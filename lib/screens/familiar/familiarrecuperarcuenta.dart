@@ -47,10 +47,10 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
       ),
       body: SizedBox(
         width: double.infinity,
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              child: Padding(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   decoration: BoxDecoration(
@@ -67,113 +67,118 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 10),
-              child: Text(
-                "Recuperar contraseña",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              child: Text(
-                "Te enviaremos un código de verificación a tu correo electrónico",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey, width: .5),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
+                child: Text(
+                  "Recuperar contraseña",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
-                margin: EdgeInsets.only(top: 50),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            "Correo electronico",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+              ),
+              SizedBox(
+                width: 300,
+                child: Text(
+                  "Te enviaremos un código de verificación a tu correo electrónico",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey, width: .5),
+                  ),
+                  margin: EdgeInsets.only(top: 50),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              "Correo electronico",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "Ingresa tu correo electronico",
-                            prefixIcon: Icon(Icons.mail_outline),
-                            filled: true,
-                            fillColor: const Color.fromARGB(59, 180, 180, 182),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              Colors.black,
-                            ),
-                            foregroundColor: WidgetStatePropertyAll(
-                              Colors.white,
-                            ),
-                            shape: WidgetStatePropertyAll(
-                              RoundedRectangleBorder(
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: "Ingresa tu correo electronico",
+                              prefixIcon: Icon(Icons.mail_outline),
+                              filled: true,
+                              fillColor: const Color.fromARGB(
+                                59,
+                                180,
+                                180,
+                                182,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    Familiarverificarcodigoscreen(),
-                              ),
-                            );
-                          },
-                          child: Text("Enviar codigo"),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Colors.black,
+                              ),
+                              foregroundColor: WidgetStatePropertyAll(
+                                Colors.white,
+                              ),
+                              shape: WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Familiarverificarcodigoscreen(),
+                                ),
+                              );
+                            },
+                            child: Text("Enviar codigo"),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Spacer(),
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Text(
-                  "¿Recordaste tu constraseña?",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Text(
+                    "¿Recordaste tu constraseña?",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
