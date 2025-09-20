@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicare/screens/familiarloginscreen.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -63,7 +64,7 @@ class _HomescreenState extends State<Homescreen> {
                 "Selecciona tu tipo de usuario para continuar",
                 style: TextStyle(fontWeight: FontWeight.normal),
               ),
-              familiarSelector(),
+              familiarSelector(context),
               cuidadorSelector(),
               Padding(
                 padding: const EdgeInsets.only(top: 50),
@@ -82,7 +83,7 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  Padding familiarSelector() {
+  Padding familiarSelector(context) {
     return Padding(
       padding: const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 10),
       child: Container(
@@ -136,7 +137,16 @@ class _HomescreenState extends State<Homescreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return Familiarloginscreen();
+                              },
+                            ),
+                          );
+                        },
                         style: ButtonStyle(
                           shape: WidgetStatePropertyAll(
                             RoundedRectangleBorder(
