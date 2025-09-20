@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicare/screens/cuidador/cuidadorseleccionrecuperacionscreen.dart';
 
 class Cuidadorloginscreen extends StatefulWidget {
   const Cuidadorloginscreen({super.key});
@@ -196,7 +197,15 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          Cuidadorseleccionrecuperacionscreen(),
+                    ),
+                  );
+                },
                 child: Text(
                   "¿Olvidaste tu contraseña? Recupérala aquí",
                   style: TextStyle(
