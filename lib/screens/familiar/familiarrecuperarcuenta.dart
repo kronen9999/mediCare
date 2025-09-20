@@ -147,13 +147,18 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
               ),
             ),
             Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Text(
-                "¿Recordaste tu constraseña?",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Text(
+                  "¿Recordaste tu constraseña?",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
