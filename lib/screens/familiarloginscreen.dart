@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
 
 class Familiarloginscreen extends StatefulWidget {
   const Familiarloginscreen({super.key});
@@ -223,7 +224,16 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Familiarrecuperarcuenta();
+                      },
+                    ),
+                  );
+                },
                 child: Text(
                   "¿Olvidaste tu contraseña? Recupérala aquí",
                   style: TextStyle(
