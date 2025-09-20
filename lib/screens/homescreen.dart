@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicare/screens/cuidadorloginscreen.dart';
 import 'package:medicare/screens/familiarloginscreen.dart';
 
 class Homescreen extends StatefulWidget {
@@ -66,7 +67,7 @@ class _HomescreenState extends State<Homescreen> {
                   style: TextStyle(fontWeight: FontWeight.normal),
                 ),
                 familiarSelector(context),
-                cuidadorSelector(),
+                cuidadorSelector(context),
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
                   child: Text(
@@ -189,7 +190,7 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  Padding cuidadorSelector() {
+  Padding cuidadorSelector(context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 5),
       child: Container(
@@ -243,7 +244,14 @@ class _HomescreenState extends State<Homescreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Cuidadorloginscreen(),
+                            ),
+                          );
+                        },
                         style: ButtonStyle(
                           shape: WidgetStatePropertyAll(
                             RoundedRectangleBorder(
