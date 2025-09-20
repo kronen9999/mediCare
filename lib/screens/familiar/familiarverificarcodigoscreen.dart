@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicare/screens/familiar/familiarcambiarcontrasenarecuperacionscreen.dart';
 
 class Familiarverificarcodigoscreen extends StatefulWidget {
   const Familiarverificarcodigoscreen({super.key});
@@ -152,7 +153,7 @@ class _FamiliarverificarcodigoscreenState
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      Familiarverificarcodigoscreen(),
+                                      Familiarcambiarcontrasenarecuperacionscreen(),
                                 ),
                               );
                             },
