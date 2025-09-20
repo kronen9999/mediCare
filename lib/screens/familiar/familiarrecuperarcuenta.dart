@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/screens/familiar/familiarverificarcodigoscreen.dart';
 
 class Familiarrecuperarcuenta extends StatefulWidget {
   const Familiarrecuperarcuenta({super.key});
@@ -48,19 +49,21 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
         width: double.infinity,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(31, 21, 93, 252),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Icon(
-                    Icons.mail_outline,
-                    color: Color.fromARGB(255, 21, 93, 252),
-                    size: 40,
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(31, 21, 93, 252),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Icon(
+                      Icons.mail_outline,
+                      color: Color.fromARGB(255, 21, 93, 252),
+                      size: 40,
+                    ),
                   ),
                 ),
               ),
@@ -137,7 +140,15 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
                               ),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Familiarverificarcodigoscreen(),
+                              ),
+                            );
+                          },
                           child: Text("Enviar codigo"),
                         ),
                       ),
