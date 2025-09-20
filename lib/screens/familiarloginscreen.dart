@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
+import 'package:medicare/screens/familiar/familiarregistroscreen.dart';
 
 class Familiarloginscreen extends StatefulWidget {
   const Familiarloginscreen({super.key});
@@ -196,7 +197,15 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 5, bottom: 5),
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        Familiarregistroscreen(),
+                                  ),
+                                );
+                              },
                               style: ButtonStyle(
                                 shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
