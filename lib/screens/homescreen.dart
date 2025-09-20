@@ -18,65 +18,67 @@ class _HomescreenState extends State<Homescreen> {
         height: double.infinity,
         child: Padding(
           padding: const EdgeInsets.only(top: 60.0, bottom: 20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: SvgPicture.asset(
-                    'assets/images/heart.svg',
-                    height: 30,
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: SvgPicture.asset(
+                      'assets/images/heart.svg',
+                      height: 30,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 25, bottom: 10),
-                child: Text(
-                  "MediCare",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                Padding(
+                  padding: const EdgeInsets.only(top: 25, bottom: 10),
+                  child: Text(
+                    "MediCare",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                "Cuidado medico en tus manos",
-                style: TextStyle(fontWeight: FontWeight.normal),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30, bottom: 10),
-                child: Text(
-                  "¿Cómo quieres acceder?",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                Text(
+                  "Cuidado medico en tus manos",
+                  style: TextStyle(fontWeight: FontWeight.normal),
                 ),
-              ),
-              Text(
-                "Selecciona tu tipo de usuario para continuar",
-                style: TextStyle(fontWeight: FontWeight.normal),
-              ),
-              familiarSelector(context),
-              cuidadorSelector(),
-              Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: Text(
-                  "¿Nesesitas ayuda? Contacta con soporte",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w300,
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, bottom: 10),
+                  child: Text(
+                    "¿Cómo quieres acceder?",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
                   ),
                 ),
-              ),
-            ],
+                Text(
+                  "Selecciona tu tipo de usuario para continuar",
+                  style: TextStyle(fontWeight: FontWeight.normal),
+                ),
+                familiarSelector(context),
+                cuidadorSelector(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: Text(
+                    "¿Nesesitas ayuda? Contacta con soporte",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -133,43 +135,47 @@ class _HomescreenState extends State<Homescreen> {
                       SizedBox(
                         width: 222,
                         child: Text(
-                          "Monitorea el cuidado de tu ser querido, recibe notificaciones importantes y mantente conectado con el equipo de cuidado",
+                          "Monitorea el cuidado de tu ser querido, recibe notificaciones y ponte en contacto con el cuidador",
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return Familiarloginscreen();
-                              },
-                            ),
-                          );
-                        },
-                        style: ButtonStyle(
-                          shape: WidgetStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          backgroundColor: WidgetStatePropertyAll(Colors.black),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              "Continuar como familiar",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                                size: 15,
+                      SizedBox(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return Familiarloginscreen();
+                                },
+                              ),
+                            );
+                          },
+                          style: ButtonStyle(
+                            shape: WidgetStatePropertyAll(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                          ],
+                            backgroundColor: WidgetStatePropertyAll(
+                              Colors.black,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Continuar como familiar",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
