@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/screens/cuidador/cuidadorverificarcodigoscreen.dart';
 
 class Cuidadorrecuperarcuentacorreoscreen extends StatefulWidget {
   const Cuidadorrecuperarcuentacorreoscreen({super.key});
@@ -54,14 +55,14 @@ class _CuidadorrecuperarcuentacorreoscreenState
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(31, 21, 93, 252),
+                    color: Color.fromARGB(100, 219, 252, 231),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Icon(
                       Icons.mail_outline,
-                      color: Color.fromARGB(255, 21, 93, 252),
+                      color: Color.fromARGB(255, 0, 166, 62),
                       size: 40,
                     ),
                   ),
@@ -144,7 +145,15 @@ class _CuidadorrecuperarcuentacorreoscreenState
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Cuidadorverificarcodigoscreen(),
+                                ),
+                              );
+                            },
                             child: Text("Enviar codigo"),
                           ),
                         ),
