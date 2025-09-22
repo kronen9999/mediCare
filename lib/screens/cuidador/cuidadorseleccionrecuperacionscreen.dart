@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/screens/cuidador/cuidadornotificarfamiliarscreen.dart';
 import 'package:medicare/screens/cuidador/cuidadorrecuperarcuentacorreoscreen.dart';
 
 class Cuidadorseleccionrecuperacionscreen extends StatefulWidget {
@@ -245,7 +246,15 @@ class _CuidadorseleccionrecuperacionscreenState
                                     ),
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          Cuidadornotificarfamiliarscreen(),
+                                    ),
+                                  );
+                                },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
