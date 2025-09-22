@@ -206,7 +206,7 @@ class _CuidadorseleccionrecuperacionscreenState
                                 child: Padding(
                                   padding: const EdgeInsets.all(12),
                                   child: Icon(
-                                    Icons.email_outlined,
+                                    Icons.notifications_none_outlined,
                                     color: Color.fromARGB(255, 248, 73, 73),
                                   ),
                                 ),
