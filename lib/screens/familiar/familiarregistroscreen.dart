@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/familiares/familiares_registro.dart';
+import 'package:medicare/repositories/familiares/familiares_registro_repository.dart';
 
 class Familiarregistroscreen extends StatefulWidget {
   const Familiarregistroscreen({super.key});
@@ -195,7 +197,9 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              registro();
+                            },
                             child: Text("Registrarse"),
                           ),
                         ),
@@ -232,5 +236,31 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
         ),
       ),
     );
+  }
+
+  void registro() async {
+    final repo = FamiliaresRegistroRepository();
+    try {
+      final result = await repo.registro(
+        FamiliaresRegistro(
+          correoE: _correo ?? '',
+          contrasena: _contrasena ?? '',
+        ),
+      );
+      // Muestra el mensaje de éxito que viene en result.message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result.message.toString()),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
