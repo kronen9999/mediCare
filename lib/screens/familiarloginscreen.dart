@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
 import 'package:medicare/screens/familiar/familiarregistroscreen.dart';
-import 'package:medicare/repositories/familiares_login_repository.dart';
-import 'package:medicare/models/familiales_login.dart';
+import 'package:medicare/repositories/familiares/familiares_login_repository.dart';
+import 'package:medicare/models/familiares/familiales_login.dart';
 
 class Familiarloginscreen extends StatefulWidget {
   const Familiarloginscreen({super.key});

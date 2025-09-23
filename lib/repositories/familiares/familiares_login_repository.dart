@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:medicare/classes/globalvariables.dart';
-import '../models/familiales_login.dart';
+import '../../models/familiares/familiales_login.dart';
 
 class FamiliarLoginRepository {
   Globalvariables globalvariables = Globalvariables();
