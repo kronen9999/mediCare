@@ -9,6 +9,9 @@ class Familiarregistroscreen extends StatefulWidget {
 }
 
 class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
+  String? _correo;
+  String? _contrasena;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +114,11 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  _correo = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.mail_outline),
                                 hintText: "Ingresa tu correo electronico",
@@ -147,6 +155,11 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  _contrasena = value;
+                                });
+                              },
                               obscureText: true,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.lock_person_outlined),
