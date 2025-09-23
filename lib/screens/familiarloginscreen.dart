@@ -11,6 +11,9 @@ class Familiarloginscreen extends StatefulWidget {
 }
 
 class _FamiliarloginscreenState extends State<Familiarloginscreen> {
+  String? credencial;
+  String? contrasena;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +109,11 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) => {
+                                setState(() {
+                                  credencial = value;
+                                }),
+                              },
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu usuario o correo",
                                 prefixIcon: Icon(Icons.person_outline),
@@ -144,6 +152,11 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) => {
+                                setState(() {
+                                  contrasena = value;
+                                }),
+                              },
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu contraseña",
@@ -168,7 +181,9 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                imprimir();
+                              },
                               style: ButtonStyle(
                                 shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
@@ -256,5 +271,10 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
         ),
       ),
     );
+  }
+
+  void imprimir() {
+    print("Credencial: $credencial");
+    print("Contrasena: $contrasena");
   }
 }
