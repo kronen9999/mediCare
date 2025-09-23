@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
 import 'package:medicare/screens/familiar/familiarregistroscreen.dart';
+import 'package:medicare/repositories/familiares_login_repository.dart';
+import 'package:medicare/models/familiales_login.dart';
 
 class Familiarloginscreen extends StatefulWidget {
   const Familiarloginscreen({super.key});
@@ -182,7 +184,7 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                imprimir();
+                                login();
                               },
                               style: ButtonStyle(
                                 shape: WidgetStatePropertyAll(
@@ -273,8 +275,29 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
     );
   }
 
-  void imprimir() {
-    print("Credencial: $credencial");
-    print("Contrasena: $contrasena");
+  void login() async {
+    final repo = FamiliarLoginRepository();
+    try {
+      final result = await repo.login(
+        FamilialesLogin(
+          credencial: credencial ?? '',
+          contrasena: contrasena ?? '',
+        ),
+      );
+      // Si el login es exitoso, muestra un SnackBar con el mensaje
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+      // Aquí puedes navegar a otra pantalla o guardar el token
+      // Por ejemplo: Navigator.pushReplacement(...);
+    } catch (e) {
+      // Si hay error, muestra el mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
