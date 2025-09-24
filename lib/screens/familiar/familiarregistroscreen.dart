@@ -250,7 +250,10 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
       // Muestra el mensaje de éxito que viene en result.message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result.message.toString()),
+          content: Text(
+            result.message.toString() +
+                " le hemos enviado un correo de confirmación",
+          ),
           backgroundColor: Colors.green,
         ),
       );
