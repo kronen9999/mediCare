@@ -6,8 +6,8 @@ import 'package:medicare/repositories/familiares/familiares_reposotory_global.da
 import 'package:medicare/screens/familiar/familiarcambiarcontrasenarecuperacionscreen.dart';
 
 class Familiarverificarcodigoscreen extends StatefulWidget {
-  String? correoE;
-  Familiarverificarcodigoscreen({super.key, required this.correoE});
+  final String? correoE;
+  const Familiarverificarcodigoscreen({super.key, required this.correoE});
 
   @override
   State<Familiarverificarcodigoscreen> createState() =>
@@ -224,8 +224,14 @@ class _FamiliarverificarcodigoscreenState
           codigoVerificacion: codigoVerificacion ?? "",
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Familiarcambiarcontrasenarecuperacionscreen(
+            correoE: widget.correoE ?? '',
+            codigoVerificacion: codigoVerificacion ?? '',
+          ),
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

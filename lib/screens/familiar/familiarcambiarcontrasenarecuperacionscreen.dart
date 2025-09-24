@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Familiarcambiarcontrasenarecuperacionscreen extends StatefulWidget {
-  const Familiarcambiarcontrasenarecuperacionscreen({super.key});
+  final String? correoE;
+  final String codigoVerificacion;
+  const Familiarcambiarcontrasenarecuperacionscreen({
+    super.key,
+    required this.correoE,
+    required this.codigoVerificacion,
+  });
 
   @override
   State<Familiarcambiarcontrasenarecuperacionscreen> createState() =>
