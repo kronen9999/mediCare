@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/screens/familiar/familiarverificarcodigoscreen.dart';
 
 class Familiarrecuperarcuenta extends StatefulWidget {
@@ -11,6 +13,7 @@ class Familiarrecuperarcuenta extends StatefulWidget {
 }
 
 class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
+  String? correoE;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +114,11 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20),
                           child: TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                correoE = value;
+                              });
+                            },
                             decoration: InputDecoration(
                               hintText: "Ingresa tu correo electronico",
                               prefixIcon: Icon(Icons.mail_outline),
@@ -145,13 +153,7 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Familiarverificarcodigoscreen(),
-                                ),
-                              );
+                              recuperarCuenta(context);
                             },
                             child: Text("Enviar codigo"),
                           ),
@@ -182,5 +184,27 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
         ),
       ),
     );
+  }
+
+  void recuperarCuenta(context) async {
+    FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
+    try {
+      final response = await repo.recuperarCuentaPCorreo(
+        FamiliaresRecuperarcuentapcorreo(correoE: correoE ?? ''),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
