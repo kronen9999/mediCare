@@ -13,6 +13,8 @@ class Familiarregistroscreen extends StatefulWidget {
 class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
   String? _correo;
   String? _contrasena;
+  TextEditingController correoController = TextEditingController();
+  TextEditingController contrasenaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +118,7 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              controller: correoController,
                               onChanged: (value) {
                                 setState(() {
                                   _correo = value;
@@ -157,6 +160,7 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              controller: contrasenaController,
                               onChanged: (value) {
                                 setState(() {
                                   _contrasena = value;
@@ -257,6 +261,12 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
           backgroundColor: Colors.green,
         ),
       );
+      setState(() {
+        correoController.clear();
+        contrasenaController.clear();
+        _correo = null;
+        _contrasena = null;
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
