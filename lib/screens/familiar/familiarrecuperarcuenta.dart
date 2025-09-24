@@ -192,10 +192,10 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
       final response = await repo.recuperarCuentaPCorreo(
         FamiliaresRecuperarcuentapcorreo(correoE: correoE ?? ''),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
-          backgroundColor: Colors.green,
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Familiarverificarcodigoscreen(correoE: correoE),
         ),
       );
     } catch (e) {

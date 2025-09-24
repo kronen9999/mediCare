@@ -3,7 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicare/screens/familiar/familiarcambiarcontrasenarecuperacionscreen.dart';
 
 class Familiarverificarcodigoscreen extends StatefulWidget {
-  const Familiarverificarcodigoscreen({super.key});
+  String? correoE;
+  Familiarverificarcodigoscreen({super.key, required this.correoE});
 
   @override
   State<Familiarverificarcodigoscreen> createState() =>
@@ -149,11 +150,13 @@ class _FamiliarverificarcodigoscreenState
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Familiarcambiarcontrasenarecuperacionscreen(),
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    widget.correoE ??
+                                        'No se proporcionó correo',
+                                  ),
+                                  backgroundColor: Colors.green,
                                 ),
                               );
                             },
