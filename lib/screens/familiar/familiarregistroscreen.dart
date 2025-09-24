@@ -198,7 +198,7 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                               ),
                             ),
                             onPressed: () {
-                              registro();
+                              registro(context);
                             },
                             child: Text("Registrarse"),
                           ),
@@ -238,7 +238,7 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
     );
   }
 
-  void registro() async {
+  void registro(context) async {
     final repo = FamiliaresRegistroRepository();
     try {
       final result = await repo.registro(
