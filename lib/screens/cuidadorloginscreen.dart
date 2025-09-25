@@ -10,6 +10,8 @@ class Cuidadorloginscreen extends StatefulWidget {
 }
 
 class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
+  String? _Credencial;
+  String? _Contrasena;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,6 +107,11 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  _Credencial = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu usuario o correo",
                                 prefixIcon: Icon(Icons.person_outline),
@@ -143,6 +150,11 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  _Contrasena = value;
+                                });
+                              },
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu contraseña",
