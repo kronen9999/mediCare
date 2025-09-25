@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
 import 'package:medicare/screens/familiar/familiarregistroscreen.dart';
+import 'package:medicare/repositories/familiares/familiares_login_repository.dart';
+import 'package:medicare/models/familiares/familiales_login.dart';
 
 class Familiarloginscreen extends StatefulWidget {
   const Familiarloginscreen({super.key});
@@ -11,6 +13,9 @@ class Familiarloginscreen extends StatefulWidget {
 }
 
 class _FamiliarloginscreenState extends State<Familiarloginscreen> {
+  String? credencial;
+  String? contrasena;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +111,11 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) => {
+                                setState(() {
+                                  credencial = value;
+                                }),
+                              },
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu usuario o correo",
                                 prefixIcon: Icon(Icons.person_outline),
@@ -144,6 +154,11 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) => {
+                                setState(() {
+                                  contrasena = value;
+                                }),
+                              },
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu contraseña",
@@ -168,7 +183,9 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                login();
+                              },
                               style: ButtonStyle(
                                 shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
@@ -256,5 +273,31 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
         ),
       ),
     );
+  }
+
+  void login() async {
+    final repo = FamiliarLoginRepository();
+    try {
+      final result = await repo.login(
+        FamilialesLogin(
+          credencial: credencial ?? '',
+          contrasena: contrasena ?? '',
+        ),
+      );
+      // Si el login es exitoso, muestra un SnackBar con el mensaje
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+      // Aquí puedes navegar a otra pantalla o guardar el token
+      // Por ejemplo: Navigator.pushReplacement(...);
+    } catch (e) {
+      // Si hay error, muestra el mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

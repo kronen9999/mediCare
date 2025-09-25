@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
+import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/screens/familiar/familiarcambiarcontrasenarecuperacionscreen.dart';
 
 class Familiarverificarcodigoscreen extends StatefulWidget {
-  const Familiarverificarcodigoscreen({super.key});
+  final String? correoE;
+  const Familiarverificarcodigoscreen({super.key, required this.correoE});
 
   @override
   State<Familiarverificarcodigoscreen> createState() =>
@@ -12,6 +16,7 @@ class Familiarverificarcodigoscreen extends StatefulWidget {
 
 class _FamiliarverificarcodigoscreenState
     extends State<Familiarverificarcodigoscreen> {
+  String? codigoVerificacion;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,6 +119,11 @@ class _FamiliarverificarcodigoscreenState
                           child: SizedBox(
                             width: 150,
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  codigoVerificacion = value;
+                                });
+                              },
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 hintText: "0000000000",
@@ -149,13 +159,7 @@ class _FamiliarverificarcodigoscreenState
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Familiarcambiarcontrasenarecuperacionscreen(),
-                                ),
-                              );
+                              verificarCodigo(context);
                             },
                             child: Text("Verificar codigo"),
                           ),
@@ -169,7 +173,7 @@ class _FamiliarverificarcodigoscreenState
                           padding: const EdgeInsets.only(top: 10),
                           child: GestureDetector(
                             onTap: () {
-                              print("Reenviar codigo");
+                              reenviarCodigo(context);
                             },
                             child: Text(
                               "Reenviar codigo",
@@ -190,5 +194,52 @@ class _FamiliarverificarcodigoscreenState
         ),
       ),
     );
+  }
+
+  void reenviarCodigo(context) async {
+    FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.recuperarCuentaPCorreo(
+        FamiliaresRecuperarcuentapcorreo(correoE: widget.correoE ?? ''),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void verificarCodigo(context) async {
+    FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.verificarCodigoRecuperacion(
+        FamiliaresVerificarcodigorecuperacion(
+          correoE: widget.correoE ?? "",
+          codigoVerificacion: codigoVerificacion ?? "",
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Familiarcambiarcontrasenarecuperacionscreen(
+            correoE: widget.correoE ?? '',
+            codigoVerificacion: codigoVerificacion ?? '',
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

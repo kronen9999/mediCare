@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/cuidador/cuidadorverificarcodigoscreen.dart';
 
 class Cuidadorrecuperarcuentacorreoscreen extends StatefulWidget {
@@ -12,6 +14,7 @@ class Cuidadorrecuperarcuentacorreoscreen extends StatefulWidget {
 
 class _CuidadorrecuperarcuentacorreoscreenState
     extends State<Cuidadorrecuperarcuentacorreoscreen> {
+  String? _correo;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +115,11 @@ class _CuidadorrecuperarcuentacorreoscreenState
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20),
                           child: TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                _correo = value;
+                              });
+                            },
                             decoration: InputDecoration(
                               hintText: "Ingresa tu correo electronico",
                               prefixIcon: Icon(Icons.mail_outline),
@@ -146,13 +154,7 @@ class _CuidadorrecuperarcuentacorreoscreenState
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Cuidadorverificarcodigoscreen(),
-                                ),
-                              );
+                              enviarCodigo(context);
                             },
                             child: Text("Enviar codigo"),
                           ),
@@ -183,5 +185,38 @@ class _CuidadorrecuperarcuentacorreoscreenState
         ),
       ),
     );
+  }
+
+  void enviarCodigo(context) async {
+    if (_correo == null || _correo!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Por favor ingrese un correo electronico"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
+    try {
+      final result = await repo.enviarCodigoRecuperacion(
+        CuidadoresRecupearcuentapcorreo(correoE: _correo ?? ''),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Cuidadorverificarcodigoscreen(correoE: _correo ?? ''),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
   }
 }

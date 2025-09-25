@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicare/models/cuidadores/cuidadores_login.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/cuidador/cuidadorseleccionrecuperacionscreen.dart';
 
 class Cuidadorloginscreen extends StatefulWidget {
@@ -10,6 +12,8 @@ class Cuidadorloginscreen extends StatefulWidget {
 }
 
 class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
+  String? _Credencial;
+  String? _Contrasena;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,6 +109,11 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  _Credencial = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu usuario o correo",
                                 prefixIcon: Icon(Icons.person_outline),
@@ -143,6 +152,11 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  _Contrasena = value;
+                                });
+                              },
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu contraseña",
@@ -167,7 +181,9 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                loginCuidador(context);
+                              },
                               style: ButtonStyle(
                                 shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
@@ -219,5 +235,46 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
         ),
       ),
     );
+  }
+
+  void loginCuidador(context) async {
+    if (_Credencial == null ||
+        _Contrasena == null ||
+        _Credencial!.isEmpty ||
+        _Contrasena!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Por favor, completa todos los campos"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
+
+    try {
+      final result = await repo.loginCuidador(
+        CuidadoresLogin(
+          contrasena: _Contrasena ?? '',
+          credencial: _Credencial ?? '',
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Bienvenido, ${result.message}\nID: ${result.usuario?.idUsuario}\n${result.usuario?.tokenAcceso}",
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

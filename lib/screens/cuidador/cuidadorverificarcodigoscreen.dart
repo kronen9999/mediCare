@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
+import 'package:medicare/models/cuidadores/cuidadores_verificarcodigorecuperacion.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/cuidador/cuidadorcambiarcontrasenarecuperacionscreen.dart';
 
 class Cuidadorverificarcodigoscreen extends StatefulWidget {
-  const Cuidadorverificarcodigoscreen({super.key});
+  final String? correoE;
+  const Cuidadorverificarcodigoscreen({super.key, required this.correoE});
 
   @override
   State<Cuidadorverificarcodigoscreen> createState() =>
@@ -12,6 +16,7 @@ class Cuidadorverificarcodigoscreen extends StatefulWidget {
 
 class _CuidadorverificarcodigoscreenState
     extends State<Cuidadorverificarcodigoscreen> {
+  String? _codigoVerificacion;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,6 +119,11 @@ class _CuidadorverificarcodigoscreenState
                           child: SizedBox(
                             width: 150,
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  _codigoVerificacion = value;
+                                });
+                              },
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 hintText: "0000000000",
@@ -149,13 +159,7 @@ class _CuidadorverificarcodigoscreenState
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Cuidadorcambiarcontrasenarecuperacionscreen(),
-                                ),
-                              );
+                              verificarCodigo(context);
                             },
                             child: Text("Verificar codigo"),
                           ),
@@ -169,7 +173,7 @@ class _CuidadorverificarcodigoscreenState
                           padding: const EdgeInsets.only(top: 10),
                           child: GestureDetector(
                             onTap: () {
-                              print("Reenviar codigo");
+                              enviarCodigo(context);
                             },
                             child: Text(
                               "Reenviar codigo",
@@ -190,5 +194,72 @@ class _CuidadorverificarcodigoscreenState
         ),
       ),
     );
+  }
+
+  void verificarCodigo(context) async {
+    if (_codigoVerificacion == null || _codigoVerificacion!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Por favor ingresa el codigo de verificación"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
+    try {
+      final response = await repo.verificarCodigo(
+        CuidadoresVerificarcodigorecuperacion(
+          correoE: widget.correoE ?? '',
+          codigoVerificacion: _codigoVerificacion ?? '',
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Cuidadorcambiarcontrasenarecuperacionscreen(
+            correoE: widget.correoE ?? '',
+            codigoVerificacion: _codigoVerificacion ?? '',
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void enviarCodigo(context) async {
+    if (widget.correoE == null || widget.correoE!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("No hay un correo electrónico proporcionado"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
+    try {
+      final result = await repo.enviarCodigoRecuperacion(
+        CuidadoresRecupearcuentapcorreo(correoE: widget.correoE ?? ''),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
   }
 }

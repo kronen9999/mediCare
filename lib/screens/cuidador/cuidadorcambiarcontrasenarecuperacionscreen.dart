@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/cuidadores/cuidadores_restablecercontrasena.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidadorloginscreen.dart';
 
 class Cuidadorcambiarcontrasenarecuperacionscreen extends StatefulWidget {
-  const Cuidadorcambiarcontrasenarecuperacionscreen({super.key});
+  final String correoE;
+  final String codigoVerificacion;
+  const Cuidadorcambiarcontrasenarecuperacionscreen({
+    super.key,
+    required this.correoE,
+    required this.codigoVerificacion,
+  });
 
   @override
   State<Cuidadorcambiarcontrasenarecuperacionscreen> createState() =>
@@ -11,6 +20,8 @@ class Cuidadorcambiarcontrasenarecuperacionscreen extends StatefulWidget {
 
 class _CuidadorcambiarcontrasenarecuperacionscreenState
     extends State<Cuidadorcambiarcontrasenarecuperacionscreen> {
+  String? campoNuevaContrasena1;
+  String? campoNuevaContrasena2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,6 +124,11 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  campoNuevaContrasena1 = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.lock_outline),
                                 hintText: "Ingresa tu nueva contraseña",
@@ -149,6 +165,11 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  campoNuevaContrasena2 = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.lock_outline),
                                 hintText: "Confirma tu nueva contraseña",
@@ -183,7 +204,9 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              cambioContrasena(context);
+                            },
                             child: Text("Restablecer contraseña"),
                           ),
                         ),
@@ -209,5 +232,48 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
         ),
       ),
     );
+  }
+
+  void cambioContrasena(context) async {
+    if (campoNuevaContrasena1 == null ||
+        campoNuevaContrasena2 == null ||
+        campoNuevaContrasena1!.isEmpty ||
+        campoNuevaContrasena2!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Por favor, completa todos los campos"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
+    try {
+      final result = await repo.restablerContrasena(
+        CuidadoresRestablecercontrasena(
+          correoE: widget.correoE,
+          codigoVerificacion: widget.codigoVerificacion,
+          nuevaContrasena: campoNuevaContrasena1 ?? '',
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Cuidadorloginscreen()),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

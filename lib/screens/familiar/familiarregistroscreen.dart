@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/familiares/familiares_registro.dart';
+import 'package:medicare/repositories/familiares/familiares_registro_repository.dart';
 
 class Familiarregistroscreen extends StatefulWidget {
   const Familiarregistroscreen({super.key});
@@ -9,6 +11,11 @@ class Familiarregistroscreen extends StatefulWidget {
 }
 
 class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
+  String? _correo;
+  String? _contrasena;
+  TextEditingController correoController = TextEditingController();
+  TextEditingController contrasenaController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +118,12 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              controller: correoController,
+                              onChanged: (value) {
+                                setState(() {
+                                  _correo = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.mail_outline),
                                 hintText: "Ingresa tu correo electronico",
@@ -147,6 +160,12 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              controller: contrasenaController,
+                              onChanged: (value) {
+                                setState(() {
+                                  _contrasena = value;
+                                });
+                              },
                               obscureText: true,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.lock_person_outlined),
@@ -182,7 +201,9 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              registro(context);
+                            },
                             child: Text("Registrarse"),
                           ),
                         ),
@@ -219,5 +240,40 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
         ),
       ),
     );
+  }
+
+  void registro(context) async {
+    final repo = FamiliaresRegistroRepository();
+    try {
+      final result = await repo.registro(
+        FamiliaresRegistro(
+          correoE: _correo ?? '',
+          contrasena: _contrasena ?? '',
+        ),
+      );
+      // Muestra el mensaje de éxito que viene en result.message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            result.message.toString() +
+                " le hemos enviado un correo de confirmación",
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+      setState(() {
+        correoController.clear();
+        contrasenaController.clear();
+        _correo = null;
+        _contrasena = null;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
