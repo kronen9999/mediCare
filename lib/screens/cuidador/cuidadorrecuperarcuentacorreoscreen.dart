@@ -12,6 +12,7 @@ class Cuidadorrecuperarcuentacorreoscreen extends StatefulWidget {
 
 class _CuidadorrecuperarcuentacorreoscreenState
     extends State<Cuidadorrecuperarcuentacorreoscreen> {
+  String? _correo;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +113,11 @@ class _CuidadorrecuperarcuentacorreoscreenState
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20),
                           child: TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                _correo = value;
+                              });
+                            },
                             decoration: InputDecoration(
                               hintText: "Ingresa tu correo electronico",
                               prefixIcon: Icon(Icons.mail_outline),
@@ -146,13 +152,7 @@ class _CuidadorrecuperarcuentacorreoscreenState
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Cuidadorverificarcodigoscreen(),
-                                ),
-                              );
+                              EnviarCodigo();
                             },
                             child: Text("Enviar codigo"),
                           ),
@@ -183,5 +183,9 @@ class _CuidadorrecuperarcuentacorreoscreenState
         ),
       ),
     );
+  }
+
+  void EnviarCodigo() {
+    print("Enviando codigo a $_correo");
   }
 }
