@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/screens/familiarloginscreen.dart';
 
 class Familiarcambiarcontrasenarecuperacionscreen extends StatefulWidget {
   final String? correoE;
-  final String codigoVerificacion;
+  final String? codigoVerificacion;
   const Familiarcambiarcontrasenarecuperacionscreen({
     super.key,
     required this.correoE,
@@ -17,6 +20,9 @@ class Familiarcambiarcontrasenarecuperacionscreen extends StatefulWidget {
 
 class _FamiliarcambiarcontrasenarecuperacionscreenState
     extends State<Familiarcambiarcontrasenarecuperacionscreen> {
+  String? nuevaContrasena;
+  String? campoContrasena1;
+  String? campoContrasena2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +125,12 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              obscureText: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  campoContrasena1 = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.lock_outline),
                                 hintText: "Ingresa tu nueva contraseña",
@@ -155,6 +167,12 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
                           child: SizedBox(
                             width: double.infinity,
                             child: TextField(
+                              obscureText: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  campoContrasena2 = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.lock_outline),
                                 hintText: "Confirma tu nueva contraseña",
@@ -189,7 +207,31 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              if (campoContrasena1 == null ||
+                                  campoContrasena2 == null ||
+                                  campoContrasena1!.isEmpty ||
+                                  campoContrasena2!.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "No puede dejar campos vacios",
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              } else if (campoContrasena1 != campoContrasena2) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Los campos no coinciden"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              } else {
+                                nuevaContrasena = campoContrasena1;
+                                cambiarContrasena(context);
+                              }
+                            },
                             child: Text("Restablecer contraseña"),
                           ),
                         ),
@@ -215,5 +257,37 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
         ),
       ),
     );
+  }
+
+  void cambiarContrasena(context) async {
+    FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.restablecerContrasena(
+        FamiliaresRestablecercontrasena(
+          correoE: widget.correoE ?? '',
+          codigoVerificacion: widget.codigoVerificacion ?? '',
+          nuevaContrasena: campoContrasena1 ?? '',
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result.message.toString()),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Familiarloginscreen()),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
