@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicare/models/cuidadores/cuidadores_alertafamiliar.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidadorloginscreen.dart';
 
 class Cuidadornotificarfamiliarscreen extends StatefulWidget {
   const Cuidadornotificarfamiliarscreen({super.key});
@@ -11,6 +14,7 @@ class Cuidadornotificarfamiliarscreen extends StatefulWidget {
 
 class _CuidadornotificarfamiliarscreenState
     extends State<Cuidadornotificarfamiliarscreen> {
+  String? usuario;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +115,11 @@ class _CuidadornotificarfamiliarscreenState
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20),
                           child: TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                usuario = value;
+                              });
+                            },
                             decoration: InputDecoration(
                               hintText: "Ingresa tu nombre de usuario",
                               prefixIcon: Icon(Icons.person_search_outlined),
@@ -144,7 +153,9 @@ class _CuidadornotificarfamiliarscreenState
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              notificacionFamiliar(context);
+                            },
                             child: Text("Notificar"),
                           ),
                         ),
@@ -174,5 +185,41 @@ class _CuidadornotificarfamiliarscreenState
         ),
       ),
     );
+  }
+
+  void notificacionFamiliar(context) async {
+    if (usuario == null || usuario!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Por favor, ingresa tu usuario."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
+
+    try {
+      final result = await repo.alertaFamiliar(
+        CuidadoresAlertafamiliar(usuario: usuario ?? ''),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Cuidadorloginscreen()),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

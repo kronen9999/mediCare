@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:medicare/classes/globalvariables.dart';
 import 'package:http/http.dart' as http;
+import 'package:medicare/models/cuidadores/cuidadores_alertafamiliar.dart';
 import 'package:medicare/models/cuidadores/cuidadores_login.dart';
 import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
 import 'package:medicare/models/cuidadores/cuidadores_restablecercontrasena.dart';
@@ -93,6 +94,31 @@ class CuidadoresRepositoryGlobal {
 
     if (response.statusCode == 200) {
       return CuidadoresRestablecercontrasenaResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //metodo para enviar alerta a familiar
+
+  Future<CuidadoresAlertaFamiliarResponse> alertaFamiliar(
+    CuidadoresAlertafamiliar alertaData,
+  ) async {
+    final String urlBase = variableGlobal.rutaGlobalBase;
+    final String endpoint = 'Cuidadores/AlertaFamiliar';
+
+    final response = await http.post(
+      Uri.parse(urlBase + endpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(alertaData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return CuidadoresAlertaFamiliarResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
