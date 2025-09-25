@@ -3,7 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/cuidador/cuidadorcambiarcontrasenarecuperacionscreen.dart';
 
 class Cuidadorverificarcodigoscreen extends StatefulWidget {
-  const Cuidadorverificarcodigoscreen({super.key});
+  final String correoE;
+  const Cuidadorverificarcodigoscreen({super.key, required this.correoE});
 
   @override
   State<Cuidadorverificarcodigoscreen> createState() =>
@@ -149,13 +150,7 @@ class _CuidadorverificarcodigoscreenState
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Cuidadorcambiarcontrasenarecuperacionscreen(),
-                                ),
-                              );
+                              print(widget.correoE);
                             },
                             child: Text("Verificar codigo"),
                           ),

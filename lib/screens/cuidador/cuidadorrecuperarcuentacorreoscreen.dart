@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/cuidador/cuidadorverificarcodigoscreen.dart';
 
 class Cuidadorrecuperarcuentacorreoscreen extends StatefulWidget {
@@ -152,7 +154,7 @@ class _CuidadorrecuperarcuentacorreoscreenState
                               ),
                             ),
                             onPressed: () {
-                              EnviarCodigo();
+                              enviarCodigo(context);
                             },
                             child: Text("Enviar codigo"),
                           ),
@@ -185,7 +187,36 @@ class _CuidadorrecuperarcuentacorreoscreenState
     );
   }
 
-  void EnviarCodigo() {
-    print("Enviando codigo a $_correo");
+  void enviarCodigo(context) async {
+    if (_correo == null || _correo!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Por favor ingrese un correo electronico"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
+    try {
+      final result = await repo.enviarCodigoRecuperacion(
+        CuidadoresRecupearcuentapcorreo(correoE: _correo ?? ''),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Cuidadorverificarcodigoscreen(correoE: _correo ?? ''),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
   }
 }
