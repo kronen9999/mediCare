@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
 import 'package:medicare/models/cuidadores/cuidadores_verificarcodigorecuperacion.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidador/cuidadorcambiarcontrasenarecuperacionscreen.dart';
 
 class Cuidadorverificarcodigoscreen extends StatefulWidget {
   final String? correoE;
@@ -214,10 +215,13 @@ class _CuidadorverificarcodigoscreenState
           codigoVerificacion: _codigoVerificacion ?? '',
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
-          backgroundColor: Colors.green,
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Cuidadorcambiarcontrasenarecuperacionscreen(
+            correoE: widget.correoE ?? '',
+            codigoVerificacion: _codigoVerificacion ?? '',
+          ),
         ),
       );
     } catch (e) {

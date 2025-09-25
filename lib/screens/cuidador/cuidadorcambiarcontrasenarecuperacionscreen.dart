@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Cuidadorcambiarcontrasenarecuperacionscreen extends StatefulWidget {
-  const Cuidadorcambiarcontrasenarecuperacionscreen({super.key});
+  final String correoE;
+  final String codigoVerificacion;
+  const Cuidadorcambiarcontrasenarecuperacionscreen({
+    super.key,
+    required this.correoE,
+    required this.codigoVerificacion,
+  });
 
   @override
   State<Cuidadorcambiarcontrasenarecuperacionscreen> createState() =>
@@ -183,7 +189,10 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              print(widget.correoE);
+                              print(widget.codigoVerificacion);
+                            },
                             child: Text("Restablecer contraseña"),
                           ),
                         ),
