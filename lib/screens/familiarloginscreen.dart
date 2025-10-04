@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/screens/familiar/familiarhome.dart';
 import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
 import 'package:medicare/screens/familiar/familiarregistroscreen.dart';
 import 'package:medicare/repositories/familiares/familiares_login_repository.dart';
@@ -297,6 +298,11 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
           content: Text(e.toString().replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
+      );
+    } finally {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Familiarhome()),
       );
     }
   }
