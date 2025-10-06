@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medicare/components/familiares/familiar_perfil_screen/apartado_estadisticas.dart';
 import 'package:medicare/components/familiares/familiar_perfil_screen/apartado_opciones.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/repositories/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/repositories/familiares/perfil/familiares_obtener_perfil.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,8 +15,8 @@ class FamiliarPerfilScreen extends StatefulWidget {
 }
 
 class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
-  String? numCuidadores = "4";
-  String? numPacientes = "3";
+  String? numCuidadores = "...";
+  String? numPacientes = "...";
   String? idUsuario;
   String? tokenAcceso;
   String? correo = "obteniendoDatos...";
@@ -126,9 +127,17 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
     final perfil = await repo.obtenerPerfil(
       FamiliaresObtenerPerfil(idFamiliar: idUsuario, tokenAcceso: tokenAcceso),
     );
+    final atributos = await repo.obtenerAtributosGenerales(
+      FamiliaresObtenerAtributosGenerales(
+        idFamiliar: idUsuario,
+        tokenAcceso: tokenAcceso,
+      ),
+    );
     setState(() {
       usuario = perfil.informacionCuenta?.usuario ?? 'No disponible';
       correo = perfil.informacionCuenta?.correoE ?? 'No disponible';
+      numCuidadores = atributos.numeroCuidadores.toString();
+      numPacientes = atributos.numeroPacientes.toString();
     });
   }
 

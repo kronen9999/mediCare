@@ -4,6 +4,7 @@ import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/repositories/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/repositories/familiares/perfil/familiares_obtener_perfil.dart';
 
 class FamiliaresReposotoryGlobal {
@@ -100,6 +101,31 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresObtenerPerfilResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para obtener los atributos generales de un familiar
+
+  Future<FamiliaresObtenerAtributosGeneralesResponse> obtenerAtributosGenerales(
+    FamiliaresObtenerAtributosGenerales atributosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/ObtenerAtributosGenerales'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(atributosData.toJson()),
+    );
+    if (response.statusCode == 200) {
+      return FamiliaresObtenerAtributosGeneralesResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
