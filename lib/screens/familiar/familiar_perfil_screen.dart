@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/components/familiares/familiar_perfil_screen/apartado_estadisticas.dart';
 import 'package:medicare/components/familiares/familiar_perfil_screen/apartado_opciones.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/repositories/familiares/perfil/familiares_obtener_perfil.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,17 +18,16 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
   String? numPacientes = "3";
   String? idUsuario;
   String? tokenAcceso;
-
+  String? correo = "obteniendoDatos...";
+  String? usuario = "obteniendoDatos...";
   @override
   void initState() {
     super.initState();
-    mostrarDatos();
+    obtenerPerfil();
   }
 
   @override
   Widget build(BuildContext context) {
-    String? correo;
-    String? usuario;
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
@@ -70,8 +71,8 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
               ),
             ),
             ApartadoOpciones(
-              correo: idUsuario ?? "No hay datos",
-              usuario: tokenAcceso ?? "No hay datos",
+              correo: correo ?? "No hay datos",
+              usuario: usuario ?? "Sin nombre de usuario",
             ),
             ApartadoEstadisticas(
               cuidadores: numCuidadores,
@@ -86,7 +87,7 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    eliminarDatos();
+                    cerrarSesion();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Homescreen()),
@@ -117,15 +118,21 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
     );
   }
 
-  Future<void> mostrarDatos() async {
-    dynamic prefs = await SharedPreferences.getInstance();
+  void obtenerPerfil() async {
+    final prefs = await SharedPreferences.getInstance();
+    idUsuario = prefs.getString('IdUsuario') ?? '';
+    tokenAcceso = prefs.getString('TokenAcceso') ?? '';
+    final repo = FamiliaresReposotoryGlobal();
+    final perfil = await repo.obtenerPerfil(
+      FamiliaresObtenerPerfil(idFamiliar: idUsuario, tokenAcceso: tokenAcceso),
+    );
     setState(() {
-      idUsuario = prefs.getString('IdUsuario') ?? 'No ID';
-      tokenAcceso = prefs.getString('TokenAcceso') ?? 'No Token';
+      usuario = perfil.informacionCuenta?.usuario ?? 'No disponible';
+      correo = perfil.informacionCuenta?.correoE ?? 'No disponible';
     });
   }
 
-  void eliminarDatos() async {
+  void cerrarSesion() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }

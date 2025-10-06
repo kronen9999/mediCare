@@ -4,6 +4,7 @@ import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/repositories/familiares/perfil/familiares_obtener_perfil.dart';
 
 class FamiliaresReposotoryGlobal {
   Globalvariables rutaGlobal = Globalvariables();
@@ -74,6 +75,31 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresRestablecercontrasenaResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+  //Metodo para obtener la informacion personal de un familiar
+
+  Future<FamiliaresObtenerPerfilResponse> obtenerPerfil(
+    FamiliaresObtenerPerfil perfilData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Perfil/ObtenerPerfil'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(perfilData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresObtenerPerfilResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
