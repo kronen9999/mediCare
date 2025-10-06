@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 class ApartadoOpciones extends StatefulWidget {
   final String? usuario;
   final String? correo;
-
+  final void Function(String?) onChanged;
   const ApartadoOpciones({
     super.key,
     required this.usuario,
     required this.correo,
+    required this.onChanged,
   });
 
   @override
@@ -102,7 +103,9 @@ class _ApartadoOpcionesState extends State<ApartadoOpciones> {
                     border: Border(bottom: BorderSide(color: Colors.grey)),
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.onChanged("editarPerfil");
+                    },
                     child: SizedBox(
                       width: double.infinity,
                       child: Row(
