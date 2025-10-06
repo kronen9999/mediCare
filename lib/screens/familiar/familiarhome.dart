@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/familiar/familiar_cuidadores_screen.dart';
 import 'package:medicare/screens/familiar/familiar_pacientes_screen.dart';
 import 'package:medicare/screens/familiar/familiar_perfil_screen.dart';
@@ -24,6 +25,42 @@ class _FamiliarhomeState extends State<Familiarhome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(85, 150, 255, 1),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(138, 183, 255, 1),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SvgPicture.asset(
+                    "assets/images/heart.svg",
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                "MediCare",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 150),
+            ],
+          ),
+        ],
+      ),
       body: _sections[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
