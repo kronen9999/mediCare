@@ -5,6 +5,7 @@ import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
 import 'package:medicare/screens/familiar/familiarregistroscreen.dart';
 import 'package:medicare/repositories/familiares/familiares_login_repository.dart';
 import 'package:medicare/models/familiares/familiales_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Familiarloginscreen extends StatefulWidget {
   const Familiarloginscreen({super.key});
@@ -286,11 +287,16 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
         ),
       );
       // Si el login es exitoso, muestra un SnackBar con el mensaje
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      guardarDatos(
+        result.usuario!.tokenAcceso,
+        result.usuario!.idUsuario.toString(),
       );
-      // Aquí puedes navegar a otra pantalla o guardar el token
-      // Por ejemplo: Navigator.pushReplacement(...);
+
+      await Future.delayed(Duration(milliseconds: 1000));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Familiarhome()),
+      );
     } catch (e) {
       // Si hay error, muestra el mensaje de error
       ScaffoldMessenger.of(context).showSnackBar(
@@ -299,11 +305,13 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
           backgroundColor: Colors.red,
         ),
       );
-    } finally {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Familiarhome()),
-      );
     }
+  }
+
+  Future<void> guardarDatos(String tokenAcceso, String idUsuario) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('IdUsuario', idUsuario);
+    await prefs.setString('TokenAcceso', tokenAcceso);
+    await prefs.setString('TipoLogin', "Familiares");
   }
 }

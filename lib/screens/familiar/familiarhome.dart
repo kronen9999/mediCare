@@ -26,6 +26,7 @@ class _FamiliarhomeState extends State<Familiarhome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromRGBO(85, 150, 255, 1),
         actions: [
           Row(
