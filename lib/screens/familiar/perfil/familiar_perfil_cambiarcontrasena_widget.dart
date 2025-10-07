@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
+import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarPerfilCambiarcontrasenaWidget extends StatefulWidget {
   final String? idFamiliar;
@@ -18,11 +21,19 @@ class FamiliarPerfilCambiarcontrasenaWidget extends StatefulWidget {
 
 class _FamiliarPerfilCambiarcontrasenaWidgetState
     extends State<FamiliarPerfilCambiarcontrasenaWidget> {
-  String? correoE;
-  String? usuario;
+  String? correoE = "Obteniendo datos...";
+  String? usuario = "Obteniendo datos...";
 
   TextEditingController correoEController = TextEditingController();
   TextEditingController usuarioEController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    correoEController.text = correoE ?? "";
+    usuarioEController.text = usuario ?? "";
+    obtenerDatos(widget.idFamiliar!, widget.tokenAcceso!);
+  }
 
   @override
   void dispose() {
@@ -194,7 +205,10 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
                               width: 1,
                             ),
                           ),
-                          prefixIcon: Icon(Icons.person, color: Colors.blue),
+                          prefixIcon: Icon(
+                            Icons.person_outlined,
+                            color: Colors.blue,
+                          ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
@@ -228,7 +242,15 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              actualizarDatos(
+                                widget.idFamiliar,
+                                widget.tokenAcceso,
+                                correoE,
+                                usuario,
+                                context,
+                              );
+                            },
                             child: Text(
                               "Guardar cambios",
                               style: TextStyle(
@@ -264,5 +286,49 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
         ],
       ),
     );
+  }
+
+  void obtenerDatos(String idFamiliar, String tokenAcceso) async {
+    final repo = FamiliaresReposotoryGlobal();
+    final result = await repo.obtenerPerfil(
+      FamiliaresObtenerPerfil(idFamiliar: idFamiliar, tokenAcceso: tokenAcceso),
+    );
+    setState(() {
+      correoE = result.informacionCuenta?.correoE;
+      usuario = result.informacionCuenta?.usuario;
+      correoEController.text = correoE ?? "";
+      usuarioEController.text = usuario ?? "";
+    });
+  }
+
+  void actualizarDatos(
+    String? idFamiliar,
+    String? tokenAcceso,
+    String? correoE,
+    String? usuario,
+    context,
+  ) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.actualizarDatosCuenta(
+        FamiliaresActualizarInformacionCuenta(
+          idFamiliar: widget.idFamiliar!,
+          tokenAcceso: widget.tokenAcceso!,
+          correoE: correoE ?? "",
+          usuario: usuario ?? "",
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+      widget.onSelection("default");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll("Excepction: ", "")),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
