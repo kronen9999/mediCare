@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 
@@ -199,7 +200,7 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                         controller: apellidoPController,
                         onChanged: (value) {
                           setState(() {
-                            apellidoP = apellidoP;
+                            apellidoP = value;
                           });
                         },
                         style: TextStyle(
@@ -506,7 +507,19 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              actualizarDatos(
+                                widget.idFamiliar!,
+                                widget.tokenAcceso!,
+                                nombre ?? "",
+                                apellidoP ?? "",
+                                apellidoM ?? "",
+                                direccion ?? "",
+                                telefono1 ?? "",
+                                telefono2 ?? "",
+                                context,
+                              );
+                            },
                             child: Text(
                               "Guardar cambios",
                               style: TextStyle(
@@ -568,5 +581,47 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
       telefono1Controller.text = telefono1 ?? "";
       telefono2Controller.text = telefono2 ?? "";
     });
+  }
+
+  void actualizarDatos(
+    String idFamiliar,
+    String tokenAcceso,
+    String nombre,
+    String apellidoP,
+    String apellidoM,
+    String direccion,
+    String telefono1,
+    String telefono2,
+    context,
+  ) async {
+    final datosperfil = FamiliaresReposotoryGlobal();
+    try {
+      final result = await datosperfil.actualizarDatosPersonales(
+        FamiliaresActualizarInformacionPersonal(
+          idFamiliar: idFamiliar,
+          tokenAcceso: tokenAcceso,
+          nombre: nombre,
+          apellidoP: apellidoP,
+          apellidoM: apellidoM,
+          direccion: direccion,
+          telefono1: telefono1,
+          telefono2: telefono2,
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result.message ?? ""),
+          backgroundColor: Colors.green,
+        ),
+      );
+      widget.onSelection("default");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }

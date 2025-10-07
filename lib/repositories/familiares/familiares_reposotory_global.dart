@@ -4,6 +4,7 @@ import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 
@@ -126,6 +127,33 @@ class FamiliaresReposotoryGlobal {
     );
     if (response.statusCode == 200) {
       return FamiliaresObtenerAtributosGeneralesResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para editar la informacion personal del familiar
+
+  Future<FamiliaresActualizarInformacionPersonalResponse>
+  actualizarDatosPersonales(
+    FamiliaresActualizarInformacionPersonal informacionData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Perfil/ActualizarInformacionPersonal'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(informacionData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresActualizarInformacionPersonalResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
