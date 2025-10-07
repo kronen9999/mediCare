@@ -141,7 +141,9 @@ class _ApartadoOpcionesState extends State<ApartadoOpciones> {
                     border: Border(bottom: BorderSide(color: Colors.grey)),
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.onChanged("editarCuenta");
+                    },
                     child: SizedBox(
                       width: double.infinity,
                       child: Row(

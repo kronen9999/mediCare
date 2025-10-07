@@ -4,7 +4,8 @@ import 'package:medicare/components/familiares/familiar_perfil_screen/apartado_o
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
-import 'package:medicare/screens/familiar/familiar_perfil_informacionPersonal_widgetScreen.dart';
+import 'package:medicare/screens/familiar/perfil/familiar_perfil_cambiarcontrasena_widget.dart';
+import 'package:medicare/screens/familiar/perfil/familiar_perfil_informacionpersonal_widgetscreen.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,6 +40,12 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
           ? componentePerfil(context)
           : tipoSeccion == "editarPerfil"
           ? FamiliarPerfilInformacionpersonalWidgetscreen(
+              idFamiliar: idUsuario,
+              tokenAcceso: tokenAcceso,
+              onSelection: cambiarSeccion,
+            )
+          : tipoSeccion == "editarCuenta"
+          ? FamiliarPerfilCambiarcontrasenaWidget(
               idFamiliar: idUsuario,
               tokenAcceso: tokenAcceso,
               onSelection: cambiarSeccion,
