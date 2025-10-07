@@ -7,11 +7,13 @@ class FamiliarPerfilCambiarcontrasenaWidget extends StatefulWidget {
   final String? idFamiliar;
   final String? tokenAcceso;
   final void Function(String?) onSelection;
+  final void Function(String?, String?) onUpdate;
   const FamiliarPerfilCambiarcontrasenaWidget({
     super.key,
     required this.idFamiliar,
     required this.tokenAcceso,
     required this.onSelection,
+    required this.onUpdate,
   });
 
   @override
@@ -330,5 +332,6 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
         ),
       );
     }
+    widget.onUpdate(idFamiliar, tokenAcceso);
   }
 }

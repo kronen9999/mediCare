@@ -4,7 +4,7 @@ import 'package:medicare/components/familiares/familiar_perfil_screen/apartado_o
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
-import 'package:medicare/screens/familiar/perfil/familiar_perfil_cambiarcontrasena_widget.dart';
+import 'package:medicare/screens/familiar/perfil/familiar_perfil_informacioncuenta_widget.dart';
 import 'package:medicare/screens/familiar/perfil/familiar_perfil_informacionpersonal_widgetscreen.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +49,7 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
               idFamiliar: idUsuario,
               tokenAcceso: tokenAcceso,
               onSelection: cambiarSeccion,
+              onUpdate: onbtenerPerfilHijos,
             )
           : Center(child: Text("Sección no encontrada")),
     );
@@ -146,6 +147,25 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
     final prefs = await SharedPreferences.getInstance();
     idUsuario = prefs.getString('IdUsuario') ?? '';
     tokenAcceso = prefs.getString('TokenAcceso') ?? '';
+    final repo = FamiliaresReposotoryGlobal();
+    final perfil = await repo.obtenerPerfil(
+      FamiliaresObtenerPerfil(idFamiliar: idUsuario, tokenAcceso: tokenAcceso),
+    );
+    final atributos = await repo.obtenerAtributosGenerales(
+      FamiliaresObtenerAtributosGenerales(
+        idFamiliar: idUsuario,
+        tokenAcceso: tokenAcceso,
+      ),
+    );
+    setState(() {
+      usuario = perfil.informacionCuenta?.usuario ?? 'No disponible';
+      correo = perfil.informacionCuenta?.correoE ?? 'No disponible';
+      numCuidadores = atributos.numeroCuidadores.toString();
+      numPacientes = atributos.numeroPacientes.toString();
+    });
+  }
+
+  void onbtenerPerfilHijos(String? idUsuario, String? tokenAcceso) async {
     final repo = FamiliaresReposotoryGlobal();
     final perfil = await repo.obtenerPerfil(
       FamiliaresObtenerPerfil(idFamiliar: idUsuario, tokenAcceso: tokenAcceso),
