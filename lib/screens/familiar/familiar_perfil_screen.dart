@@ -4,6 +4,7 @@ import 'package:medicare/components/familiares/familiar_perfil_screen/apartado_o
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
+import 'package:medicare/screens/familiar/perfil/familiar_perfil_cambiarcontrasena_perfil_widget.dart';
 import 'package:medicare/screens/familiar/perfil/familiar_perfil_informacioncuenta_widget.dart';
 import 'package:medicare/screens/familiar/perfil/familiar_perfil_informacionpersonal_widgetscreen.dart';
 import 'package:medicare/screens/homescreen.dart';
@@ -50,6 +51,12 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
               tokenAcceso: tokenAcceso,
               onSelection: cambiarSeccion,
               onUpdate: onbtenerPerfilHijos,
+            )
+          : tipoSeccion == "editarContrasena"
+          ? FamiliarPerfilCambiarcontrasenaPerfilWidget(
+              idFamiliar: idUsuario,
+              tokenAcceso: tokenAcceso,
+              onSelection: cambiarSeccion,
             )
           : Center(child: Text("Sección no encontrada")),
     );

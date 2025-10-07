@@ -179,7 +179,9 @@ class _ApartadoOpcionesState extends State<ApartadoOpciones> {
                     border: Border(bottom: BorderSide(color: Colors.grey)),
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.onChanged("editarContrasena");
+                    },
                     child: SizedBox(
                       width: double.infinity,
                       child: Row(
