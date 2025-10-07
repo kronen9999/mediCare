@@ -4,8 +4,8 @@ import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
-import 'package:medicare/repositories/familiares/perfil/familiares_obtener_atributos_generales.dart';
-import 'package:medicare/repositories/familiares/perfil/familiares_obtener_perfil.dart';
+import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
+import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 
 class FamiliaresReposotoryGlobal {
   Globalvariables rutaGlobal = Globalvariables();

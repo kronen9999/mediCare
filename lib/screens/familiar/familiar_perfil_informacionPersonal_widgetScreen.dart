@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
-import 'package:medicare/repositories/familiares/perfil/familiares_obtener_perfil.dart';
+import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 
 class FamiliarPerfilInformacionpersonalWidgetscreen extends StatefulWidget {
   final String? idFamiliar;
