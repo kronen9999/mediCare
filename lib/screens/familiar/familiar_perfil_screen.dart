@@ -23,8 +23,6 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
   String? correo = "obteniendoDatos...";
   String? usuario = "obteniendoDatos...";
 
-  List<Widget> pantallas = [FamiliarPerfilInformacionpersonalWidgetscreen()];
-
   String tipoSeccion = "default";
   @override
   void initState() {
@@ -40,7 +38,11 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
       child: tipoSeccion == "default"
           ? componentePerfil(context)
           : tipoSeccion == "editarPerfil"
-          ? FamiliarPerfilInformacionpersonalWidgetscreen()
+          ? FamiliarPerfilInformacionpersonalWidgetscreen(
+              idFamiliar: idUsuario,
+              tokenAcceso: tokenAcceso,
+              onSelection: cambiarSeccion,
+            )
           : Center(child: Text("Sección no encontrada")),
     );
   }

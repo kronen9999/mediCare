@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/repositories/familiares/perfil/familiares_obtener_perfil.dart';
 
 class FamiliarPerfilInformacionpersonalWidgetscreen extends StatefulWidget {
-  const FamiliarPerfilInformacionpersonalWidgetscreen({super.key});
+  final String? idFamiliar;
+  final String? tokenAcceso;
+  final void Function(String?) onSelection;
+  const FamiliarPerfilInformacionpersonalWidgetscreen({
+    super.key,
+    required this.idFamiliar,
+    required this.tokenAcceso,
+    required this.onSelection,
+  });
 
   @override
   State<FamiliarPerfilInformacionpersonalWidgetscreen> createState() =>
@@ -11,6 +21,43 @@ class FamiliarPerfilInformacionpersonalWidgetscreen extends StatefulWidget {
 
 class _FamiliarPerfilInformacionpersonalWidgetscreenState
     extends State<FamiliarPerfilInformacionpersonalWidgetscreen> {
+  String? nombre = "Obteniendo datos...";
+  String? apellidoP = "Obteniendo datos...";
+  String? apellidoM = "Obteniendo datos...";
+  String? direccion = "Obteniendo datos...";
+  String? telefono1 = "Obteniendo datos...";
+  String? telefono2 = "Obteniendo datos...";
+
+  final TextEditingController nombreController = TextEditingController();
+  final TextEditingController apellidoPController = TextEditingController();
+  final TextEditingController apellidoMController = TextEditingController();
+  final TextEditingController direccionController = TextEditingController();
+  final TextEditingController telefono1Controller = TextEditingController();
+  final TextEditingController telefono2Controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nombreController.text = nombre ?? "";
+    apellidoPController.text = apellidoP ?? "";
+    apellidoMController.text = apellidoM ?? "";
+    direccionController.text = direccion ?? "";
+    telefono1Controller.text = telefono1 ?? "";
+    telefono2Controller.text = telefono2 ?? "";
+    obtenerDatos();
+  }
+
+  @override
+  void dispose() {
+    nombreController.dispose();
+    apellidoPController.dispose();
+    apellidoMController.dispose();
+    direccionController.dispose();
+    telefono1Controller.dispose();
+    telefono2Controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -87,6 +134,12 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: nombreController,
+                        onChanged: (value) {
+                          setState(() {
+                            nombre = value;
+                          });
+                        },
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -143,6 +196,12 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: apellidoPController,
+                        onChanged: (value) {
+                          setState(() {
+                            apellidoP = apellidoP;
+                          });
+                        },
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -199,6 +258,12 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: apellidoMController,
+                        onChanged: (value) {
+                          setState(() {
+                            apellidoM = value;
+                          });
+                        },
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -255,6 +320,12 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: direccionController,
+                        onChanged: (value) {
+                          setState(() {
+                            direccion = value;
+                          });
+                        },
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -311,6 +382,12 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: telefono1Controller,
+                        onChanged: (value) {
+                          setState(() {
+                            telefono1 = value;
+                          });
+                        },
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -367,6 +444,12 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 30),
                       child: TextField(
+                        controller: telefono2Controller,
+                        onChanged: (value) {
+                          setState(() {
+                            telefono2 = value;
+                          });
+                        },
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -440,7 +523,9 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              widget.onSelection("default");
+                            },
                             child: Text(
                               "Cancelar",
                               style: TextStyle(color: Colors.blue),
@@ -457,5 +542,31 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
         ],
       ),
     );
+  }
+
+  void obtenerDatos() async {
+    final datosperfil = FamiliaresReposotoryGlobal();
+    final result = await datosperfil.obtenerPerfil(
+      FamiliaresObtenerPerfil(
+        idFamiliar: widget.idFamiliar,
+        tokenAcceso: widget.tokenAcceso,
+      ),
+    );
+    setState(() {
+      nombre = result.informacionPersonal?.nombbre ?? "";
+
+      apellidoP = result.informacionPersonal?.apellidoP ?? "";
+      apellidoM = result.informacionPersonal?.apellidoM ?? "";
+      direccion = result.informacionPersonal?.direccion ?? "";
+      telefono1 = result.informacionPersonal?.telefono1 ?? "";
+      telefono2 = result.informacionPersonal?.telefono2 ?? "";
+
+      nombreController.text = nombre ?? "";
+      apellidoPController.text = apellidoP ?? "";
+      apellidoMController.text = apellidoM ?? "";
+      direccionController.text = direccion ?? "";
+      telefono1Controller.text = telefono1 ?? "";
+      telefono2Controller.text = telefono2 ?? "";
+    });
   }
 }
