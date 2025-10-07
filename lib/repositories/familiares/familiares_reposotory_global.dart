@@ -4,6 +4,7 @@ import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
@@ -181,6 +182,32 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresActualizarInformacionCuentaResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para actualizar la contrasena del familiar
+
+  Future<FamiliaresActualizarContrasenaResponse> actualizarContrasena(
+    FamiliaresActualizarContrasena contrasenaData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Perfil/ActualizarContrasena'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(contrasenaData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresActualizarContrasenaResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

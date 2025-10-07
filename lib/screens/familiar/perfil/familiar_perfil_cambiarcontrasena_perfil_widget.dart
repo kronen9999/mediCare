@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarPerfilCambiarcontrasenaPerfilWidget extends StatefulWidget {
   final String? idFamiliar;
@@ -232,7 +234,15 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              actualizarContrasena(
+                                widget.idFamiliar,
+                                widget.tokenAcceso,
+                                contrasenaA,
+                                contrasenaN,
+                                context,
+                              );
+                            },
                             child: Text(
                               "Guardar cambios",
                               style: TextStyle(
@@ -343,5 +353,36 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
         ],
       ),
     );
+  }
+
+  void actualizarContrasena(
+    String? idFamiliar,
+    String? tokenAcceso,
+    String? contrasenaA,
+    String? contrasenaN,
+    context,
+  ) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.actualizarContrasena(
+        FamiliaresActualizarContrasena(
+          idFamiliar: idFamiliar!,
+          tokenAcceso: tokenAcceso!,
+          contrasenaActual: contrasenaA ?? "",
+          nuevaContrasena: contrasenaN ?? "",
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+      widget.onSelection("default");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
