@@ -164,6 +164,7 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
         tokenAcceso: tokenAcceso,
       ),
     );
+    if (!mounted) return;
     setState(() {
       usuario = perfil.informacionCuenta?.usuario ?? 'No disponible';
       correo = perfil.informacionCuenta?.correoE ?? 'No disponible';
@@ -183,6 +184,7 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
         tokenAcceso: tokenAcceso,
       ),
     );
+    if (!mounted) return;
     setState(() {
       usuario = perfil.informacionCuenta?.usuario ?? 'No disponible';
       correo = perfil.informacionCuenta?.correoE ?? 'No disponible';

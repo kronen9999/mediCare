@@ -295,6 +295,7 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
     final result = await repo.obtenerPerfil(
       FamiliaresObtenerPerfil(idFamiliar: idFamiliar, tokenAcceso: tokenAcceso),
     );
+    if (!mounted) return;
     setState(() {
       correoE = result.informacionCuenta?.correoE;
       usuario = result.informacionCuenta?.usuario;

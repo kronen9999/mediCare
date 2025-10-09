@@ -565,6 +565,7 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
         tokenAcceso: widget.tokenAcceso,
       ),
     );
+    if (!mounted) return;
     setState(() {
       nombre = result.informacionPersonal?.nombbre ?? "";
 
