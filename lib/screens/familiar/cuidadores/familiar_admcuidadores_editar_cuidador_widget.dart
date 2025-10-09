@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_cambiar_contrasena.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
-import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarAdmcuidadoresEditarCuidadorWidget extends StatefulWidget {
@@ -911,7 +911,13 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         color: Colors.blue,
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          cambiarContrasena(
+                            context,
+                            nuevaContrasena ?? "",
+                            confirmarContrasena ?? "",
+                          );
+                        },
                         child: Text(
                           "Cambiar contraseña",
                           style: TextStyle(
@@ -1052,6 +1058,52 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
         ),
       );
       widget.onUpdate(widget.idFamiliar ?? "", widget.tokenAcceso ?? "");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
+  }
+
+  void cambiarContrasena(
+    context,
+    String nuevaContrasena,
+    String confirmarContrasena,
+  ) async {
+    if (nuevaContrasena != confirmarContrasena) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Las contraseñas no coinciden"),
+        ),
+      );
+      return;
+    }
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.cuidadorCambiarContrasena(
+        FamiliaresCuidadoresCambiarContrasena(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idCuidador: widget.idCuidador ?? "",
+          nuevaContrasena: nuevaContrasena,
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            result.message ?? "No se recibió respuesta del servidor",
+          ),
+        ),
+      );
+      nuevaContrasenaController.text = "";
+      confirmarContrasenaController.text = "";
+      nuevaContrasena = "";
+      confirmarContrasena = "";
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
