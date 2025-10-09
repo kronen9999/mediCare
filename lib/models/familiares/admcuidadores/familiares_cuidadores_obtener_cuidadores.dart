@@ -39,13 +39,13 @@ class FamiliaresCuidadoresObtenerCuidadoresResponse {
 
 class Cuidadores {
   final int idCuidador;
-  final String nombre;
-  final String apellidoP;
-  final String apellidoM;
-  final String correoE;
-  final String usuario;
-  final String direccion;
-  final String telefono1;
+  final String? nombre;
+  final String? apellidoP;
+  final String? apellidoM;
+  final String? correoE;
+  final String? usuario;
+  final String? direccion;
+  final String? telefono1;
   final String? telefono2;
   final String? pacienteAsignado;
 

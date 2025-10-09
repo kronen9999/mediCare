@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_agregar_cuidador.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarAdmcuidadoresAgregarCuidadorWidget extends StatefulWidget {
-  const FamiliarAdmcuidadoresAgregarCuidadorWidget({super.key});
+  final void Function(String) onSelect;
+  final String idFamiliar;
+  final String tokenAcceso;
+  final void Function(String, String) onUpdate;
+  const FamiliarAdmcuidadoresAgregarCuidadorWidget({
+    super.key,
+    required this.onSelect,
+    required this.idFamiliar,
+    required this.tokenAcceso,
+    required this.onUpdate,
+  });
 
   @override
   State<FamiliarAdmcuidadoresAgregarCuidadorWidget> createState() =>
@@ -10,6 +22,16 @@ class FamiliarAdmcuidadoresAgregarCuidadorWidget extends StatefulWidget {
 
 class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
     extends State<FamiliarAdmcuidadoresAgregarCuidadorWidget> {
+  String? nombre;
+  String? apellidoP;
+  String? apellidoM;
+  String? direccion;
+  String? telefono1;
+  String? telefono2;
+  String? correoE;
+  String? usuario;
+  String? contrasena;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -98,7 +120,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            nombre = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -157,7 +181,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            apellidoP = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -216,7 +242,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            apellidoM = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -275,7 +303,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            direccion = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -336,7 +366,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            telefono1 = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -397,7 +429,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            telefono2 = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -497,7 +531,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            correoE = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -557,7 +593,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                       child: TextField(
                         maxLength: 20,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            usuario = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -617,7 +655,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                       child: TextField(
                         maxLength: 15,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            contrasena = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -684,7 +724,22 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  agregarCuidador(
+                    widget.idFamiliar,
+                    widget.tokenAcceso,
+                    nombre ?? "",
+                    apellidoP ?? "",
+                    apellidoM ?? "",
+                    direccion ?? "",
+                    telefono1 ?? "",
+                    telefono2 ?? "",
+                    correoE ?? "",
+                    usuario ?? "",
+                    contrasena ?? "",
+                    context,
+                  );
+                },
                 child: Text(
                   "Guardar cuidador",
                   style: TextStyle(
@@ -705,7 +760,9 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                 border: Border.all(color: Colors.blue, width: 1),
               ),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  widget.onSelect("default");
+                },
                 child: Text(
                   "Cancelar",
                   style: TextStyle(
@@ -720,5 +777,54 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
         ],
       ),
     );
+  }
+
+  void agregarCuidador(
+    String idFamiliar,
+    String tokenAcceso,
+    String nombre,
+    String apellidoP,
+    String apellidoM,
+    String direccion,
+    String telefono1,
+    String telefono2,
+    String correoE,
+    String usuario,
+    String contrasena,
+    context,
+  ) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.agregarCuidador(
+        FamiliaresCuidadoresAgregarCuidador(
+          idFamiliar: idFamiliar,
+          tokenAcceso: tokenAcceso,
+          nombre: nombre,
+          apellidoP: apellidoP,
+          apellidoM: apellidoM,
+          direccion: direccion,
+          telefono1: telefono1,
+          telefono2: telefono2,
+          correoE: correoE,
+          usuario: usuario,
+          contrasena: contrasena,
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(result.message.toString()),
+        ),
+      );
+      widget.onUpdate(idFamiliar, tokenAcceso);
+      widget.onSelect("default");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }

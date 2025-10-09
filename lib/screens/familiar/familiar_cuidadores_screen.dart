@@ -34,7 +34,12 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
         child: apartado == "default"
             ? contenidoBasico()
             : apartado == "agregarCuidador"
-            ? FamiliarAdmcuidadoresAgregarCuidadorWidget()
+            ? FamiliarAdmcuidadoresAgregarCuidadorWidget(
+                onSelect: asignarSeccion,
+                idFamiliar: idUsuario ?? "",
+                tokenAcceso: tokenAcceso ?? "",
+                onUpdate: obtenerCuidadoresHijo,
+              )
             : Center(child: Text("sin seccion")),
       ),
     );
@@ -215,11 +220,11 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
                               idCuidador: cuidador.idCuidador.toString(),
                               idFamiliar: idUsuario ?? "",
                               tokenAcceso: tokenAcceso ?? "",
-                              nombre: cuidador.nombre,
-                              apellidoP: cuidador.apellidoP,
-                              apellidoM: cuidador.apellidoM,
+                              nombre: cuidador.nombre ?? "",
+                              apellidoP: cuidador.apellidoP ?? "",
+                              apellidoM: cuidador.apellidoM ?? "",
                               pacienteAsignado: cuidador.pacienteAsignado ?? "",
-                              usuarioCuidador: cuidador.usuario,
+                              usuarioCuidador: cuidador.usuario ?? "",
                               telefono1: cuidador.telefono1,
                               correoE: cuidador.correoE,
                             );
@@ -255,6 +260,18 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
         FamiliaresCuidadoresObtenerCuidadores(
           idFamiliar: idUsuario ?? "",
           tokenAcceso: tokenAcceso ?? "",
+        ),
+      );
+    });
+  }
+
+  void obtenerCuidadoresHijo(String idFamiliar, String tokenAcceso) async {
+    final repo = FamiliaresReposotoryGlobal();
+    setState(() {
+      listaCuidadores = repo.obtenerCuidadores(
+        FamiliaresCuidadoresObtenerCuidadores(
+          idFamiliar: idFamiliar,
+          tokenAcceso: tokenAcceso,
         ),
       );
     });
