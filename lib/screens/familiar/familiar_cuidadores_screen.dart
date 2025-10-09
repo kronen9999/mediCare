@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medicare/components/familiares/familiar_cuidadores_screen/item_lista_cuidadores.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/screens/familiar/cuidadores/familiar_admcuidadores_agregar_cuidador_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FamiliarCuidadoresScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class FamiliarCuidadoresScreen extends StatefulWidget {
 class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
   String? idUsuario;
   String? tokenAcceso;
+  String apartado = "default";
   Future<FamiliaresCuidadoresObtenerCuidadoresResponse?>? listaCuidadores;
 
   @override
@@ -29,7 +31,11 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: contenidoBasico(),
+        child: apartado == "default"
+            ? contenidoBasico()
+            : apartado == "agregarCuidador"
+            ? FamiliarAdmcuidadoresAgregarCuidadorWidget()
+            : Center(child: Text("sin seccion")),
       ),
     );
   }
@@ -87,7 +93,9 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  asignarSeccion("agregarCuidador");
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -249,6 +257,12 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
           tokenAcceso: tokenAcceso ?? "",
         ),
       );
+    });
+  }
+
+  void asignarSeccion(String seccion) {
+    setState(() {
+      apartado = seccion;
     });
   }
 }
