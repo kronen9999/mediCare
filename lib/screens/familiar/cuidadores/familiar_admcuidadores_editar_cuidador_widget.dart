@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarAdmcuidadoresEditarCuidadorWidget extends StatefulWidget {
   final String? idFamiliar;
@@ -22,6 +24,61 @@ class FamiliarAdmcuidadoresEditarCuidadorWidget extends StatefulWidget {
 
 class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
     extends State<FamiliarAdmcuidadoresEditarCuidadorWidget> {
+  String? nombre = "Obteniendo datos...";
+  String? apellidoP = "Obteniendo datos...";
+  String? apellidoM = "Obteniendo datos...";
+  String? direccion = "Obteniendo datos...";
+  String? telefono1 = "Obteniendo datos...";
+  String? telefono2 = "Obteniendo datos...";
+  String? correoE = "Obteniendo datos...";
+  String? usuario = "Obteniendo datos...";
+  String? nuevaContrasena = "Obteniendo datos...";
+  String? confirmarContrasena = "Obteniendo datos...";
+
+  TextEditingController nombreController = TextEditingController();
+  TextEditingController apellidoPController = TextEditingController();
+  TextEditingController apellidoMController = TextEditingController();
+  TextEditingController direccionController = TextEditingController();
+  TextEditingController telefono1Controller = TextEditingController();
+  TextEditingController telefono2Controller = TextEditingController();
+  TextEditingController correoEController = TextEditingController();
+  TextEditingController usuarioController = TextEditingController();
+  TextEditingController nuevaContrasenaController = TextEditingController();
+  TextEditingController confirmarContrasenaController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nombreController.text = "Obteniendo datos...";
+    apellidoPController.text = "Obteniendo datos...";
+    apellidoMController.text = "Obteniendo datos...";
+    direccionController.text = "Obteniendo datos...";
+    telefono1Controller.text = "Obteniendo datos...";
+    telefono2Controller.text = "Obteniendo datos...";
+    correoEController.text = "Obteniendo datos...";
+    usuarioController.text = "Obteniendo datos...";
+    obtenerCuidador(
+      widget.idFamiliar ?? "",
+      widget.tokenAcceso ?? "",
+      widget.idCuidador ?? "",
+    );
+  }
+
+  @override
+  void dispose() {
+    nombreController.dispose();
+    apellidoPController.dispose();
+    apellidoMController.dispose();
+    direccionController.dispose();
+    telefono1Controller.dispose();
+    telefono2Controller.dispose();
+    correoEController.dispose();
+    usuarioController.dispose();
+    nuevaContrasenaController.dispose();
+    confirmarContrasenaController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -105,6 +162,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: nombreController,
                         onChanged: (value) {
                           setState(() {});
                         },
@@ -164,6 +222,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: apellidoPController,
                         onChanged: (value) {
                           setState(() {});
                         },
@@ -223,6 +282,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: apellidoMController,
                         onChanged: (value) {
                           setState(() {});
                         },
@@ -282,6 +342,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: direccionController,
                         onChanged: (value) {
                           setState(() {});
                         },
@@ -341,6 +402,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: TextField(
+                        controller: telefono1Controller,
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
@@ -402,6 +464,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: telefono2Controller,
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
@@ -522,6 +585,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: correoEController,
                         onChanged: (value) {
                           setState(() {});
                         },
@@ -581,6 +645,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
                       child: TextField(
+                        controller: usuarioController,
                         maxLength: 20,
                         onChanged: (value) {
                           setState(() {});
@@ -700,6 +765,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: TextField(
+                        controller: nuevaContrasenaController,
                         maxLength: 15,
                         onChanged: (value) {
                           setState(() {});
@@ -760,6 +826,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
                       child: TextField(
+                        controller: confirmarContrasenaController,
                         maxLength: 15,
                         onChanged: (value) {
                           setState(() {});
@@ -849,7 +916,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
               ),
               child: TextButton(
                 onPressed: () {
-                  // widget.onSelect("default");
+                  widget.onSelect("default");
                 },
                 child: Text(
                   "Regresar",
@@ -865,5 +932,40 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
         ],
       ),
     );
+  }
+
+  void obtenerCuidador(
+    String idFamiliar,
+    String tokenAcceso,
+    String idCuidador,
+  ) async {
+    final repo = FamiliaresReposotoryGlobal();
+    final response = await repo.obtenerCuidador(
+      FamiliaresCuidadoresObtenerCuidador(
+        idFamiliar: idFamiliar,
+        tokenAcceso: tokenAcceso,
+        idCuidador: idCuidador,
+      ),
+    );
+    if (!mounted) return;
+    setState(() {
+      nombre = response.nombre ?? "";
+      apellidoP = response.apellidoP ?? "";
+      apellidoM = response.apellidoM ?? "";
+      correoE = response.correoE ?? "";
+      usuario = response.usuario ?? "";
+      direccion = response.direccion ?? "";
+      telefono1 = response.telefono1 ?? "";
+      telefono2 = response.telefono2 ?? "";
+
+      nombreController.text = response.nombre ?? "";
+      apellidoPController.text = response.apellidoP ?? "";
+      apellidoMController.text = response.apellidoM ?? "";
+      direccionController.text = response.direccion ?? "";
+      telefono1Controller.text = response.telefono1 ?? "";
+      telefono2Controller.text = response.telefono2 ?? "";
+      correoEController.text = response.correoE ?? "";
+      usuarioController.text = response.usuario ?? "";
+    });
   }
 }

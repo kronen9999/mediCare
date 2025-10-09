@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_agregar_cuidador.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
@@ -269,6 +270,33 @@ class FamiliaresReposotoryGlobal {
       );
     } else if (response.statusCode == 422) {
       throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para obtener la informacion general de un cuidador
+  Future<FamiliaresCuidadoresObtenerCuidadorResponse> obtenerCuidador(
+    FamiliaresCuidadoresObtenerCuidador cuidadorData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Cuidadores/ObtenerCuidador'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(cuidadorData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresCuidadoresObtenerCuidadorResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 404) {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {

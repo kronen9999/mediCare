@@ -279,6 +279,7 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
 
   void obtenerCuidadoresHijo(String idFamiliar, String tokenAcceso) async {
     final repo = FamiliaresReposotoryGlobal();
+    if (!mounted) return;
     setState(() {
       listaCuidadores = repo.obtenerCuidadores(
         FamiliaresCuidadoresObtenerCuidadores(
