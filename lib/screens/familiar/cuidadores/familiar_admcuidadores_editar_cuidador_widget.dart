@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
+import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarAdmcuidadoresEditarCuidadorWidget extends StatefulWidget {
@@ -722,7 +724,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         color: Colors.blue,
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          actualizarInformacionAcceso(context);
+                        },
                         child: Text(
                           "Guardar cambios",
                           style: TextStyle(
@@ -1006,6 +1010,37 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
           direccion: direccion ?? "",
           telefono1: telefono1 ?? "",
           telefono2: telefono2 ?? "",
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            result.message ?? "No se recibió respuesta del servidor",
+          ),
+        ),
+      );
+      widget.onUpdate(widget.idFamiliar ?? "", widget.tokenAcceso ?? "");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
+  }
+
+  void actualizarInformacionAcceso(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.cuidadorActualizarInformacionCuenta(
+        FamiliaresCuidadoresEditarInformacionCuentaAcceso(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idCuidador: widget.idCuidador,
+          correoE: correoE ?? "",
+          usuario: usuario ?? "",
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(

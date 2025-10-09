@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_agregar_cuidador.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
@@ -324,6 +325,36 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresCuidadoresEditarInformacionPerfilResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+  //Metodo para actualizar la informacion de la cuenta de un cuidador
+
+  Future<FamiliaresCuidadoresEditarInformacionCuentaAccesoResponse>
+  cuidadorActualizarInformacionCuenta(
+    FamiliaresCuidadoresEditarInformacionCuentaAcceso editarData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Cuidadores/EditarCuidadorInformacionCuenta',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(editarData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresCuidadoresEditarInformacionCuentaAccesoResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
