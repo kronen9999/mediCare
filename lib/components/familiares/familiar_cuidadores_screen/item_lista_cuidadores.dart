@@ -11,6 +11,7 @@ class ItemListaCuidadores extends StatefulWidget {
   final String usuarioCuidador;
   final String? telefono1;
   final String? correoE;
+  final void Function(BuildContext context, VoidCallback onConfirmar)? onDelete;
   final void Function(String) onEdit;
   const ItemListaCuidadores({
     super.key,
@@ -25,6 +26,7 @@ class ItemListaCuidadores extends StatefulWidget {
     required this.telefono1,
     this.correoE,
     required this.onEdit,
+    required this.onDelete,
   });
 
   @override
@@ -84,9 +86,20 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
                             ),
                           ),
                         ),
-                        Icon(
-                          Icons.delete_outline_rounded,
-                          color: const Color.fromARGB(255, 102, 101, 101),
+                        GestureDetector(
+                          onTap: () {
+                            if (widget.onDelete != null) {
+                              widget.onDelete!(context, () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Cuidador eliminado')),
+                                );
+                              });
+                            }
+                          },
+                          child: Icon(
+                            Icons.delete_outline_rounded,
+                            color: const Color.fromARGB(255, 102, 101, 101),
+                          ),
                         ),
                       ],
                     ),

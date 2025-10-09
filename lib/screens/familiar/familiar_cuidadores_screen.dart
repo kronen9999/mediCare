@@ -285,6 +285,12 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
                               telefono1: cuidador.telefono1,
                               correoE: cuidador.correoE,
                               onEdit: seleccionarCuidadorParaEditar,
+                              onDelete: (context, onConfirmar) {
+                                mostrarDialogoEliminarCuidador(
+                                  context,
+                                  onConfirmar,
+                                );
+                              },
                             );
                           },
                         );
@@ -348,5 +354,32 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
       idCuidadorEditar = idCuidador;
       apartado = "editarCuidador";
     });
+  }
+
+  void mostrarDialogoEliminarCuidador(
+    BuildContext context,
+    VoidCallback onConfirmar,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Confirmar eliminación"),
+        content: Text("¿Está seguro que desea eliminar a este cuidador?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(), // Cierra el diálogo
+            child: Text("Cancelar", style: TextStyle(color: Colors.blue)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el diálogo
+              onConfirmar(); // Ejecuta la acción de eliminar
+            },
+            child: Text("Eliminar", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 }
