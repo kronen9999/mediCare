@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -164,7 +165,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                       child: TextField(
                         controller: nombreController,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            nombre = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -224,7 +227,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                       child: TextField(
                         controller: apellidoPController,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            apellidoP = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -284,7 +289,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                       child: TextField(
                         controller: apellidoMController,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            apellidoM = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -344,7 +351,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                       child: TextField(
                         controller: direccionController,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            direccion = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -406,7 +415,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            telefono1 = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -468,7 +479,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            telefono2 = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -523,7 +536,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         color: Colors.blue,
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          actualizarInformacionPersonal(context);
+                        },
                         child: Text(
                           "Guardar cambios",
                           style: TextStyle(
@@ -587,7 +602,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                       child: TextField(
                         controller: correoEController,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            correoE = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -648,7 +665,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         controller: usuarioController,
                         maxLength: 20,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            usuario = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -768,7 +787,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         controller: nuevaContrasenaController,
                         maxLength: 15,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            nuevaContrasena = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -829,7 +850,9 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                         controller: confirmarContrasenaController,
                         maxLength: 15,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            confirmarContrasena = value;
+                          });
                         },
                         style: TextStyle(
                           fontSize: 14,
@@ -967,5 +990,40 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       correoEController.text = response.correoE ?? "";
       usuarioController.text = response.usuario ?? "";
     });
+  }
+
+  void actualizarInformacionPersonal(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.cuidadoresEditarInformacionPersonal(
+        FamiliaresCuidadoresEditarInformacionPerfil(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idCuidador: widget.idCuidador ?? "",
+          nombre: nombre ?? "",
+          apellidoP: apellidoP ?? "",
+          apellidoM: apellidoM ?? "",
+          direccion: direccion ?? "",
+          telefono1: telefono1 ?? "",
+          telefono2: telefono2 ?? "",
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            result.message ?? "No se recibió respuesta del servidor",
+          ),
+        ),
+      );
+      widget.onUpdate(widget.idFamiliar ?? "", widget.tokenAcceso ?? "");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }

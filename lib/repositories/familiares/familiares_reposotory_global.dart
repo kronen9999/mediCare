@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:medicare/classes/globalvariables.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_agregar_cuidador.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
@@ -231,11 +232,13 @@ class FamiliaresReposotoryGlobal {
   Future<FamiliaresCuidadoresObtenerCuidadoresResponse?>? obtenerCuidadores(
     FamiliaresCuidadoresObtenerCuidadores cuidadoresData,
   ) async {
-    final response = await http.post(
-      Uri.parse('${urlBase}Familiares/Cuidadores/ObtenerCuidadores'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(cuidadoresData.toJson()),
-    );
+    final response = await http
+        .post(
+          Uri.parse('${urlBase}Familiares/Cuidadores/ObtenerCuidadores'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(cuidadoresData.toJson()),
+        )
+        .timeout(const Duration(seconds: 20));
 
     if (response.statusCode == 200) {
       return FamiliaresCuidadoresObtenerCuidadoresResponse.fromJson(
@@ -291,6 +294,36 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresCuidadoresObtenerCuidadorResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para actualizar la informacion personal de un cuidador
+  Future<FamiliaresCuidadoresEditarInformacionPerfilResponse>
+  cuidadoresEditarInformacionPersonal(
+    FamiliaresCuidadoresEditarInformacionPerfil editarData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Cuidadores/EditarCuidadorInformacionPerfil',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(editarData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresCuidadoresEditarInformacionPerfilResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

@@ -212,7 +212,54 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.wifi_off, color: Colors.red, size: 40),
+                              const SizedBox(height: 16),
+                              Text(
+                                "Parece que su conexión está lenta o inestable.",
+                                style: TextStyle(
+                                  color: Color.fromRGBO(85, 150, 255, 1),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                width: 180,
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    obtenerCuidadores();
+                                  },
+                                  icon: Icon(
+                                    Icons.refresh,
+                                    color: Colors.white,
+                                  ),
+                                  label: Text(
+                                    "Reintentar",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       } else if (snapshot.hasData && snapshot.data != null) {
                         final cuidadores = snapshot.data!.cuidadores;
                         if (cuidadores.isEmpty) {
