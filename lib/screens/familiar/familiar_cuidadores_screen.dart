@@ -3,6 +3,7 @@ import 'package:medicare/components/familiares/familiar_cuidadores_screen/item_l
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/screens/familiar/cuidadores/familiar_admcuidadores_agregar_cuidador_widget.dart';
+import 'package:medicare/screens/familiar/cuidadores/familiar_admcuidadores_editar_cuidador_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FamiliarCuidadoresScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
   String? idUsuario;
   String? tokenAcceso;
   String apartado = "default";
+  String idCuidadorEditar = "";
   Future<FamiliaresCuidadoresObtenerCuidadoresResponse?>? listaCuidadores;
 
   @override
@@ -38,6 +40,14 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
                 onSelect: asignarSeccion,
                 idFamiliar: idUsuario ?? "",
                 tokenAcceso: tokenAcceso ?? "",
+                onUpdate: obtenerCuidadoresHijo,
+              )
+            : apartado == "editarCuidador"
+            ? FamiliarAdmcuidadoresEditarCuidadorWidget(
+                idFamiliar: idUsuario ?? "",
+                tokenAcceso: tokenAcceso ?? "",
+                idCuidador: idCuidadorEditar,
+                onSelect: asignarSeccion,
                 onUpdate: obtenerCuidadoresHijo,
               )
             : Center(child: Text("sin seccion")),
@@ -227,6 +237,7 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
                               usuarioCuidador: cuidador.usuario ?? "",
                               telefono1: cuidador.telefono1,
                               correoE: cuidador.correoE,
+                              onEdit: seleccionarCuidadorParaEditar,
                             );
                           },
                         );
@@ -255,6 +266,7 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
 
   void obtenerCuidadores() async {
     final repo = FamiliaresReposotoryGlobal();
+    if (!mounted) return;
     setState(() {
       listaCuidadores = repo.obtenerCuidadores(
         FamiliaresCuidadoresObtenerCuidadores(
@@ -280,6 +292,13 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
   void asignarSeccion(String seccion) {
     setState(() {
       apartado = seccion;
+    });
+  }
+
+  void seleccionarCuidadorParaEditar(String idCuidador) {
+    setState(() {
+      idCuidadorEditar = idCuidador;
+      apartado = "editarCuidador";
     });
   }
 }

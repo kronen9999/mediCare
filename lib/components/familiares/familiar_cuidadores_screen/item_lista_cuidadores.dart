@@ -11,6 +11,7 @@ class ItemListaCuidadores extends StatefulWidget {
   final String usuarioCuidador;
   final String? telefono1;
   final String? correoE;
+  final void Function(String) onEdit;
   const ItemListaCuidadores({
     super.key,
     required this.idCuidador,
@@ -23,6 +24,7 @@ class ItemListaCuidadores extends StatefulWidget {
     required this.usuarioCuidador,
     required this.telefono1,
     this.correoE,
+    required this.onEdit,
   });
 
   @override
@@ -72,9 +74,14 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 10.0),
-                          child: Icon(
-                            Icons.edit_outlined,
-                            color: const Color.fromARGB(255, 102, 101, 101),
+                          child: GestureDetector(
+                            onTap: () {
+                              widget.onEdit(widget.idCuidador);
+                            },
+                            child: Icon(
+                              Icons.edit_outlined,
+                              color: const Color.fromARGB(255, 102, 101, 101),
+                            ),
                           ),
                         ),
                         Icon(
