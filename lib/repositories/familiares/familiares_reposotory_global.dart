@@ -5,6 +5,7 @@ import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_a
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_cambiar_contrasena.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_eliminar_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
@@ -384,6 +385,33 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresCuidadoresCambiarContrasenaResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para eliminar un cuidador
+  Future<FamiliaresCuidadoresEliminarCuidadorResponse> eliminarCuidador(
+    FamiliaresCuidadoresEliminarCuidador eliminarData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Cuidadores/EliminarCuidador'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(eliminarData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresCuidadoresEliminarCuidadorResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

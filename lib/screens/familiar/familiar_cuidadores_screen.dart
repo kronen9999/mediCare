@@ -19,7 +19,10 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
   String? tokenAcceso;
   String apartado = "default";
   String idCuidadorEditar = "";
-  Future<FamiliaresCuidadoresObtenerCuidadoresResponse?>? listaCuidadores;
+  Future<FamiliaresCuidadoresObtenerCuidadoresResponse?>? listaCuidadores =
+      Future.value(
+        FamiliaresCuidadoresObtenerCuidadoresResponse(cuidadores: []),
+      );
 
   @override
   void initState() {
@@ -291,6 +294,8 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen> {
                                   onConfirmar,
                                 );
                               },
+                              onUpdateFather: obtenerCuidadoresHijo,
+                              onSelect: asignarSeccion,
                             );
                           },
                         );

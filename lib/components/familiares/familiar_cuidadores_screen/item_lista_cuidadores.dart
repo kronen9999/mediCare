@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_eliminar_cuidador.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class ItemListaCuidadores extends StatefulWidget {
   final String idCuidador;
@@ -13,6 +15,8 @@ class ItemListaCuidadores extends StatefulWidget {
   final String? correoE;
   final void Function(BuildContext context, VoidCallback onConfirmar)? onDelete;
   final void Function(String) onEdit;
+  final void Function(String, String) onUpdateFather;
+  final void Function(String) onSelect;
   const ItemListaCuidadores({
     super.key,
     required this.idCuidador,
@@ -27,6 +31,8 @@ class ItemListaCuidadores extends StatefulWidget {
     this.correoE,
     required this.onEdit,
     required this.onDelete,
+    required this.onUpdateFather,
+    required this.onSelect,
   });
 
   @override
@@ -90,9 +96,7 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
                           onTap: () {
                             if (widget.onDelete != null) {
                               widget.onDelete!(context, () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Cuidador eliminado')),
-                                );
+                                eliminarCuidador(context);
                               });
                             }
                           },
@@ -187,5 +191,33 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
         ),
       ),
     );
+  }
+
+  void eliminarCuidador(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.eliminarCuidador(
+        FamiliaresCuidadoresEliminarCuidador(
+          idFamiliar: widget.idFamiliar,
+          tokenAcceso: widget.tokenAcceso,
+          idCuidador: widget.idCuidador,
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(result.message ?? ""),
+        ),
+      );
+      widget.onUpdateFather(widget.idFamiliar, widget.tokenAcceso);
+      widget.onSelect("default");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }
