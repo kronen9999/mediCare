@@ -60,7 +60,7 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: 250,
+                      width: 260,
                       child: Text(
                         "${widget.nombre} ${widget.apellidoP} ${widget.apellidoM}",
                         style: TextStyle(
@@ -68,35 +68,6 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                           fontSize: 16,
                         ),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              //widget.onEdit(widget.idCuidador);
-                            },
-                            child: Icon(
-                              Icons.edit_outlined,
-                              color: const Color.fromARGB(255, 102, 101, 101),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // if (widget.onDelete != null) {
-                            //widget.onDelete!(context, () {
-                            // eliminarCuidador(context);
-                            //});
-                            // }
-                          },
-                          child: Icon(
-                            Icons.delete_outline_rounded,
-                            color: const Color.fromARGB(255, 102, 101, 101),
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
@@ -107,7 +78,11 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                   width: double.infinity,
                   child: Row(
                     children: [
-                      Icon(Icons.person, size: 18, color: Colors.grey),
+                      Icon(
+                        Icons.medical_services_outlined,
+                        size: 18,
+                        color: Colors.grey,
+                      ),
                       (widget.padecimiento != null &&
                               widget.padecimiento != "null" &&
                               widget.padecimiento != "")
@@ -123,7 +98,7 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                   width: double.infinity,
                   child: Row(
                     children: [
-                      Icon(Icons.mail, size: 18, color: Colors.grey),
+                      Icon(Icons.person, size: 18, color: Colors.grey),
                       (widget.idCuidador != null &&
                               widget.idCuidador != "null" &&
                               widget.idCuidador != "")
@@ -135,9 +110,57 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                   ),
                 ),
               ),
+              Divider(height: 30),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.edit_outlined,
+                        color: const Color.fromARGB(255, 102, 101, 101),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.delete_outline_rounded,
+                        color: const Color.fromARGB(255, 102, 101, 101),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.medication_liquid,
+                        color: const Color.fromARGB(255, 102, 101, 101),
+                      ),
+                    ),
+                  ),
+                  (widget.idCuidador != null &&
+                          widget.idCuidador != "" &&
+                          widget.idCuidador != "null")
+                      ? GestureDetector(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.person_add_disabled_outlined,
+                            color: const Color.fromARGB(255, 102, 101, 101),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.person_add_alt_outlined,
+                            color: const Color.fromARGB(255, 102, 101, 101),
+                          ),
+                        ),
+                  Spacer(),
                   (widget.idCuidador != null &&
                           widget.idCuidador != "" &&
                           widget.idCuidador != "null")
