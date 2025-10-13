@@ -17,6 +17,7 @@ import 'package:medicare/models/familiares/perfil/familiares_actualizar_informac
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_agregar_paciente.dart';
+import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
 
 class FamiliaresReposotoryGlobal {
   Globalvariables rutaGlobal = Globalvariables();
@@ -443,6 +444,35 @@ class FamiliaresReposotoryGlobal {
       return FamiliaresPacientesAgregarPacienteResponse.fromJson(
         jsonDecode(response.body),
       );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para obtener todos los pacientes
+  Future<FamiliaresPacientesObtenerPacientesResponse?>? obtenerPacientes(
+    FamiliaresPacientesObtenerPacientes pacientesData,
+  ) async {
+    final response = await http
+        .post(
+          Uri.parse('${urlBase}Familiares/Pacientes/ObtenerPacientes'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(pacientesData.toJson()),
+        )
+        .timeout(const Duration(seconds: 20));
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesObtenerPacientesResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 204) {
+      return FamiliaresPacientesObtenerPacientesResponse(pacientes: []);
     } else if (response.statusCode == 422) {
       throw Exception(jsonDecode(response.body)["error"]);
     } else if (response.statusCode == 404) {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/screens/familiar/pacientes/familiar_paciente_agregarpaciente_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +13,7 @@ class FamiliarPacientesScreen extends StatefulWidget {
 }
 
 class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
+  Future<FamiliaresPacientesObtenerPacientesResponse?>? listaPacientes;
   String? idFamiliar;
   String? tokenAcceso;
   String seccion = "defecto";
@@ -184,6 +187,84 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
               ),
             ),
           ),
+          FutureBuilder<FamiliaresPacientesObtenerPacientesResponse?>(
+            future: listaPacientes,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.wifi_off, color: Colors.red, size: 40),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Parece que su conexión está lenta o inestable.",
+                        style: TextStyle(
+                          color: Color.fromRGBO(85, 150, 255, 1),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: 180,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            obtenerPacientes(idFamiliar, tokenAcceso);
+                          },
+                          icon: Icon(Icons.refresh, color: Colors.white),
+                          label: Text(
+                            "Reintentar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (!snapshot.hasData ||
+                  snapshot.data?.pacientes == null ||
+                  snapshot.data!.pacientes!.isEmpty) {
+                return Center(child: Text('No hay pacientes registrados'));
+              } else {
+                final pacientes = snapshot.data!.pacientes!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: pacientes.length,
+                  itemBuilder: (context, index) {
+                    final paciente = pacientes[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        leading: Icon(Icons.person, color: Colors.blue),
+                        title: Text(paciente.nombre ?? ''),
+                        subtitle: Text(paciente.apellidoM ?? ''),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () {
+                          // Acción al seleccionar paciente
+                        },
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+          ),
         ],
       ),
     );
@@ -197,6 +278,25 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
     setState(() {
       idFamiliar = pref.getString("IdUsuario");
       tokenAcceso = pref.getString("TokenAcceso");
+    });
+    obtenerPacientes(
+      pref.getString("IdUsuario"),
+      pref.getString("TokenAcceso"),
+    );
+  }
+
+  void obtenerPacientes(String? idFamiliar, String? tokenAcceso) async {
+    final repo = FamiliaresReposotoryGlobal();
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      listaPacientes = repo.obtenerPacientes(
+        FamiliaresPacientesObtenerPacientes(
+          idFamiliar: idFamiliar ?? "",
+          tokenAcceso: tokenAcceso ?? "",
+        ),
+      );
     });
   }
 
