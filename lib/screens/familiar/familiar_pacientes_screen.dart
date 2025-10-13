@@ -39,6 +39,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                 idFamiliar: idFamiliar,
                 tokenAcceso: tokenAcceso,
                 onSelect: asignarSeccion,
+                onUpdate: obtenerPacientes,
               )
             : defecto(),
       ),

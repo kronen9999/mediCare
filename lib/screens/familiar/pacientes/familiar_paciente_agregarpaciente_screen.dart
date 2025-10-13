@@ -6,12 +6,14 @@ class FamiliarPacienteAgregarpacienteScreen extends StatefulWidget {
   final String? idFamiliar;
   final String? tokenAcceso;
   final void Function(String) onSelect;
+  final void Function(String?, String?) onUpdate;
 
   const FamiliarPacienteAgregarpacienteScreen({
     super.key,
     required this.idFamiliar,
     required this.tokenAcceso,
     required this.onSelect,
+    required this.onUpdate,
   });
 
   @override
@@ -626,6 +628,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
           content: Text(result.message.toString()),
         ),
       );
+      widget.onUpdate(widget.idFamiliar, widget.tokenAcceso);
       widget.onSelect("default");
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
