@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/pacientes/familiares_pacientes_agregar_paciente.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarPacienteAgregarpacienteScreen extends StatefulWidget {
   final String? idFamiliar;
@@ -544,7 +546,18 @@ class _FamiliarPacienteAgregarpacienteScreenState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              agregarPaciente(
+                                nombre: nombre ?? "",
+                                apellidoP: apellidoP ?? "",
+                                apellidoM: apellidoM ?? "",
+                                direccion: direccion ?? "",
+                                telefono1: telefono1 ?? "",
+                                telefono2: telefono2 ?? "",
+                                padecimiento: padecimiento ?? "",
+                                context: context,
+                              );
+                            },
                             child: Text(
                               "Agregar paciente",
                               style: TextStyle(
@@ -580,5 +593,47 @@ class _FamiliarPacienteAgregarpacienteScreenState
         ],
       ),
     );
+  }
+
+  void agregarPaciente({
+    required String nombre,
+    required String apellidoP,
+    required String apellidoM,
+    required String direccion,
+    required String telefono1,
+    required String telefono2,
+    required String padecimiento,
+    context,
+  }) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.agregarPaciente(
+        FamiliaresPacientesAgregarPaciente(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          nombre: nombre,
+          apellidoP: apellidoP,
+          apellidoM: apellidoM,
+          padecimiento: padecimiento,
+          direccion: direccion,
+          telefono1: telefono1,
+          telefono2: telefono2,
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(result.message.toString()),
+        ),
+      );
+      widget.onSelect("default");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }
