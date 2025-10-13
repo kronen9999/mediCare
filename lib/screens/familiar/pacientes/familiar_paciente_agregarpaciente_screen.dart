@@ -60,7 +60,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
             ),
           ),
           Text(
-            "Agrega un paciente a su lista de pacientes",
+            "Agrege un paciente a su lista de pacientes",
             style: TextStyle(
               color: Colors.black,
               fontSize: 15,
@@ -94,7 +94,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Informacion personal",
+                        "Informacion del paciente",
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
@@ -321,7 +321,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
                             ),
                           ),
                           prefixIcon: Icon(
-                            Icons.person_4_outlined,
+                            Icons.medical_information_outlined,
                             color: Colors.blue,
                           ),
                           enabledBorder: OutlineInputBorder(

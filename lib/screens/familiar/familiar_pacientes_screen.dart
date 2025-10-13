@@ -14,6 +14,13 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
   String? idFamiliar;
   String? tokenAcceso;
   String seccion = "defecto";
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerDatos();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -188,7 +195,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
       return;
     }
     setState(() {
-      idFamiliar = pref.getString("IdFamiliar");
+      idFamiliar = pref.getString("IdUsuario");
       tokenAcceso = pref.getString("TokenAcceso");
     });
   }
