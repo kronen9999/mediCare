@@ -47,6 +47,9 @@ class Pacientes {
   String? telefono1;
   String? telefono2;
   int? idCuidador;
+  String? nombreCuidador;
+  String? apellidoPCuidador;
+  String? apellidoMCuidador;
 
   Pacientes({
     this.idPaciente,
@@ -58,6 +61,9 @@ class Pacientes {
     this.telefono1,
     this.telefono2,
     this.idCuidador,
+    this.nombreCuidador,
+    this.apellidoPCuidador,
+    this.apellidoMCuidador,
   });
 
   factory Pacientes.fromJson(Map<String, dynamic> json) {
@@ -71,6 +77,9 @@ class Pacientes {
       telefono1: json['Telefono1'],
       telefono2: json['Telefono2'],
       idCuidador: json['IdCuidador'],
+      nombreCuidador: json['NombreCuidador'],
+      apellidoPCuidador: json['ApellidoPCuidador'],
+      apellidoMCuidador: json['ApellidoMCuidador'],
     );
   }
 }

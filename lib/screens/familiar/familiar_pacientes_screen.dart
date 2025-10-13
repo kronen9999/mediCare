@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/components/familiares/familiar_cuidadores_screen/item_lista_cuidadores.dart';
+import 'package:medicare/components/familiares/familiar_pacientes_screen/item_lista_pacientes_screen.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/screens/familiar/pacientes/familiar_paciente_agregarpaciente_screen.dart';
@@ -248,16 +250,21 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                   itemCount: pacientes.length,
                   itemBuilder: (context, index) {
                     final paciente = pacientes[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: ListTile(
-                        leading: Icon(Icons.person, color: Colors.blue),
-                        title: Text(paciente.nombre ?? ''),
-                        subtitle: Text(paciente.apellidoM ?? ''),
-                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                        onTap: () {
-                          // Acción al seleccionar paciente
-                        },
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      child: ItemListaPacientesScreen(
+                        idCuidador: (paciente.idCuidador != null)
+                            ? paciente.idCuidador.toString()
+                            : "",
+                        idFamliar: idFamiliar ?? "",
+                        tokenAcceso: tokenAcceso ?? "",
+                        nombre: paciente.nombre ?? "",
+                        apellidoP: paciente.apellidoP ?? "",
+                        apellidoM: paciente.apellidoM ?? "",
+                        nombreCuidador: paciente.nombreCuidador ?? "",
+                        padecimiento: paciente.padecimiento ?? "",
+                        apellidoPCuidador: paciente.apellidoPCuidador ?? "",
+                        apellidoMCuidador: paciente.apellidoMCuidador,
                       ),
                     );
                   },
