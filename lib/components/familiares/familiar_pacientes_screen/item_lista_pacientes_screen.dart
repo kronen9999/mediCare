@@ -174,7 +174,9 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                           ),
                         )
                       : GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            mostrarDialogoSeleccionarCuidador(context);
+                          },
                           child: Icon(
                             Icons.person_add_alt_outlined,
                             color: const Color.fromARGB(255, 102, 101, 101),
@@ -246,5 +248,28 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
         ),
       );
     }
+  }
+
+  void mostrarDialogoSeleccionarCuidador(context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Seleccionar cuidador"),
+        content: Text("Funcionalidad en desarrollo"),
+        actions: [
+          Column(
+            children: [
+              Text("Funcionalidad en desarrollo"),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Cerrar"),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

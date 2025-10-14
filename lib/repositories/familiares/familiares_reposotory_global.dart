@@ -8,6 +8,7 @@ import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_e
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_eliminar_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadoresna.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
@@ -424,6 +425,36 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["error"]);
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para obtener los cuidadores no asignados
+
+  Future<FamiliaresCuidadoresObtenerCuidadoresnaResponse> obtenerCuidadoresNa(
+    FamiliaresCuidadoresObtenerCuidadoresna cuidadoresData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Cuidadores/ObtenerCuidadoresNoAsignados'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(cuidadoresData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresCuidadoresObtenerCuidadoresnaResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 204) {
+      return FamiliaresCuidadoresObtenerCuidadoresnaResponse(
+        cuidadoresNoAsignados: [],
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
     } else if (response.statusCode == 404) {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
