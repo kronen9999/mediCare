@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/pacientes/familiar_pacientes_eliminar_paciente.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class ItemListaPacientesScreen extends StatefulWidget {
   final String? idFamliar;
@@ -14,6 +16,9 @@ class ItemListaPacientesScreen extends StatefulWidget {
   final String? apellidoMCuidador;
   final void Function(String) onSelect;
   final void Function(String?) onUpdatePaciente;
+  final void Function(String?, String?) onUpdatePacientes;
+  final void Function(BuildContext, VoidCallback)
+  mostrarDialogoEliminarPaciente;
   const ItemListaPacientesScreen({
     super.key,
     required this.idFamliar,
@@ -29,6 +34,8 @@ class ItemListaPacientesScreen extends StatefulWidget {
     required this.apellidoMCuidador,
     required this.onSelect,
     required this.onUpdatePaciente,
+    required this.mostrarDialogoEliminarPaciente,
+    required this.onUpdatePacientes,
   });
 
   @override
@@ -135,7 +142,11 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        widget.mostrarDialogoEliminarPaciente(context, () {
+                          eliminarPaciente(context);
+                        });
+                      },
                       child: Icon(
                         Icons.delete_outline_rounded,
                         color: const Color.fromARGB(255, 102, 101, 101),
@@ -210,5 +221,30 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
         ),
       ),
     );
+  }
+
+  void eliminarPaciente(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.eliminarPaciente(
+        FamiliarPacientesEliminarPaciente(
+          idFamiliar: widget.idFamliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+      widget.onSelect("default");
+      widget.onUpdatePacientes(widget.idFamliar, widget.tokenAcceso);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }
