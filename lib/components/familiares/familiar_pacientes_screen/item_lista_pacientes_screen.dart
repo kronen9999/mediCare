@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadoresna.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_eliminar_paciente.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -44,6 +45,7 @@ class ItemListaPacientesScreen extends StatefulWidget {
 }
 
 class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
+  Future<FamiliaresCuidadoresObtenerCuidadoresnaResponse?>? listaCuidadoresNA;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -175,6 +177,7 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                         )
                       : GestureDetector(
                           onTap: () {
+                            obtenerListaCuidadoresNa();
                             mostrarDialogoSeleccionarCuidador(context);
                           },
                           child: Icon(
@@ -254,22 +257,90 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Seleccionar cuidador"),
-        content: Text("Funcionalidad en desarrollo"),
+        title: Text(
+          "Seleccionar cuidador",
+          style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SizedBox(
+            height: 250,
+            child: FutureBuilder<FamiliaresCuidadoresObtenerCuidadoresnaResponse?>(
+              future: listaCuidadoresNA,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.wifi_off, color: Colors.red, size: 40),
+                        const SizedBox(height: 16),
+                        Text(
+                          "Parece que su conexión está lenta o inestable.",
+                          style: TextStyle(
+                            color: Color.fromRGBO(85, 150, 255, 1),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  );
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  final cuidadores = snapshot.data!.cuidadoresNoAsignados;
+                  if (cuidadores.isEmpty) {
+                    return Text('No hay cuidadores disponibles.');
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: cuidadores.length,
+                    itemBuilder: (context, index) {
+                      final cuidador = cuidadores[index];
+                      return ListTile(
+                        leading: Icon(Icons.person),
+                        title: Text(
+                          '${cuidador.nombre} ${cuidador.apellidoP} ${cuidador.apellidoM}',
+                        ),
+                        subtitle: Text("No asignado"),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return Text('No hay datos');
+                }
+              },
+            ),
+          ),
+        ),
         actions: [
-          Column(
-            children: [
-              Text("Funcionalidad en desarrollo"),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Cerrar"),
-              ),
-            ],
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Cerrar"),
           ),
         ],
       ),
     );
+  }
+
+  void obtenerListaCuidadoresNa() async {
+    final repo = FamiliaresReposotoryGlobal();
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      listaCuidadoresNA = repo.obtenerCuidadoresNa(
+        FamiliaresCuidadoresObtenerCuidadoresna(
+          idFamiliar: widget.idFamliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+        ),
+      );
+    });
   }
 }

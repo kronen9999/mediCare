@@ -436,7 +436,7 @@ class FamiliaresReposotoryGlobal {
 
   //Metodo para obtener los cuidadores no asignados
 
-  Future<FamiliaresCuidadoresObtenerCuidadoresnaResponse> obtenerCuidadoresNa(
+  Future<FamiliaresCuidadoresObtenerCuidadoresnaResponse?>? obtenerCuidadoresNa(
     FamiliaresCuidadoresObtenerCuidadoresna cuidadoresData,
   ) async {
     final response = await http.post(

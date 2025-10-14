@@ -43,7 +43,7 @@ class FamiliaresCuidadoresObtenerCuidadoresnaResponse {
 }
 
 class Cuidadoresna {
-  final String? idCuidador;
+  final int? idCuidador;
   final String? nombre;
   final String? apellidoM;
   final String? apellidoP;
