@@ -16,9 +16,11 @@ import 'package:medicare/models/familiares/perfil/familiares_actualizar_informac
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
+import 'package:medicare/models/pacientes/familiar_pacientes_editar_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_paciente_obtener_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_agregar_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
+import 'package:medicare/screens/familiar/pacientes/familiar_paciente_agregarpaciente_screen.dart';
 
 class FamiliaresReposotoryGlobal {
   Globalvariables rutaGlobal = Globalvariables();
@@ -490,14 +492,45 @@ class FamiliaresReposotoryGlobal {
   Future<FamiliaresPacienteObtenerPacienteResponse> obtenerPaciente(
     FamiliaresPacienteObtenerPaciente pacienteData,
   ) async {
-    final response = await http.post(
-      Uri.parse('${urlBase}Familiares/Pacientes/ObtenerPaciente'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(pacienteData.toJson()),
-    );
+    final response = await http
+        .post(
+          Uri.parse('${urlBase}Familiares/Pacientes/ObtenerPaciente'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(pacienteData.toJson()),
+        )
+        .timeout(const Duration(seconds: 20));
 
     if (response.statusCode == 200) {
       return FamiliaresPacienteObtenerPacienteResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para editar la informacion de un paciente
+  Future<FamiliarPacientesEditarPacienteResponse> editarPaciente(
+    FamiliarPacientesEditarPaciente editarData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/EditarPacienteInformacionPerfil',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(editarData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliarPacientesEditarPacienteResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/pacientes/familiar_pacientes_editar_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_paciente_obtener_paciente.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -586,9 +587,20 @@ class _FamiliarPacienteEditarpacienteScreenState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              editarPaciente(
+                                nombre,
+                                apellidoP,
+                                apellidoM,
+                                direccion,
+                                telefono1,
+                                telefono2,
+                                padecimiento,
+                                context,
+                              );
+                            },
                             child: Text(
-                              "Agregar paciente",
+                              "Guardar cambios",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -652,5 +664,52 @@ class _FamiliarPacienteEditarpacienteScreenState
       telefono2Controller.text = result.telefono2 ?? '';
       padecimientoController.text = result.padecimiento ?? '';
     });
+  }
+
+  void editarPaciente(
+    String? nombre,
+    String? apellidoP,
+    String? apellidoM,
+    String? direccion,
+    String? telefono1,
+    String? telefono2,
+    String? padecimiento,
+    context,
+  ) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.editarPaciente(
+        FamiliarPacientesEditarPaciente(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
+          nombre: nombre ?? "",
+          apellidoP: apellidoP ?? "",
+          apellidoM: apellidoM ?? "",
+          direccion: direccion ?? "",
+          telefono1: telefono1 ?? "",
+          telefono2: telefono2 ?? "",
+          padecimiento: padecimiento ?? "",
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(result.message ?? "Error al editar el paciente"),
+        ),
+      );
+      widget.onUpdate(widget.idFamiliar, widget.tokenAcceso);
+      widget.onSelect("default");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }
