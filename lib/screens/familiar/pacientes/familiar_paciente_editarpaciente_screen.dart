@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/pacientes/familiares_paciente_obtener_paciente.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarPacienteEditarpacienteScreen extends StatefulWidget {
   final String? idFamiliar;
@@ -23,13 +25,46 @@ class FamiliarPacienteEditarpacienteScreen extends StatefulWidget {
 
 class _FamiliarPacienteEditarpacienteScreenState
     extends State<FamiliarPacienteEditarpacienteScreen> {
-  String? nombre;
-  String? apellidoP;
-  String? apellidoM;
-  String? direccion;
-  String? telefono1;
-  String? telefono2;
-  String? padecimiento;
+  final TextEditingController nombreController = TextEditingController();
+  final TextEditingController apellidoPController = TextEditingController();
+  final TextEditingController apellidoMController = TextEditingController();
+  final TextEditingController direccionController = TextEditingController();
+  final TextEditingController telefono1Controller = TextEditingController();
+  final TextEditingController telefono2Controller = TextEditingController();
+  final TextEditingController padecimientoController = TextEditingController();
+  String? nombre = "Obteniendo Datos...";
+  String? apellidoP = "Obteniendo Datos...";
+  String? apellidoM = "Obteniendo Datos...";
+  String? direccion = "Obteniendo Datos...";
+  String? telefono1 = "Obteniendo Datos...";
+  String? telefono2 = "Obteniendo Datos...";
+  String? padecimiento = "Obteniendo Datos...";
+
+  @override
+  void initState() {
+    super.initState();
+    nombreController.text = nombre ?? '';
+    apellidoPController.text = apellidoP ?? '';
+    apellidoMController.text = apellidoM ?? '';
+    direccionController.text = direccion ?? '';
+    telefono1Controller.text = telefono1 ?? '';
+    telefono2Controller.text = telefono2 ?? '';
+    padecimientoController.text = padecimiento ?? '';
+    obtenerDatos();
+  }
+
+  @override
+  void dispose() {
+    nombreController.dispose();
+    apellidoPController.dispose();
+    apellidoMController.dispose();
+    direccionController.dispose();
+    telefono1Controller.dispose();
+    telefono2Controller.dispose();
+    padecimientoController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -113,6 +148,7 @@ class _FamiliarPacienteEditarpacienteScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: nombreController,
                         onChanged: (value) {
                           setState(() {
                             nombre = value;
@@ -174,6 +210,7 @@ class _FamiliarPacienteEditarpacienteScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: apellidoPController,
                         onChanged: (value) {
                           setState(() {
                             apellidoP = value;
@@ -235,6 +272,7 @@ class _FamiliarPacienteEditarpacienteScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: apellidoMController,
                         onChanged: (value) {
                           setState(() {
                             apellidoM = value;
@@ -296,6 +334,7 @@ class _FamiliarPacienteEditarpacienteScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: padecimientoController,
                         onChanged: (value) {
                           setState(() {
                             padecimiento = value;
@@ -357,6 +396,7 @@ class _FamiliarPacienteEditarpacienteScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: direccionController,
                         onChanged: (value) {
                           setState(() {
                             direccion = value;
@@ -418,6 +458,7 @@ class _FamiliarPacienteEditarpacienteScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: TextField(
+                        controller: telefono1Controller,
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
@@ -481,6 +522,7 @@ class _FamiliarPacienteEditarpacienteScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: telefono2Controller,
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
                         onChanged: (value) {
@@ -580,5 +622,35 @@ class _FamiliarPacienteEditarpacienteScreenState
         ],
       ),
     );
+  }
+
+  void obtenerDatos() async {
+    final repo = FamiliaresReposotoryGlobal();
+    final result = await repo.obtenerPaciente(
+      FamiliaresPacienteObtenerPaciente(
+        idFamiliar: widget.idFamiliar,
+        tokenAcceso: widget.tokenAcceso ?? "",
+        idPaciente: widget.idPaciente,
+      ),
+    );
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      nombre = result.nombre;
+      apellidoP = result.apellidoP;
+      apellidoM = result.apellidoM;
+      direccion = result.direccion;
+      telefono1 = result.telefono1;
+      telefono2 = result.telefono2;
+      padecimiento = result.padecimiento;
+      nombreController.text = result.nombre ?? '';
+      apellidoPController.text = result.apellidoP ?? '';
+      apellidoMController.text = result.apellidoM ?? '';
+      direccionController.text = result.direccion ?? '';
+      telefono1Controller.text = result.telefono1 ?? '';
+      telefono2Controller.text = result.telefono2 ?? '';
+      padecimientoController.text = result.padecimiento ?? '';
+    });
   }
 }
