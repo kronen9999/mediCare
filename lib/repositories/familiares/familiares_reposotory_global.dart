@@ -17,6 +17,7 @@ import 'package:medicare/models/familiares/perfil/familiares_actualizar_informac
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_editar_paciente.dart';
+import 'package:medicare/models/pacientes/familiar_pacientes_eliminar_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_paciente_obtener_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_agregar_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
@@ -531,6 +532,33 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliarPacientesEditarPacienteResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para eliminar un paciente
+  Future<FamiliarPacientesEliminarPacienteResponse> eliminarPaciente(
+    FamiliarPacientesEliminarPaciente pacienteData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Pacientes/EliminarPaciente'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(pacienteData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliarPacientesEliminarPacienteResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

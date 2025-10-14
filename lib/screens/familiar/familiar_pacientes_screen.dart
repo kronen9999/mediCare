@@ -279,6 +279,10 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                         apellidoMCuidador: paciente.apellidoMCuidador,
                         onSelect: asignarSeccion,
                         onUpdatePaciente: seleccionarPaciente,
+                        mostrarDialogoEliminarPaciente: (context, onConfirmar) {
+                          mostrarDialogoEliminarPaciente(context, onConfirmar);
+                        },
+                        onUpdatePacientes: obtenerPacientes,
                       ),
                     );
                   },
@@ -331,5 +335,32 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
     setState(() {
       this.idPaciente = idPaciente;
     });
+  }
+
+  void mostrarDialogoEliminarPaciente(
+    BuildContext context,
+    VoidCallback onConfirmar,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Confirmar eliminación"),
+        content: Text("¿Está seguro que desea eliminar a este cuidador?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(), // Cierra el diálogo
+            child: Text("Cancelar", style: TextStyle(color: Colors.blue)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el diálogo
+              onConfirmar(); // Ejecuta la acción de eliminar
+            },
+            child: Text("Eliminar", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 }
