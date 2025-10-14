@@ -4,6 +4,7 @@ import 'package:medicare/components/familiares/familiar_pacientes_screen/item_li
 import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/screens/familiar/pacientes/familiar_paciente_agregarpaciente_screen.dart';
+import 'package:medicare/screens/familiar/pacientes/familiar_paciente_editarpaciente_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FamiliarPacientesScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
   Future<FamiliaresPacientesObtenerPacientesResponse?>? listaPacientes;
   String? idFamiliar;
   String? tokenAcceso;
+  String? idPaciente;
   String seccion = "defecto";
 
   @override
@@ -38,6 +40,14 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
             ? FamiliarPacienteAgregarpacienteScreen(
                 idFamiliar: idFamiliar,
                 tokenAcceso: tokenAcceso,
+                onSelect: asignarSeccion,
+                onUpdate: obtenerPacientes,
+              )
+            : seccion == "editarPaciente"
+            ? FamiliarPacienteEditarpacienteScreen(
+                idFamiliar: idFamiliar,
+                tokenAcceso: tokenAcceso,
+                idPaciente: idPaciente,
                 onSelect: asignarSeccion,
                 onUpdate: obtenerPacientes,
               )
@@ -259,6 +269,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                             : "",
                         idFamliar: idFamiliar ?? "",
                         tokenAcceso: tokenAcceso ?? "",
+                        idPaciente: paciente.idPaciente.toString(),
                         nombre: paciente.nombre ?? "",
                         apellidoP: paciente.apellidoP ?? "",
                         apellidoM: paciente.apellidoM ?? "",
@@ -266,6 +277,8 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                         padecimiento: paciente.padecimiento ?? "",
                         apellidoPCuidador: paciente.apellidoPCuidador ?? "",
                         apellidoMCuidador: paciente.apellidoMCuidador,
+                        onSelect: asignarSeccion,
+                        onUpdatePaciente: seleccionarPaciente,
                       ),
                     );
                   },
@@ -311,6 +324,12 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
   asignarSeccion(String seccion) {
     setState(() {
       this.seccion = seccion;
+    });
+  }
+
+  seleccionarPaciente(String? idPaciente) {
+    setState(() {
+      this.idPaciente = idPaciente;
     });
   }
 }

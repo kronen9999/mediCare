@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ItemListaPacientesScreen extends StatefulWidget {
   final String? idFamliar;
   final String? tokenAcceso;
+  final String? idPaciente;
   final String? nombre;
   final String? apellidoP;
   final String? apellidoM;
@@ -11,11 +12,14 @@ class ItemListaPacientesScreen extends StatefulWidget {
   final String? nombreCuidador;
   final String? apellidoPCuidador;
   final String? apellidoMCuidador;
+  final void Function(String) onSelect;
+  final void Function(String?) onUpdatePaciente;
   const ItemListaPacientesScreen({
     super.key,
     required this.idFamliar,
     required this.tokenAcceso,
     required this.idCuidador,
+    required this.idPaciente,
     required this.nombre,
     required this.apellidoP,
     required this.apellidoM,
@@ -23,6 +27,8 @@ class ItemListaPacientesScreen extends StatefulWidget {
     required this.nombreCuidador,
     required this.apellidoPCuidador,
     required this.apellidoMCuidador,
+    required this.onSelect,
+    required this.onUpdatePaciente,
   });
 
   @override
@@ -116,7 +122,10 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        widget.onUpdatePaciente(widget.idPaciente ?? "");
+                        widget.onSelect("editarPaciente");
+                      },
                       child: Icon(
                         Icons.edit_outlined,
                         color: const Color.fromARGB(255, 102, 101, 101),
