@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/screens/cuidador/cuidadorhomescreen.dart';
 import 'package:medicare/screens/familiar/familiarhome.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +33,8 @@ class _MainAppState extends State<MainApp> {
             ? const Homescreen()
             : sesionIniciada == "Familiares"
             ? const Familiarhome()
+            : sesionIniciada == "Cuidadores"
+            ? Cuidadorhomescreen()
             : const Homescreen(),
       ),
     );

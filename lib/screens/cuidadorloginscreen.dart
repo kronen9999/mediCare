@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicare/models/cuidadores/cuidadores_login.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidador/cuidadorhomescreen.dart';
 import 'package:medicare/screens/cuidador/cuidadorseleccionrecuperacionscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cuidadorloginscreen extends StatefulWidget {
   const Cuidadorloginscreen({super.key});
@@ -260,13 +262,14 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
           credencial: _Credencial ?? '',
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Bienvenido, ${result.message}\nID: ${result.usuario?.idUsuario}\n${result.usuario?.tokenAcceso}",
-          ),
-          backgroundColor: Colors.green,
-        ),
+      guardarDatos(
+        result.usuario?.idUsuario.toString(),
+        result.usuario?.tokenAcceso,
+      );
+      Future.delayed(Duration(seconds: 1));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Cuidadorhomescreen()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -276,5 +279,12 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
         ),
       );
     }
+  }
+
+  void guardarDatos(String? idCuidador, String? tokenAcceso) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("IdCuidador", idCuidador ?? "");
+    prefs.setString("TokenAcceso", tokenAcceso ?? "");
+    prefs.setString("TipoLogin", "Cuidadores");
   }
 }
