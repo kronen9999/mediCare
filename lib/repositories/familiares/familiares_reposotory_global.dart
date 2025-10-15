@@ -17,12 +17,12 @@ import 'package:medicare/models/familiares/perfil/familiares_actualizar_informac
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_atributos_generales.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
+import 'package:medicare/models/pacientes/familiar_pacientes_asignar_cuidador.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_editar_paciente.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_eliminar_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_paciente_obtener_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_agregar_paciente.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
-import 'package:medicare/screens/familiar/pacientes/familiar_paciente_agregarpaciente_screen.dart';
 
 class FamiliaresReposotoryGlobal {
   Globalvariables rutaGlobal = Globalvariables();
@@ -599,6 +599,36 @@ class FamiliaresReposotoryGlobal {
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para asignar un cuidador a un paciente
+
+  Future<FamiliarPacientesAsignarCuidadorResponse> asignarCuidador(
+    FamiliarPacientesAsignarCuidador cuidadorData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}Familiares/Pacientes/AsignarCuidadorAPaciente'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(cuidadorData.toJson()),
+    );
+
+    if (response.statusCode == 201) {
+      return FamiliarPacientesAsignarCuidadorResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 403) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 409) {
       throw Exception(jsonDecode(response.body)["message"]);
     } else {
       throw Exception(jsonDecode(response.body)['message']);

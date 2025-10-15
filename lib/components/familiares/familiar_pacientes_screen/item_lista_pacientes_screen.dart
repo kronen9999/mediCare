@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadoresna.dart';
+import 'package:medicare/models/pacientes/familiar_pacientes_asignar_cuidador.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_eliminar_paciente.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -307,6 +308,10 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                         ),
                         subtitle: Text("No asignado"),
                         onTap: () {
+                          asignarPaciente(
+                            cuidador.idCuidador.toString(),
+                            context,
+                          );
                           Navigator.of(context).pop();
                         },
                       );
@@ -342,5 +347,29 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
         ),
       );
     });
+  }
+
+  void asignarPaciente(String? idCuidador, context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.asignarCuidador(
+        FamiliarPacientesAsignarCuidador(
+          idFamiliar: widget.idFamliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
+          idCuidador: idCuidador ?? "",
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }
