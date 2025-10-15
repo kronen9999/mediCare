@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadoresna.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_asignar_cuidador.dart';
+import 'package:medicare/models/pacientes/familiar_pacientes_desasignar_cuidador.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_eliminar_paciente.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -170,7 +171,9 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                           widget.idCuidador != "" &&
                           widget.idCuidador != "null")
                       ? GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            mostrarDialogoDesasignarC();
+                          },
                           child: Icon(
                             Icons.person_add_disabled_outlined,
                             color: const Color.fromARGB(255, 102, 101, 101),
@@ -312,6 +315,10 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                             cuidador.idCuidador.toString(),
                             context,
                           );
+                          widget.onUpdatePacientes(
+                            widget.idFamliar,
+                            widget.tokenAcceso,
+                          );
                           Navigator.of(context).pop();
                         },
                       );
@@ -358,6 +365,55 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
           tokenAcceso: widget.tokenAcceso ?? "",
           idPaciente: widget.idPaciente ?? "",
           idCuidador: idCuidador ?? "",
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
+  }
+
+  void mostrarDialogoDesasignarC() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Desasignar cuidador"),
+        content: Text(
+          "¿Está seguro que desea desasignar el cuidador ${widget.nombreCuidador} ${widget.apellidoPCuidador} ${widget.apellidoMCuidador}?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(), // Cierra el diálogo
+            child: Text("Cancelar", style: TextStyle(color: Colors.blue)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el diálogo
+              desasignarCuidador(context);
+            },
+            child: Text("Deasignar", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void desasignarCuidador(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.desasignarCuidador(
+        FamiliarPacientesDesasignarCuidador(
+          idFamiliar: widget.idFamliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(
