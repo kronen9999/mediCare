@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicare/screens/cuidador/home/cuidadorprincipalscreen.dart';
+import 'package:medicare/screens/cuidador/perfil/cuidadorperfilscreen.dart';
 
 class Cuidadorhomescreen extends StatefulWidget {
   const Cuidadorhomescreen({super.key});
@@ -11,22 +13,22 @@ class Cuidadorhomescreen extends StatefulWidget {
 class _CuidadorhomescreenState extends State<Cuidadorhomescreen> {
   int _selectedIndex = 0;
   final List<Widget> _sections = [
-    Center(child: Text('Inicio')),
-    Center(child: Text('Perfil')),
+    Cuidadorprincipalscreen(),
+    Cuidadorperfilscreen(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color.fromRGBO(85, 150, 255, 1),
+        backgroundColor: Color.fromRGBO(42, 189, 23, 1),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(138, 183, 255, 1),
+                  color: Color.fromRGBO(73, 223, 32, 1),
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Padding(
@@ -71,14 +73,6 @@ class _CuidadorhomescreenState extends State<Cuidadorhomescreen> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Cuidadores',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_hospital),
-            label: 'Pacientes',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline_sharp),
             label: 'Perfil',
