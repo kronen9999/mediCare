@@ -315,11 +315,6 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                             cuidador.idCuidador.toString(),
                             context,
                           );
-                          widget.onUpdatePacientes(
-                            widget.idFamliar,
-                            widget.tokenAcceso,
-                          );
-                          Navigator.of(context).pop();
                         },
                       );
                     },
@@ -358,6 +353,12 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
 
   void asignarPaciente(String? idCuidador, context) async {
     final repo = FamiliaresReposotoryGlobal();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+    );
     try {
       final result = await repo.asignarCuidador(
         FamiliarPacientesAsignarCuidador(
@@ -367,10 +368,15 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
           idCuidador: idCuidador ?? "",
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
       );
+      // Actualiza la lista después de asignar
+      widget.onUpdatePacientes(widget.idFamliar, widget.tokenAcceso);
+      Navigator.of(context).pop();
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
@@ -396,8 +402,8 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             onPressed: () {
-              Navigator.of(context).pop(); // Cierra el diálogo
               desasignarCuidador(context);
+              // Cierra el diálogo
             },
             child: Text("Deasignar", style: TextStyle(color: Colors.white)),
           ),
@@ -408,6 +414,12 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
 
   void desasignarCuidador(context) async {
     final repo = FamiliaresReposotoryGlobal();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+    );
     try {
       final result = await repo.desasignarCuidador(
         FamiliarPacientesDesasignarCuidador(
@@ -419,7 +431,12 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
       );
+      Navigator.of(context).pop();
+      // Actualiza la lista después de desasignar
+      widget.onUpdatePacientes(widget.idFamliar, widget.tokenAcceso);
+      Navigator.of(context).pop();
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
