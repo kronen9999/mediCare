@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/components/cuidadores/perfil/perfilinformacionadmwidget.dart';
+import 'package:medicare/components/cuidadores/perfil/perfilopcioneswidget.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,6 +61,8 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
               fontWeight: FontWeight.w400,
             ),
           ),
+          Perfilopcioneswidget(),
+          Perfilinformacionadmwidget(),
           Padding(
             padding: const EdgeInsets.all(25),
             child: Container(

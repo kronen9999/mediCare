@@ -25,7 +25,7 @@ class _PerfilopcioneswidgetState extends State<Perfilopcioneswidget> {
             ),
           ],
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Color.fromRGBO(79, 172, 196, 1), width: .5),
+          border: Border.all(color: Colors.green, width: .5),
         ),
         child: Padding(
           padding: const EdgeInsets.all(15),
