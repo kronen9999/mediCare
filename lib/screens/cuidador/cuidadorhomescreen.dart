@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/cuidador/home/cuidadorprincipalscreen.dart';
 import 'package:medicare/screens/cuidador/perfil/cuidadorperfilscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cuidadorhomescreen extends StatefulWidget {
   const Cuidadorhomescreen({super.key});
@@ -12,6 +13,7 @@ class Cuidadorhomescreen extends StatefulWidget {
 
 class _CuidadorhomescreenState extends State<Cuidadorhomescreen> {
   int _selectedIndex = 0;
+
   final List<Widget> _sections = [
     Cuidadorprincipalscreen(),
     Cuidadorperfilscreen(),

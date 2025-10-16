@@ -7,6 +7,8 @@ import 'package:medicare/models/cuidadores/cuidadores_login.dart';
 import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
 import 'package:medicare/models/cuidadores/cuidadores_restablecercontrasena.dart';
 import 'package:medicare/models/cuidadores/cuidadores_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfil.dart';
+import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 
 class CuidadoresRepositoryGlobal {
   Globalvariables variableGlobal = Globalvariables();
@@ -122,6 +124,33 @@ class CuidadoresRepositoryGlobal {
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+  //Metodos para el perfil de los cuidadores
+
+  Future<CuidadoresPerfilObtenerperfilResponse> obtenerPerfil(
+    CuidadoresPerfilObtenerperfil perfilData,
+  ) async {
+    final String urlBase = variableGlobal.rutaGlobalBase;
+    final String endpoint = 'Cuidadores/Perfil/ObtenerPerfilCompleto';
+    final response = await http.post(
+      Uri.parse(urlBase + endpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(perfilData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return CuidadoresPerfilObtenerperfilResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)['error']);
     } else {
       throw Exception(jsonDecode(response.body)['message']);

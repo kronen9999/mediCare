@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/components/cuidadores/perfil/perfilinformacionadmwidget.dart';
 import 'package:medicare/components/cuidadores/perfil/perfilopcioneswidget.dart';
+import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfil.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +14,8 @@ class Cuidadorperfilscreen extends StatefulWidget {
 }
 
 class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
+  String? idCuidador;
+  String? tokenAcceso;
   String? usuarioCuidador = "Obteniendo datos...";
   String? correoCuidador = "Obteniendo datos...";
   String? nombreCFamiliar = "Obteniendo datos...";
@@ -19,6 +23,13 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
   String? direccionFamiliar = "Obteniendo datos...";
   String? telefono1Familiar = "Obteniendo datos...";
   String? telefono2Familiar = "Obteniendo datos...";
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerDatos();
+    obtenerDatosSesion();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,5 +133,42 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
       context,
       MaterialPageRoute(builder: (context) => Homescreen()),
     );
+  }
+
+  void obtenerDatos() async {
+    final repo = CuidadoresRepositoryGlobal();
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) {
+      return;
+    }
+    final idCuidador = prefs.getString("IdCuidador");
+    final tokenAcceso = prefs.getString("TokenAcceso");
+    final result = await repo.obtenerPerfil(
+      CuidadoresPerfilObtenerperfil(
+        idCuidador: idCuidador ?? "",
+        tokenAcceso: tokenAcceso ?? "",
+      ),
+    );
+    setState(() {
+      usuarioCuidador = result.usuario ?? "Sin definir";
+      correoCuidador = result.correoE ?? "Sin definir";
+      nombreCFamiliar =
+          "${result.nombreFamiliar ?? ""} ${result.apellidoPFamiliar ?? ""} ${result.apellidoMFamiliar ?? ""}";
+      correoFamiliar = result.correoEFamiliar ?? "Sin definir";
+      direccionFamiliar = result.direccionFamiliar ?? "Sin definir";
+      telefono1Familiar = result.telefono1 ?? "Sin definir";
+      telefono2Familiar = result.telefono2 ?? "Sin definir";
+    });
+  }
+
+  void obtenerDatosSesion() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      idCuidador = prefs.getString("IdCuidador");
+      tokenAcceso = prefs.getString("TokenAcceso");
+    });
   }
 }
