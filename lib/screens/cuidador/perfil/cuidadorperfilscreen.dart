@@ -3,6 +3,7 @@ import 'package:medicare/components/cuidadores/perfil/perfilinformacionadmwidget
 import 'package:medicare/components/cuidadores/perfil/perfilopcioneswidget.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfil.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidador/perfil/cuidadorperfilinformacionpersonalscreen.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,7 @@ class Cuidadorperfilscreen extends StatefulWidget {
 }
 
 class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
+  String apartado = "default";
   String? idCuidador;
   String? tokenAcceso;
   String? usuarioCuidador = "Obteniendo datos...";
@@ -36,7 +38,15 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
-      child: perfilPrincipal(),
+      child: apartado == "default"
+          ? perfilPrincipal()
+          : apartado == "editarPerfil"
+          ? Cuidadorperfilinformacionpersonalscreen(
+              idCuidador: idCuidador,
+              tokenAcceso: tokenAcceso,
+              onSelection: cambiarApartado,
+            )
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -83,6 +93,7 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
           Perfilopcioneswidget(
             usuario: usuarioCuidador,
             correo: correoCuidador,
+            onChanged: cambiarApartado,
           ),
           Perfilinformacionadmwidget(
             nombreCompleto: nombreCFamiliar,
@@ -169,6 +180,15 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
     setState(() {
       idCuidador = prefs.getString("IdCuidador");
       tokenAcceso = prefs.getString("TokenAcceso");
+    });
+  }
+
+  void cambiarApartado(String nuevoApartado) {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      apartado = nuevoApartado;
     });
   }
 }

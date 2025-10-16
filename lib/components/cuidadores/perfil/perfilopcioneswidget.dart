@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class Perfilopcioneswidget extends StatefulWidget {
   final String? usuario;
   final String? correo;
+  final void Function(String) onChanged;
   const Perfilopcioneswidget({
     super.key,
     required this.usuario,
     required this.correo,
+    required this.onChanged,
   });
 
   @override
@@ -102,7 +104,7 @@ class _PerfilopcioneswidgetState extends State<Perfilopcioneswidget> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      // widget.onChanged("editarPerfil");
+                      widget.onChanged("editarPerfil");
                     },
                     child: SizedBox(
                       width: double.infinity,
@@ -140,7 +142,7 @@ class _PerfilopcioneswidgetState extends State<Perfilopcioneswidget> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      //  widget.onChanged("editarCuenta");
+                      widget.onChanged("editarCuenta");
                     },
                     child: SizedBox(
                       width: double.infinity,
@@ -178,7 +180,7 @@ class _PerfilopcioneswidgetState extends State<Perfilopcioneswidget> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      //   widget.onChanged("editarContrasena");
+                      widget.onChanged("editarContrasena");
                     },
                     child: SizedBox(
                       width: double.infinity,
