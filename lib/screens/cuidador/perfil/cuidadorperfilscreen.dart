@@ -12,6 +12,14 @@ class Cuidadorperfilscreen extends StatefulWidget {
 }
 
 class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
+  String? usuarioCuidador = "Obteniendo datos...";
+  String? correoCuidador = "Obteniendo datos...";
+  String? nombreCFamiliar = "Obteniendo datos...";
+  String? correoFamiliar = "Obteniendo datos...";
+  String? direccionFamiliar = "Obteniendo datos...";
+  String? telefono1Familiar = "Obteniendo datos...";
+  String? telefono2Familiar = "Obteniendo datos...";
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -61,8 +69,17 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
               fontWeight: FontWeight.w400,
             ),
           ),
-          Perfilopcioneswidget(),
-          Perfilinformacionadmwidget(),
+          Perfilopcioneswidget(
+            usuario: usuarioCuidador,
+            correo: correoCuidador,
+          ),
+          Perfilinformacionadmwidget(
+            nombreCompleto: nombreCFamiliar,
+            correo: correoFamiliar,
+            direccion: direccionFamiliar,
+            telefono1: telefono1Familiar,
+            telefono2: telefono2Familiar,
+          ),
           Padding(
             padding: const EdgeInsets.all(25),
             child: Container(

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Perfilopcioneswidget extends StatefulWidget {
-  const Perfilopcioneswidget({super.key});
+  final String? usuario;
+  final String? correo;
+  const Perfilopcioneswidget({
+    super.key,
+    required this.usuario,
+    required this.correo,
+  });
 
   @override
   State<Perfilopcioneswidget> createState() => _PerfilopcioneswidgetState();
@@ -65,8 +71,7 @@ class _PerfilopcioneswidgetState extends State<Perfilopcioneswidget> {
                               child: SizedBox(
                                 width: 200,
                                 child: Text(
-                                  "USUARIO",
-                                  //widget.usuario.toString(),
+                                  widget.usuario ?? "Usuario no definido",
                                   style: TextStyle(
                                     color: Colors.green,
                                     fontWeight: FontWeight.w500,
@@ -78,8 +83,7 @@ class _PerfilopcioneswidgetState extends State<Perfilopcioneswidget> {
                             SizedBox(
                               width: 200,
                               child: Text(
-                                "Correo1",
-                                //widget.correo.toString(),
+                                widget.correo ?? "Correo no definido",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),

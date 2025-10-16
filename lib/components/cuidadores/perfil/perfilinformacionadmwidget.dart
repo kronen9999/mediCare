@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 
 class Perfilinformacionadmwidget extends StatefulWidget {
-  const Perfilinformacionadmwidget({super.key});
+  final String? nombreCompleto;
+  final String? correo;
+  final String? direccion;
+  final String? telefono1;
+  final String? telefono2;
+  const Perfilinformacionadmwidget({
+    super.key,
+    required this.nombreCompleto,
+    required this.correo,
+    required this.direccion,
+    required this.telefono1,
+    required this.telefono2,
+  });
 
   @override
   State<Perfilinformacionadmwidget> createState() =>
@@ -118,7 +130,7 @@ class _PerfilinformacionadmwidgetState
                         width: double.infinity,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 45),
-                          child: Text("Andres Lopez Lopez"),
+                          child: Text(widget.nombreCompleto ?? "Sin definir"),
                         ),
                       ),
                     ],
@@ -151,7 +163,7 @@ class _PerfilinformacionadmwidgetState
                         width: double.infinity,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 45),
-                          child: Text("friover67@gmail.com"),
+                          child: Text(widget.correo ?? "Sin definir"),
                         ),
                       ),
                     ],
@@ -184,7 +196,7 @@ class _PerfilinformacionadmwidgetState
                         width: double.infinity,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 45),
-                          child: Text("Reforma #45"),
+                          child: Text(widget.direccion ?? "Sin definir"),
                         ),
                       ),
                     ],
@@ -217,7 +229,7 @@ class _PerfilinformacionadmwidgetState
                         width: double.infinity,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 45),
-                          child: Text("8943893830"),
+                          child: Text(widget.telefono1 ?? "Sin definir"),
                         ),
                       ),
                     ],
@@ -250,7 +262,7 @@ class _PerfilinformacionadmwidgetState
                         width: double.infinity,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 45),
-                          child: Text("984589093"),
+                          child: Text(widget.telefono2 ?? "Sin definir"),
                         ),
                       ),
                     ],
