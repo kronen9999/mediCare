@@ -3,6 +3,7 @@ import 'package:medicare/components/cuidadores/perfil/perfilinformacionadmwidget
 import 'package:medicare/components/cuidadores/perfil/perfilopcioneswidget.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfil.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidador/perfil/cuidadorperfilactualizarcontrasenascreen.dart';
 import 'package:medicare/screens/cuidador/perfil/cuidadorperfilinformacioncuentascreen.dart';
 import 'package:medicare/screens/cuidador/perfil/cuidadorperfilinformacionpersonalscreen.dart';
 import 'package:medicare/screens/homescreen.dart';
@@ -53,6 +54,12 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
               tokenAcceso: tokenAcceso,
               onSelection: cambiarApartado,
               onUpdate: obtenerDatosHijo,
+            )
+          : apartado == "editarContrasena"
+          ? Cuidadorperfilactualizarcontrasenascreen(
+              idFamiliar: idCuidador,
+              tokenAcceso: tokenAcceso,
+              onSelection: cambiarApartado,
             )
           : const Center(child: CircularProgressIndicator()),
     );
