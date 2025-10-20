@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarcontrasena.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 
 class Cuidadorperfilactualizarcontrasenascreen extends StatefulWidget {
-  final String? idFamiliar;
+  final String? idCuidador;
   final String? tokenAcceso;
   final void Function(String) onSelection;
   const Cuidadorperfilactualizarcontrasenascreen({
     super.key,
-    required this.idFamiliar,
+    required this.idCuidador,
     required this.tokenAcceso,
     required this.onSelection,
   });
@@ -221,13 +223,11 @@ class _CuidadorperfilactualizarcontrasenascreenState
                           ),
                           child: TextButton(
                             onPressed: () {
-                              /*  actualizarContrasena(
-                                widget.idFamiliar,
-                                widget.tokenAcceso,
+                              actualizarContrasena(
                                 contrasenaA,
                                 contrasenaN,
                                 context,
-                              );*/
+                              );
                             },
                             child: Text(
                               "Guardar cambios",
@@ -336,5 +336,43 @@ class _CuidadorperfilactualizarcontrasenascreenState
         ],
       ),
     );
+  }
+
+  void actualizarContrasena(
+    String? contrasenaActual,
+    String? nuevaContrasena,
+    context,
+  ) async {
+    final repo = CuidadoresRepositoryGlobal();
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.green)),
+      barrierDismissible: false,
+    );
+
+    try {
+      final result = await repo.actualizarContrasena(
+        CuidadoresPerfilActualizarcontrasena(
+          idCuidador: widget.idCuidador ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          contrasenaActual: contrasenaActual ?? "",
+          nuevaContrasena: nuevaContrasena ?? "",
+        ),
+      );
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+      widget.onSelection("default");
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

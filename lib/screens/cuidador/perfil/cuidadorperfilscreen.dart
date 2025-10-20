@@ -57,7 +57,7 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
             )
           : apartado == "editarContrasena"
           ? Cuidadorperfilactualizarcontrasenascreen(
-              idFamiliar: idCuidador,
+              idCuidador: idCuidador,
               tokenAcceso: tokenAcceso,
               onSelection: cambiarApartado,
             )
