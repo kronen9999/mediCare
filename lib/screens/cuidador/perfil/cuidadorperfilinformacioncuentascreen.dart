@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarinformacioncuenta.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfilbasico.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 
@@ -235,7 +236,9 @@ class _CuidadorperfilinformacioncuentascreenState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              actualizarDatos(usuario, correoE, context);
+                            },
                             child: Text(
                               "Guardar cambios",
                               style: TextStyle(
@@ -290,5 +293,42 @@ class _CuidadorperfilinformacioncuentascreenState
       correoEController.text = result.correoE ?? "";
       usuarioEController.text = result.usuario ?? "";
     });
+  }
+
+  void actualizarDatos(String? usuario, String? correo, context) async {
+    final repo = CuidadoresRepositoryGlobal();
+    try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
+      final result = await repo.actualizarInformacionCuenta(
+        CuidadoresPerfilActualizarinformacioncuenta(
+          idCuidador: widget.idCuidador ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          usuario: usuario ?? "",
+          correoE: correoE ?? "",
+        ),
+      );
+      Navigator.of(context).pop();
+      if (!mounted) {
+        return;
+      }
+      widget.onUpdate(widget.idCuidador, widget.tokenAcceso);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+      widget.onSelection("default");
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }
