@@ -3,6 +3,7 @@ import 'package:medicare/components/cuidadores/perfil/perfilinformacionadmwidget
 import 'package:medicare/components/cuidadores/perfil/perfilopcioneswidget.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfil.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidador/perfil/cuidadorperfilinformacioncuentascreen.dart';
 import 'package:medicare/screens/cuidador/perfil/cuidadorperfilinformacionpersonalscreen.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +46,13 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
               idCuidador: idCuidador,
               tokenAcceso: tokenAcceso,
               onSelection: cambiarApartado,
+            )
+          : apartado == "editarCuenta"
+          ? Cuidadorperfilinformacioncuentascreen(
+              idCuidador: idCuidador,
+              tokenAcceso: tokenAcceso,
+              onSelection: cambiarApartado,
+              onUpdate: obtenerDatosHijo,
             )
           : const Center(child: CircularProgressIndicator()),
     );
@@ -180,6 +188,29 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
     setState(() {
       idCuidador = prefs.getString("IdCuidador");
       tokenAcceso = prefs.getString("TokenAcceso");
+    });
+  }
+
+  void obtenerDatosHijo(String? idCuidador, String? tokenAcceso) async {
+    final repo = CuidadoresRepositoryGlobal();
+    if (!mounted) {
+      return;
+    }
+    final result = await repo.obtenerPerfil(
+      CuidadoresPerfilObtenerperfil(
+        idCuidador: idCuidador ?? "",
+        tokenAcceso: tokenAcceso ?? "",
+      ),
+    );
+    setState(() {
+      usuarioCuidador = result.usuario ?? "Sin definir";
+      correoCuidador = result.correoE ?? "Sin definir";
+      nombreCFamiliar =
+          "${result.nombreFamiliar ?? ""} ${result.apellidoPFamiliar ?? ""} ${result.apellidoMFamiliar ?? ""}";
+      correoFamiliar = result.correoEFamiliar ?? "Sin definir";
+      direccionFamiliar = result.direccionFamiliar ?? "Sin definir";
+      telefono1Familiar = result.telefono1 ?? "Sin definir";
+      telefono2Familiar = result.telefono2 ?? "Sin definir";
     });
   }
 
