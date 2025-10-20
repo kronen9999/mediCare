@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfilbasico.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 
 class Cuidadorperfilinformacioncuentascreen extends StatefulWidget {
   final String? idCuidador;
@@ -31,7 +33,7 @@ class _CuidadorperfilinformacioncuentascreenState
     super.initState();
     correoEController.text = correoE ?? "";
     usuarioEController.text = usuario ?? "";
-    //obtenerDatos(widget.idFamiliar!, widget.tokenAcceso!);
+    obtenerDatos(widget.idCuidador!, widget.tokenAcceso!);
   }
 
   @override
@@ -269,5 +271,24 @@ class _CuidadorperfilinformacioncuentascreenState
         ],
       ),
     );
+  }
+
+  void obtenerDatos(String? idCuidador, String? tokenAcceso) async {
+    final repo = CuidadoresRepositoryGlobal();
+    final result = await repo.obtenerPerfilBasico(
+      CuidadoresPerfilObtenerperfilbasico(
+        idCuidador: idCuidador ?? "",
+        tokenAcceso: tokenAcceso ?? "",
+      ),
+    );
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      correoE = result.correoE ?? "";
+      usuario = result.usuario ?? "";
+      correoEController.text = result.correoE ?? "";
+      usuarioEController.text = result.usuario ?? "";
+    });
   }
 }
