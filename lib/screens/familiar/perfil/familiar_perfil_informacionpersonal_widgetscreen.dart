@@ -597,6 +597,12 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
   ) async {
     final datosperfil = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await datosperfil.actualizarDatosPersonales(
         FamiliaresActualizarInformacionPersonal(
           idFamiliar: idFamiliar,
@@ -609,6 +615,7 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
           telefono2: telefono2,
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result.message ?? ""),
@@ -617,6 +624,7 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
       );
       widget.onSelection("default");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,

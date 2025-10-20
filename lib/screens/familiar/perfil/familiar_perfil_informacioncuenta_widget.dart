@@ -313,6 +313,12 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
   ) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.actualizarDatosCuenta(
         FamiliaresActualizarInformacionCuenta(
           idFamiliar: widget.idFamiliar!,
@@ -321,11 +327,13 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
           usuario: usuario ?? "",
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
       );
       widget.onSelection("default");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll("Excepction: ", "")),

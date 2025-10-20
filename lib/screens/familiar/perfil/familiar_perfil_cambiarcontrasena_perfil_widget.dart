@@ -235,6 +235,7 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
                           ),
                           child: TextButton(
                             onPressed: () {
+                              FocusScope.of(context).unfocus();
                               actualizarContrasena(
                                 widget.idFamiliar,
                                 widget.tokenAcceso,
@@ -364,6 +365,12 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
   ) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.actualizarContrasena(
         FamiliaresActualizarContrasena(
           idFamiliar: idFamiliar!,
@@ -372,11 +379,13 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
           nuevaContrasena: contrasenaN ?? "",
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
       );
       widget.onSelection("default");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll("Exception: ", "")),
