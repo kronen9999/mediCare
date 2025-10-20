@@ -7,6 +7,7 @@ import 'package:medicare/models/cuidadores/cuidadores_login.dart';
 import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
 import 'package:medicare/models/cuidadores/cuidadores_restablecercontrasena.dart';
 import 'package:medicare/models/cuidadores/cuidadores_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarinformacionpersonal.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfil.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfilbasico.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
@@ -173,6 +174,34 @@ class CuidadoresRepositoryGlobal {
 
     if (response.statusCode == 200) {
       return CuidadoresPerfilObtenerperfilbasicoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para actualizar la informacion personal del cuidador
+  Future<CuidadoresPerfilActualizarinformacionpersonalResponse>
+  actualizarInformacionPersonal(
+    CuidadoresPerfilActualizarinformacionpersonal actualizarData,
+  ) async {
+    final String urlBase = variableGlobal.rutaGlobalBase;
+    final String endpoint = 'Cuidadores/Perfil/ActualizarInformacionPersonal';
+    final response = await http.put(
+      Uri.parse(urlBase + endpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(actualizarData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return CuidadoresPerfilActualizarinformacionpersonalResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

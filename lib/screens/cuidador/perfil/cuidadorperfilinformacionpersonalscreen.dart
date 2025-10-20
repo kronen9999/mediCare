@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarinformacionpersonal.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfilbasico.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 
@@ -169,7 +170,7 @@ class _CuidadorperfilinformacionpersonalscreenState
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
                               color: Colors
-                                  .blue, // Color del borde cuando está enfocado
+                                  .green, // Color del borde cuando está enfocado
                               width: 1.5,
                             ),
                           ),
@@ -227,7 +228,7 @@ class _CuidadorperfilinformacionpersonalscreenState
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
                               color: Colors
-                                  .blue, // Color del borde cuando está enfocado
+                                  .green, // Color del borde cuando está enfocado
                               width: 1.5,
                             ),
                           ),
@@ -285,7 +286,7 @@ class _CuidadorperfilinformacionpersonalscreenState
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
                               color: Colors
-                                  .blue, // Color del borde cuando está enfocado
+                                  .green, // Color del borde cuando está enfocado
                               width: 1.5,
                             ),
                           ),
@@ -343,7 +344,7 @@ class _CuidadorperfilinformacionpersonalscreenState
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
                               color: Colors
-                                  .blue, // Color del borde cuando está enfocado
+                                  .green, // Color del borde cuando está enfocado
                               width: 1.5,
                             ),
                           ),
@@ -353,13 +354,15 @@ class _CuidadorperfilinformacionpersonalscreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono 1",
+                        "Telefono principal",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 15),
+                      padding: const EdgeInsets.only(top: 10),
                       child: TextField(
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
                         controller: telefono1Controller,
                         onChanged: (value) {
                           setState(() {
@@ -401,7 +404,7 @@ class _CuidadorperfilinformacionpersonalscreenState
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
                               color: Colors
-                                  .blue, // Color del borde cuando está enfocado
+                                  .green, // Color del borde cuando está enfocado
                               width: 1.5,
                             ),
                           ),
@@ -418,6 +421,8 @@ class _CuidadorperfilinformacionpersonalscreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 30),
                       child: TextField(
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
                         controller: telefono2Controller,
                         onChanged: (value) {
                           setState(() {
@@ -459,7 +464,7 @@ class _CuidadorperfilinformacionpersonalscreenState
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
                               color: Colors
-                                  .blue, // Color del borde cuando está enfocado
+                                  .green, // Color del borde cuando está enfocado
                               width: 1.5,
                             ),
                           ),
@@ -476,7 +481,17 @@ class _CuidadorperfilinformacionpersonalscreenState
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              actualizarDatos(
+                                nombre,
+                                apellidoP,
+                                apellidoM,
+                                direccion,
+                                telefono1,
+                                telefono2,
+                                context,
+                              );
+                            },
                             child: Text(
                               "Guardar cambios",
                               style: TextStyle(
@@ -539,5 +554,54 @@ class _CuidadorperfilinformacionpersonalscreenState
       telefono1Controller.text = telefono1 ?? "";
       telefono2Controller.text = telefono2 ?? "";
     });
+  }
+
+  void actualizarDatos(
+    String? nombre,
+    String? apellidoP,
+    String? apellidoM,
+    String? direccion,
+    String? telefono1,
+    String? telefono2,
+    context,
+  ) async {
+    final repo = CuidadoresRepositoryGlobal();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) =>
+          const Center(child: CircularProgressIndicator(color: Colors.green)),
+    );
+    try {
+      final result = await repo.actualizarInformacionPersonal(
+        CuidadoresPerfilActualizarinformacionpersonal(
+          idCuidador: widget.idCuidador ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          nombre: nombre ?? "",
+          apellidoP: apellidoP ?? "",
+          apellidoM: apellidoM ?? "",
+          direccion: direccion ?? "",
+          telefono1: telefono1 ?? "",
+          telefono2: telefono2 ?? "",
+        ),
+      );
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+      widget.onSelection("default");
+    } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }
