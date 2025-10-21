@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/screens/familiar/Inicio/familiar_chat_ia_widget.dart';
+import 'package:medicare/screens/familiar/Inicio/familiar_chat_iapersonalizada.dart';
 
 class FamiliarPrincipalScreen extends StatefulWidget {
   const FamiliarPrincipalScreen({super.key});
@@ -34,7 +35,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen> {
           child: tipoScreen == "default"
               ? cuerpoPrincipal()
               : tipoScreen == "chatbot"
-              ? FamiliarChatIaWidget()
+              ? FamiliarChatIapersonalizada() //FamiliarChatIaWidget()
               : Text("Otra pantalla"),
         ),
       ),
