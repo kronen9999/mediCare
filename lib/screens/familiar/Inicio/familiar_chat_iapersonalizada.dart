@@ -16,6 +16,13 @@ class _FamiliarChatIapersonalizadaState
   bool primeraInteraccion = false;
   late final AnimationController _controller;
   late final TextEditingController mensajeController;
+  // Lista de mensajes de ejemplo
+  final List<String> mensajes = [
+    "Hola, ¿en qué puedo ayudarte?",
+    "¿Tienes alguna pregunta sobre tu salud?",
+    "Recuerda tomar tus medicamentos a tiempo.",
+    "Estoy aquí para asistirte con cualquier duda.",
+  ];
 
   @override
   void initState() {
@@ -78,83 +85,112 @@ class _FamiliarChatIapersonalizadaState
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Column(
-          mainAxisSize: MainAxisSize.max,
           children: [
-            primeraInteraccion == false
-                ? Column(
-                    children: [
-                      Center(
-                        child: Lottie.asset(
-                          repeat: true,
-                          reverse: true,
-                          'assets/images/circle.json',
-                          controller: _controller,
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.fill,
-                          onLoaded: (composition) {
-                            _controller.duration = composition.duration;
-                            _controller.repeat();
-                          },
-                        ),
+            if (!primeraInteraccion)
+              Column(
+                children: [
+                  Center(
+                    child: Lottie.asset(
+                      repeat: true,
+                      reverse: true,
+                      'assets/images/circle.json',
+                      controller: _controller,
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.fill,
+                      onLoaded: (composition) {
+                        _controller.duration = composition.duration;
+                        _controller.repeat();
+                      },
+                    ),
+                  ),
+                  Text(
+                    "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey, fontSize: 20),
+                  ),
+                ],
+              )
+            else
+              const SizedBox(height: 24),
+            // Área de mensajes scrollable
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                itemCount: mensajes.length,
+                itemBuilder: (context, index) {
+                  return Align(
+                    alignment: index % 2 == 0
+                        ? Alignment.centerLeft
+                        : Alignment.centerRight,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
                       ),
-                      Text(
-                        "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey, fontSize: 20),
+                      decoration: BoxDecoration(
+                        color: index % 2 == 0
+                            ? Colors.grey[200]
+                            : Colors.blue[100],
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ],
-                  )
-                : const SizedBox(height: 24),
-            SizedBox(height: 330, child: ListView()),
-            Container(
-              height: 100,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.grey, width: 2)),
+                      child: Text(
+                        mensajes[index],
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  );
+                },
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: .5),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Icon(Icons.image_outlined, color: Colors.blue),
-                      ),
+            ),
+            // Input fijo abajo
+            Padding(
+              padding: EdgeInsets.only(
+                left: 8,
+                right: 8,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 8,
+                top: 8,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: .5),
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: .5),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Icon(
-                          Icons.mic_none_outlined,
-                          color: Colors.blue,
-                        ),
-                      ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(Icons.image_outlined, color: Colors.blue),
                     ),
-                    Container(
-                      height: 35,
-                      width: 250,
+                  ),
+                  SizedBox(width: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: .5),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(Icons.mic_none_outlined, color: Colors.blue),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Container(
+                      height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: .5),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: 210,
+                          Expanded(
                             child: TextField(
                               onChanged: (value) {
                                 setState(() {
@@ -163,21 +199,26 @@ class _FamiliarChatIapersonalizadaState
                               },
                               controller: mensajeController,
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  left: 10,
-                                  bottom: 10,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10,
                                 ),
                                 hintText: "Escribe tu mensaje...",
                                 border: InputBorder.none,
                               ),
                             ),
                           ),
-                          Icon(Icons.send, color: Colors.blue),
+                          IconButton(
+                            icon: Icon(Icons.send, color: Colors.blue),
+                            onPressed: () {
+                              // Acción de enviar mensaje
+                            },
+                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
