@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class FamiliarChatIapersonalizada extends StatefulWidget {
-  const FamiliarChatIapersonalizada({super.key});
+  final String? idFamiliar;
+  final void Function(String) onSelect;
+
+  const FamiliarChatIapersonalizada({
+    super.key,
+    required this.idFamiliar,
+    required this.onSelect,
+  });
 
   @override
   State<FamiliarChatIapersonalizada> createState() =>
@@ -17,12 +24,7 @@ class _FamiliarChatIapersonalizadaState
   late final AnimationController _controller;
   late final TextEditingController mensajeController;
   // Lista de mensajes de ejemplo
-  final List<String> mensajes = [
-    "Hola, ¿en qué puedo ayudarte?",
-    "¿Tienes alguna pregunta sobre tu salud?",
-    "Recuerda tomar tus medicamentos a tiempo.",
-    "Estoy aquí para asistirte con cualquier duda.",
-  ];
+  final List<String> mensajes = [];
 
   @override
   void initState() {
@@ -39,7 +41,6 @@ class _FamiliarChatIapersonalizadaState
 
   void empezarHablar() {
     _controller.duration = Duration(seconds: 2);
-    _controller.repeat();
   }
 
   void dejarDeHablar() {
@@ -81,31 +82,36 @@ class _FamiliarChatIapersonalizadaState
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Icon(Icons.arrow_back, color: Colors.black),
+            child: GestureDetector(
+              onTap: () {
+                widget.onSelect("default");
+              },
+              child: Icon(Icons.arrow_back, color: Colors.black),
+            ),
           ),
         ],
       ),
       body: SafeArea(
         child: Column(
           children: [
+            Center(
+              child: Lottie.asset(
+                repeat: true,
+                reverse: true,
+                'assets/images/circle.json',
+                controller: _controller,
+                width: 200,
+                height: 200,
+                fit: BoxFit.fill,
+                onLoaded: (composition) {
+                  _controller.duration = composition.duration;
+                  _controller.repeat();
+                },
+              ),
+            ),
             if (!primeraInteraccion)
               Column(
                 children: [
-                  Center(
-                    child: Lottie.asset(
-                      repeat: true,
-                      reverse: true,
-                      'assets/images/circle.json',
-                      controller: _controller,
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.fill,
-                      onLoaded: (composition) {
-                        _controller.duration = composition.duration;
-                        _controller.repeat();
-                      },
-                    ),
-                  ),
                   Text(
                     "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
                     textAlign: TextAlign.center,
@@ -126,8 +132,8 @@ class _FamiliarChatIapersonalizadaState
                 itemBuilder: (context, index) {
                   return Align(
                     alignment: index % 2 == 0
-                        ? Alignment.centerLeft
-                        : Alignment.centerRight,
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(
@@ -136,8 +142,8 @@ class _FamiliarChatIapersonalizadaState
                       ),
                       decoration: BoxDecoration(
                         color: index % 2 == 0
-                            ? Colors.grey[200]
-                            : Colors.blue[100],
+                            ? Colors.blue[100]
+                            : Colors.grey[200],
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -211,7 +217,7 @@ class _FamiliarChatIapersonalizadaState
                           IconButton(
                             icon: Icon(Icons.send, color: Colors.blue),
                             onPressed: () {
-                              // Acción de enviar mensaje
+                              enviarMensaje();
                             },
                           ),
                         ],
@@ -225,5 +231,16 @@ class _FamiliarChatIapersonalizadaState
         ),
       ),
     );
+  }
+
+  void enviarMensaje() {
+    if (mensaje != null && mensaje!.trim().isNotEmpty) {
+      setState(() {
+        mensajes.add(mensaje!.trim());
+        mensajeController.clear();
+        mensaje = null;
+        primeraInteraccion = true;
+      });
+    }
   }
 }
