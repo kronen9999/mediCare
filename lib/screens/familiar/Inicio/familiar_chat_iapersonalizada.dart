@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medicare/models/familiares/familiares_chatbot.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarChatIapersonalizada extends StatefulWidget {
   final String? idFamiliar;
@@ -233,7 +235,8 @@ class _FamiliarChatIapersonalizadaState
     );
   }
 
-  void enviarMensaje() {
+  void enviarMensaje() async {
+    String? mensajeChat = mensaje;
     if (mensaje != null && mensaje!.trim().isNotEmpty) {
       setState(() {
         mensajes.add(mensaje!.trim());
@@ -241,6 +244,20 @@ class _FamiliarChatIapersonalizadaState
         mensaje = null;
         primeraInteraccion = true;
       });
+      final repo = FamiliaresReposotoryGlobal();
+      final respuesta = await repo.envioMensaje(
+        FamiliaresChatbot(
+          idUsuario: widget.idFamiliar ?? '',
+          mensaje: mensajeChat ?? "",
+        ),
+      );
+      recibirRespuesta(respuesta.response);
     }
+  }
+
+  void recibirRespuesta(String respuesta) {
+    setState(() {
+      mensajes.add(respuesta);
+    });
   }
 }

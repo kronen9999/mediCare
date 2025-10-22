@@ -9,6 +9,7 @@ import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_e
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadoresna.dart';
+import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
@@ -662,6 +663,24 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else {
       throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  ////////////////////////////////////Metodos del chatBot////////////
+
+  Future<FamiliaresChatbotResponse> envioMensaje(
+    FamiliaresChatbot chatData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('http://192.168.0.104:5678/webhook-test/MediCare/Test2'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(chatData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresChatbotResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Ha ocurrido un error inesperado");
     }
   }
 }
