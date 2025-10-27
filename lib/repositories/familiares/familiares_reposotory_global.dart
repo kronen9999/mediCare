@@ -9,6 +9,7 @@ import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_e
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidador.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadores.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadoresna.dart';
+import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
@@ -662,6 +663,27 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else {
       throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  ////////////////////////////////////Metodos del chatBot////////////
+
+  Future<FamiliaresChatbotResponse> envioMensaje(
+    FamiliaresChatbot chatData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        'https://chimerically-centrobaric-brendan.ngrok-free.dev/webhook/MediCareBot/Familiares',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(chatData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return FamiliaresChatbotResponse.fromJson(data.first);
+    } else {
+      throw Exception("Ha ocurrido un error inesperado");
     }
   }
 }
