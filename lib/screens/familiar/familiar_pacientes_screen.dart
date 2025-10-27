@@ -3,6 +3,7 @@ import 'package:medicare/components/familiares/familiar_cuidadores_screen/item_l
 import 'package:medicare/components/familiares/familiar_pacientes_screen/item_lista_pacientes_screen.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/screens/familiar/medicamentos/familiar_pacientes_medicamentos_screen.dart';
 import 'package:medicare/screens/familiar/pacientes/familiar_paciente_agregarpaciente_screen.dart';
 import 'package:medicare/screens/familiar/pacientes/familiar_paciente_editarpaciente_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,6 +52,8 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                 onSelect: asignarSeccion,
                 onUpdate: obtenerPacientes,
               )
+            : seccion == "medicamentosPaciente"
+            ? FamiliarPacientesMedicamentosScreen()
             : defecto(),
       ),
     );

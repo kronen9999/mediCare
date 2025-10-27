@@ -160,7 +160,9 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        widget.onSelect("medicamentosPaciente");
+                      },
                       child: Icon(
                         Icons.medication_liquid,
                         color: const Color.fromARGB(255, 102, 101, 101),
