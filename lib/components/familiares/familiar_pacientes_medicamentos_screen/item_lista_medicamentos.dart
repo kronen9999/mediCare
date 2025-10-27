@@ -117,6 +117,76 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
                 ),
               ),
               Divider(height: 30),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      widget.medicamentoActivo == 1
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: Colors.green[100],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Text(
+                                  "Activo",
+                                  style: TextStyle(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      94,
+                                      94,
+                                      94,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red[100],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Text(
+                                  "Inactivo",
+                                  style: TextStyle(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      94,
+                                      94,
+                                      94,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      widget.medicamentoActivo == 1
+                          ? TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Deshabilitar medicamento",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            )
+                          : TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Habilitar medicamento",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
         ),
