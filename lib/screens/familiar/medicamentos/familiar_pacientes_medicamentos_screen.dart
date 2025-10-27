@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/components/familiares/familiar_pacientes_medicamentos_screen/item_lista_medicamentos.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -250,16 +251,12 @@ class _FamiliarPacientesMedicamentosScreenState
                     final medicamento = medicamentos[index];
                     return Padding(
                       padding: const EdgeInsets.only(left: 25, right: 25),
-                      child: Container(
-                        child: Column(
-                          children: [
-                            Text("Nombre medicamento"),
-                            Text(
-                              medicamento.nombreM ??
-                                  "Sin nombre del medicamento",
-                            ),
-                          ],
-                        ),
+                      child: ItemListaMedicamentos(
+                        nombreM: medicamento.nombreM ?? "Sin nombre",
+                        descripcionM:
+                            medicamento.descripcionM ?? "Sin descripcion",
+                        tipoM: medicamento.tipoMedicamento ?? "Sin tipo",
+                        medicamentoActivo: medicamento.medicamentoActivo,
                       ) /* ItemListaPacientesScreen(
                         idCuidador: (paciente.idCuidador != null)
                             ? paciente.idCuidador.toString()
