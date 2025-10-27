@@ -7,6 +7,7 @@ class FamiliarPacientesMedicamentosScreen extends StatefulWidget {
   final String? idFamiliar;
   final String? tokenAcceso;
   final String? idPaciente;
+  final String? nombrePaciente;
   final void Function(String) onSelect;
   const FamiliarPacientesMedicamentosScreen({
     super.key,
@@ -14,6 +15,7 @@ class FamiliarPacientesMedicamentosScreen extends StatefulWidget {
     required this.tokenAcceso,
     required this.idPaciente,
     required this.onSelect,
+    required this.nombrePaciente,
   });
 
   @override
@@ -56,7 +58,7 @@ class _FamiliarPacientesMedicamentosScreenState
           Padding(
             padding: const EdgeInsets.only(top: 15, bottom: 15),
             child: Text(
-              "Medicamentos de Alejandro",
+              "Medicamentos de ${widget.nombrePaciente}",
               style: TextStyle(
                 color: Color.fromRGBO(85, 150, 255, 1),
                 fontSize: 20,

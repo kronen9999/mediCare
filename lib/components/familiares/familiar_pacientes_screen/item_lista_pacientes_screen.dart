@@ -20,6 +20,7 @@ class ItemListaPacientesScreen extends StatefulWidget {
   final void Function(String) onSelect;
   final void Function(String?) onUpdatePaciente;
   final void Function(String?, String?) onUpdatePacientes;
+  final void Function(String) onUpdateNombre;
   final void Function(BuildContext, VoidCallback)
   mostrarDialogoEliminarPaciente;
   const ItemListaPacientesScreen({
@@ -39,6 +40,7 @@ class ItemListaPacientesScreen extends StatefulWidget {
     required this.onUpdatePaciente,
     required this.mostrarDialogoEliminarPaciente,
     required this.onUpdatePacientes,
+    required this.onUpdateNombre,
   });
 
   @override
@@ -161,6 +163,7 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                     padding: const EdgeInsets.only(right: 16),
                     child: GestureDetector(
                       onTap: () {
+                        widget.onUpdateNombre(widget.nombre ?? "");
                         widget.onUpdatePaciente(widget.idPaciente);
                         widget.onSelect("medicamentosPaciente");
                       },

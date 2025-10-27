@@ -21,6 +21,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
   String? idFamiliar;
   String? tokenAcceso;
   String? idPaciente;
+  String? nombrePaciente;
   String seccion = "defecto";
 
   @override
@@ -58,6 +59,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                 tokenAcceso: tokenAcceso,
                 idPaciente: idPaciente,
                 onSelect: asignarSeccion,
+                nombrePaciente: nombrePaciente,
               )
             : defecto(),
       ),
@@ -291,6 +293,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                           mostrarDialogoEliminarPaciente(context, onConfirmar);
                         },
                         onUpdatePacientes: obtenerPacientes,
+                        onUpdateNombre: asignarNombrePaciente,
                       ),
                     );
                   },
@@ -370,5 +373,14 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
         ],
       ),
     );
+  }
+
+  void asignarNombrePaciente(String nuevoNombrePaciente) {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      nombrePaciente = nuevoNombrePaciente;
+    });
   }
 }
