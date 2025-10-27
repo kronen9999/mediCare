@@ -187,6 +187,106 @@ class _FamiliarPacientesMedicamentosScreenState
               ),
             ),
           ),
+          FutureBuilder<FamiliaresPacientesObtenermedicamentosResponse?>(
+            future: listaMedicamentos,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.wifi_off, color: Colors.red, size: 40),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Parece que su conexión está lenta o inestable.",
+                        style: TextStyle(
+                          color: Color.fromRGBO(85, 150, 255, 1),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: 180,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            obtenerMedicamentos();
+                          },
+                          icon: Icon(Icons.refresh, color: Colors.white),
+                          label: Text(
+                            "Reintentar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (!snapshot.hasData ||
+                  snapshot.data?.medicamentos == null ||
+                  snapshot.data!.medicamentos.isEmpty) {
+                return Center(child: Text('No hay medicamentos registrados'));
+              } else {
+                final medicamentos = snapshot.data!.medicamentos;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: medicamentos.length,
+                  itemBuilder: (context, index) {
+                    final medicamento = medicamentos[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Text("Nombre medicamento"),
+                            Text(
+                              medicamento.nombreM ??
+                                  "Sin nombre del medicamento",
+                            ),
+                          ],
+                        ),
+                      ) /* ItemListaPacientesScreen(
+                        idCuidador: (paciente.idCuidador != null)
+                            ? paciente.idCuidador.toString()
+                            : "",
+                        idFamliar: idFamiliar ?? "",
+                        tokenAcceso: tokenAcceso ?? "",
+                        idPaciente: paciente.idPaciente.toString(),
+                        nombre: paciente.nombre ?? "",
+                        apellidoP: paciente.apellidoP ?? "",
+                        apellidoM: paciente.apellidoM ?? "",
+                        nombreCuidador: paciente.nombreCuidador ?? "",
+                        padecimiento: paciente.padecimiento ?? "",
+                        apellidoPCuidador: paciente.apellidoPCuidador ?? "",
+                        apellidoMCuidador: paciente.apellidoMCuidador,
+                        onSelect: asignarSeccion,
+                        onUpdatePaciente: seleccionarPaciente,
+                        mostrarDialogoEliminarPaciente: (context, onConfirmar) {
+                          mostrarDialogoEliminarPaciente(context, onConfirmar);
+                        },
+                        onUpdatePacientes: obtenerPacientes,
+                      ),*/,
+                    );
+                  },
+                );
+              }
+            },
+          ),
         ],
       ),
     );
