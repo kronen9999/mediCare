@@ -5,12 +5,14 @@ class ItemListaMedicamentos extends StatefulWidget {
   final String? descripcionM;
   final String? tipoM;
   final int medicamentoActivo;
+  final void Function(String) onSelect;
   const ItemListaMedicamentos({
     super.key,
     required this.nombreM,
     required this.descripcionM,
     required this.tipoM,
     required this.medicamentoActivo,
+    required this.onSelect,
   });
 
   @override

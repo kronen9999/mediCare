@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medicare/components/familiares/familiar_pacientes_medicamentos_screen/item_lista_medicamentos.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/screens/familiar/medicamentos/familiar_pacientes_agregarmedicamento_screen.dart';
 
 class FamiliarPacientesMedicamentosScreen extends StatefulWidget {
   final String? idFamiliar;
@@ -25,6 +26,7 @@ class FamiliarPacientesMedicamentosScreen extends StatefulWidget {
 
 class _FamiliarPacientesMedicamentosScreenState
     extends State<FamiliarPacientesMedicamentosScreen> {
+  String apartado = "defecto";
   Future<FamiliaresPacientesObtenermedicamentosResponse?>? listaMedicamentos;
 
   @override
@@ -35,6 +37,14 @@ class _FamiliarPacientesMedicamentosScreenState
 
   @override
   Widget build(BuildContext context) {
+    return apartado == "defecto"
+        ? principal()
+        : apartado == "agregarMedicamento"
+        ? FamiliarPacientesAgregarmedicamentoScreen()
+        : CircularProgressIndicator();
+  }
+
+  SingleChildScrollView principal() {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -89,7 +99,7 @@ class _FamiliarPacientesMedicamentosScreenState
               ),
               child: TextButton(
                 onPressed: () {
-                  // asignarSeccion("agregarPaciente");
+                  setApartado("agregarMedicamento");
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -259,27 +269,8 @@ class _FamiliarPacientesMedicamentosScreenState
                             medicamento.descripcionM ?? "Sin descripcion",
                         tipoM: medicamento.tipoMedicamento ?? "Sin tipo",
                         medicamentoActivo: medicamento.medicamentoActivo,
-                      ) /* ItemListaPacientesScreen(
-                        idCuidador: (paciente.idCuidador != null)
-                            ? paciente.idCuidador.toString()
-                            : "",
-                        idFamliar: idFamiliar ?? "",
-                        tokenAcceso: tokenAcceso ?? "",
-                        idPaciente: paciente.idPaciente.toString(),
-                        nombre: paciente.nombre ?? "",
-                        apellidoP: paciente.apellidoP ?? "",
-                        apellidoM: paciente.apellidoM ?? "",
-                        nombreCuidador: paciente.nombreCuidador ?? "",
-                        padecimiento: paciente.padecimiento ?? "",
-                        apellidoPCuidador: paciente.apellidoPCuidador ?? "",
-                        apellidoMCuidador: paciente.apellidoMCuidador,
-                        onSelect: asignarSeccion,
-                        onUpdatePaciente: seleccionarPaciente,
-                        mostrarDialogoEliminarPaciente: (context, onConfirmar) {
-                          mostrarDialogoEliminarPaciente(context, onConfirmar);
-                        },
-                        onUpdatePacientes: obtenerPacientes,
-                      ),*/,
+                        onSelect: setApartado,
+                      ),
                     );
                   },
                 );
@@ -304,6 +295,12 @@ class _FamiliarPacientesMedicamentosScreenState
           idPaciente: widget.idPaciente ?? "",
         ),
       );
+    });
+  }
+
+  void setApartado(String nuevoApartado) {
+    setState(() {
+      apartado = nuevoApartado;
     });
   }
 }
