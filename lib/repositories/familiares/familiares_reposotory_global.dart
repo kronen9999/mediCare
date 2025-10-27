@@ -13,6 +13,7 @@ import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
@@ -660,6 +661,36 @@ class FamiliaresReposotoryGlobal {
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 409) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  ////////////////////////////////////Metodos de medicamentos y horarios////////////////////////
+
+  Future<FamiliaresPacientesObtenermedicamentosResponse?>? obtenerMedicamentos(
+    FamiliaresPacientesObtenermedicamentos medicamentosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/ObtenerMedicamentos',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesObtenermedicamentosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 204) {
+      return FamiliaresPacientesObtenermedicamentosResponse(medicamentos: []);
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
     } else {
       throw Exception(jsonDecode(response.body)['message']);
