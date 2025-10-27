@@ -1,18 +1,18 @@
 class FamiliaresChatbot {
-  final String idUsuario;
+  final String idFamiliar;
   final String mensaje;
 
-  FamiliaresChatbot({required this.idUsuario, required this.mensaje});
+  FamiliaresChatbot({required this.idFamiliar, required this.mensaje});
 
   factory FamiliaresChatbot.fromJson(Map<String, dynamic> json) {
     return FamiliaresChatbot(
-      idUsuario: json['IdUsuario'] ?? '',
+      idFamiliar: json['IdFamiliar'] ?? '',
       mensaje: json['Mensaje'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'IdUsuario': idUsuario, 'Mensaje': mensaje};
+    return {'IdFamiliar': idFamiliar, 'Mensaje': mensaje};
   }
 }
 

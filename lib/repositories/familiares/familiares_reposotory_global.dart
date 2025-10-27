@@ -672,13 +672,16 @@ class FamiliaresReposotoryGlobal {
     FamiliaresChatbot chatData,
   ) async {
     final response = await http.post(
-      Uri.parse('http://192.168.0.104:5678/webhook-test/MediCare/Test2'),
+      Uri.parse(
+        'https://chimerically-centrobaric-brendan.ngrok-free.dev/webhook/MediCareBot/Familiares',
+      ),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(chatData.toJson()),
     );
 
     if (response.statusCode == 200) {
-      return FamiliaresChatbotResponse.fromJson(jsonDecode(response.body));
+      final List<dynamic> data = jsonDecode(response.body);
+      return FamiliaresChatbotResponse.fromJson(data.first);
     } else {
       throw Exception("Ha ocurrido un error inesperado");
     }

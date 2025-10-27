@@ -247,7 +247,7 @@ class _FamiliarChatIapersonalizadaState
       final repo = FamiliaresReposotoryGlobal();
       final respuesta = await repo.envioMensaje(
         FamiliaresChatbot(
-          idUsuario: widget.idFamiliar ?? '',
+          idFamiliar: widget.idFamiliar ?? '',
           mensaje: mensajeChat ?? "",
         ),
       );
