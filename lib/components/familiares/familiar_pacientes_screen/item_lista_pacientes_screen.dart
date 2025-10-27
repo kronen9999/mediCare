@@ -161,6 +161,7 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
                     padding: const EdgeInsets.only(right: 16),
                     child: GestureDetector(
                       onTap: () {
+                        widget.onUpdatePaciente(widget.idPaciente);
                         widget.onSelect("medicamentosPaciente");
                       },
                       child: Icon(

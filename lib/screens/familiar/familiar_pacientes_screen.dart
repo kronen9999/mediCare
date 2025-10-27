@@ -53,7 +53,12 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                 onUpdate: obtenerPacientes,
               )
             : seccion == "medicamentosPaciente"
-            ? FamiliarPacientesMedicamentosScreen()
+            ? FamiliarPacientesMedicamentosScreen(
+                idFamiliar: idFamiliar,
+                tokenAcceso: tokenAcceso,
+                idPaciente: idPaciente,
+                onSelect: asignarSeccion,
+              )
             : defecto(),
       ),
     );
