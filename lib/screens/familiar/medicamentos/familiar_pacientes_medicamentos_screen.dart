@@ -40,7 +40,10 @@ class _FamiliarPacientesMedicamentosScreenState
     return apartado == "defecto"
         ? principal()
         : apartado == "agregarMedicamento"
-        ? FamiliarPacientesAgregarmedicamentoScreen()
+        ? FamiliarPacientesAgregarmedicamentoScreen(
+            nombrePaciente: widget.nombrePaciente,
+            onSelect: setApartado,
+          )
         : CircularProgressIndicator();
   }
 
