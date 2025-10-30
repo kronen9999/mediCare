@@ -57,6 +57,7 @@ class _FamiliarPacientesMedicamentosScreenState
             idPaciente: widget.idPaciente,
             idMedicamento: idMedicamento,
             onSelect: setApartado,
+            obtenerMedicamentos: obtenerMedicamentos,
           )
         : CircularProgressIndicator();
   }

@@ -14,6 +14,7 @@ import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dar
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
@@ -755,6 +756,34 @@ class FamiliaresReposotoryGlobal {
     }
   }
 
+  //Metodo para actualizar los datos de la informacion del medicamento
+
+  Future<FamiliaresPacientesEditarInformacionmedicamentoResponse>
+  editarInformacionMedicamento(
+    FamiliaresPacientesEditarInformacionmedicamento infoData,
+  ) async {
+    final response = await http.put(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/EditarMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(infoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesEditarInformacionmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
   ////////////////////////////////////Metodos del chatBot////////////
 
   Future<FamiliaresChatbotResponse> envioMensaje(

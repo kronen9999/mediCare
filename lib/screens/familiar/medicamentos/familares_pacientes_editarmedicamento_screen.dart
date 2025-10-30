@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -8,6 +9,7 @@ class FamilaresPacientesEditarmedicamentoScreen extends StatefulWidget {
   final String? tokenAcceso;
   final String? idPaciente;
   final String? idMedicamento;
+  final void Function() obtenerMedicamentos;
 
   const FamilaresPacientesEditarmedicamentoScreen({
     super.key,
@@ -16,6 +18,7 @@ class FamilaresPacientesEditarmedicamentoScreen extends StatefulWidget {
     required this.tokenAcceso,
     required this.idPaciente,
     required this.idMedicamento,
+    required this.obtenerMedicamentos,
   });
 
   @override
@@ -415,7 +418,9 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                actualizarInformacionMedicamento(context);
+                              },
                               child: Text(
                                 "Guardar cambios",
                                 style: TextStyle(
@@ -800,7 +805,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
         nombreController.text = result.nombreM;
         nombreM = result.nombreM;
         descripcionController.text = result.descripcionM ?? "";
-        descripcionM = result.nombreM;
+        descripcionM = result.descripcionM;
         notasController.text = result.notas ?? "";
         notas = result.notas;
         tipoMedicamento = result.tipoMedicamento;
@@ -819,6 +824,44 @@ class _FamilaresPacientesEditarmedicamentoScreenState
       Future.delayed(Duration(seconds: 1), () {
         obtenerMedicamento();
       });
+    }
+  }
+
+  void actualizarInformacionMedicamento(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+    );
+    try {
+      final result = await repo.editarInformacionMedicamento(
+        FamiliaresPacientesEditarInformacionmedicamento(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
+          idMedicamento: widget.idMedicamento ?? "",
+          nombreM: nombreM ?? "",
+          descripcionM: descripcionM ?? "",
+          tipoMedicamento: tipoMedicamento ?? "",
+          unidadDosis: unidadDosis ?? "",
+          notas: notas ?? "",
+        ),
+      );
+      Navigator.of(context).pop();
+      widget.obtenerMedicamentos();
+      widget.onSelect("defecto");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
     }
   }
 }
