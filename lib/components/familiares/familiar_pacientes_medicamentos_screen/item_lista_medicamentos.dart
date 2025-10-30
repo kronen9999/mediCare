@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ItemListaMedicamentos extends StatefulWidget {
+  final String idMedicamento;
   final String nombreM;
   final String? descripcionM;
   final String? tipoM;
   final int medicamentoActivo;
   final void Function(String) onSelect;
+  final void Function(String) setIdMedicamento;
   const ItemListaMedicamentos({
     super.key,
     required this.nombreM,
@@ -13,6 +15,8 @@ class ItemListaMedicamentos extends StatefulWidget {
     required this.tipoM,
     required this.medicamentoActivo,
     required this.onSelect,
+    required this.setIdMedicamento,
+    required this.idMedicamento,
   });
 
   @override
@@ -70,6 +74,7 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              widget.setIdMedicamento(widget.idMedicamento);
                               widget.onSelect("editarMedicamento");
                             },
                             child: Icon(

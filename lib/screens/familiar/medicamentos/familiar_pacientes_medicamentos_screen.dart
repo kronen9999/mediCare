@@ -28,6 +28,7 @@ class FamiliarPacientesMedicamentosScreen extends StatefulWidget {
 class _FamiliarPacientesMedicamentosScreenState
     extends State<FamiliarPacientesMedicamentosScreen> {
   String apartado = "defecto";
+  String? idMedicamento;
   Future<FamiliaresPacientesObtenermedicamentosResponse?>? listaMedicamentos;
 
   @override
@@ -50,7 +51,13 @@ class _FamiliarPacientesMedicamentosScreenState
             onUpdateM: obtenerMedicamentos,
           )
         : apartado == "editarMedicamento"
-        ? FamilaresPacientesEditarmedicamentoScreen()
+        ? FamilaresPacientesEditarmedicamentoScreen(
+            idFamiliar: widget.idFamiliar,
+            tokenAcceso: widget.tokenAcceso,
+            idPaciente: widget.idPaciente,
+            idMedicamento: idMedicamento,
+            onSelect: setApartado,
+          )
         : CircularProgressIndicator();
   }
 
@@ -279,6 +286,8 @@ class _FamiliarPacientesMedicamentosScreenState
                             medicamento.descripcionM ?? "Sin descripcion",
                         tipoM: medicamento.tipoMedicamento ?? "Sin tipo",
                         medicamentoActivo: medicamento.medicamentoActivo,
+                        idMedicamento: medicamento.idMedicamento.toString(),
+                        setIdMedicamento: setIdMedicamento,
                         onSelect: setApartado,
                       ),
                     );
@@ -311,6 +320,12 @@ class _FamiliarPacientesMedicamentosScreenState
   void setApartado(String nuevoApartado) {
     setState(() {
       apartado = nuevoApartado;
+    });
+  }
+
+  void setIdMedicamento(String newIdMedicamento) {
+    setState(() {
+      idMedicamento = newIdMedicamento;
     });
   }
 }
