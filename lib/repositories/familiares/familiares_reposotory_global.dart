@@ -13,6 +13,7 @@ import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
@@ -686,6 +687,34 @@ class FamiliaresReposotoryGlobal {
       );
     } else if (response.statusCode == 204) {
       return FamiliaresPacientesObtenermedicamentosResponse(medicamentos: []);
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para agregar un medicamento
+
+  Future<FamiliaresPacientesAgregarmedicamentoshResponse> agregarMedicamentoH(
+    FamiliaresPacientesAgregarmedicamentosh medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/AgregarMedicamentoHorario',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesAgregarmedicamentoshResponse.fromJson(
+        jsonDecode(response.body),
+      );
     } else if (response.statusCode == 422) {
       throw Exception(jsonDecode(response.body)["error"]);
     } else if (response.statusCode == 404) {

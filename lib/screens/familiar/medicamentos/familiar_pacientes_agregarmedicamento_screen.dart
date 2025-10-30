@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamiliarPacientesAgregarmedicamentoScreen extends StatefulWidget {
   final String? idFamiliar;
@@ -6,6 +8,7 @@ class FamiliarPacientesAgregarmedicamentoScreen extends StatefulWidget {
   final String? idPaciente;
   final String? nombrePaciente;
   final void Function(String) onSelect;
+  final void Function() onUpdateM;
   const FamiliarPacientesAgregarmedicamentoScreen({
     super.key,
     required this.idFamiliar,
@@ -13,6 +16,7 @@ class FamiliarPacientesAgregarmedicamentoScreen extends StatefulWidget {
     required this.idPaciente,
     required this.nombrePaciente,
     required this.onSelect,
+    required this.onUpdateM,
   });
 
   @override
@@ -48,7 +52,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
     'Inhaladores: dosis',
   ];
   String? opcionSeleccionada;
-  bool? primerRecordatorio = false;
+  bool primerRecordatorio = false;
 
   int? retardoHora = 0;
   int? retardoMinutos = 0;
@@ -1073,7 +1077,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
               ),
               child: TextButton(
                 onPressed: () {
-                  AgregarMedicamento();
+                  agregarMedicamento(context);
                 },
                 child: Text(
                   "Guardar medicamento",
@@ -1114,7 +1118,66 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
     );
   }
 
-  void AgregarMedicamento() {}
+  void agregarMedicamento(context) async {
+    String recordatorio = "";
+    if (primerRecordatorio) {
+      recordatorio = "ConRecordatorio";
+    } else {
+      recordatorio = "SinRecordatorio";
+    }
+    final repo = FamiliaresReposotoryGlobal();
+    if (intervaloHora == 0 && intervaloMinutos == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El intervalo de tiempo no puede ser 0"),
+        ),
+      );
+      return;
+    }
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
+      final result = await repo.agregarMedicamentoH(
+        FamiliaresPacientesAgregarmedicamentosh(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
+          nombreM: nombreM ?? "",
+          descripcionM: descripcionM ?? "",
+          tipoMedicamento: tipoMedicamento ?? "",
+          horaPrimeraDosis: horaInicioMedicamento ?? "",
+          intervaloHoras: intervaloHora.toString(),
+          intervaloMinutos: intervaloMinutos.toString(),
+          primerRecordatorio: recordatorio,
+          dosis: dosis ?? "",
+          unidadDosis: unidadDosis ?? "",
+          notas: notas ?? "",
+        ),
+      );
+      Navigator.of(context).pop();
+      widget.onUpdateM();
+      widget.onSelect("defecto");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(result.message + "\n" + result.fechaProgramada),
+        ),
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
+  }
 
   String formato12Horas(String hora24) {
     // hora24 debe ser tipo "HH:mm"
