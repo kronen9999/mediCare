@@ -15,6 +15,7 @@ import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
@@ -782,6 +783,37 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else {
       throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para editar el horario del medicamento
+
+  Future<FamiliaresPacientesEditarhorariomedicamentoResponse>
+  editarHorarioMedicamento(
+    FamiliaresPacientesEditarhorariomedicamento horarioData,
+  ) async {
+    final response = await http.put(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/EditarHorarioMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(horarioData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesEditarhorariomedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
   ////////////////////////////////////Metodos del chatBot////////////

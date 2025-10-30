@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -747,7 +748,9 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                actualizarHorarioMedicamento(context);
+                              },
                               child: Text(
                                 "Guardar cambios",
                                 style: TextStyle(
@@ -846,6 +849,42 @@ class _FamilaresPacientesEditarmedicamentoScreenState
           tipoMedicamento: tipoMedicamento ?? "",
           unidadDosis: unidadDosis ?? "",
           notas: notas ?? "",
+        ),
+      );
+      Navigator.of(context).pop();
+      widget.obtenerMedicamentos();
+      widget.onSelect("defecto");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
+  }
+
+  void actualizarHorarioMedicamento(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+    );
+    try {
+      final result = await repo.editarHorarioMedicamento(
+        FamiliaresPacientesEditarhorariomedicamento(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
+          idMedicamento: widget.idMedicamento ?? "",
+          dosis: dosis ?? "",
+          intervaloHoras: intervaloHora.toString(),
+          intervaloMinutos: intervaloMinutos.toString(),
         ),
       );
       Navigator.of(context).pop();
