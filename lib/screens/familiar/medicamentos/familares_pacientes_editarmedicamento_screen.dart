@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class FamilaresPacientesEditarmedicamentoScreen extends StatefulWidget {
   final Function(String) onSelect;
@@ -31,6 +33,16 @@ class _FamilaresPacientesEditarmedicamentoScreenState
   int? intervaloHora = 0;
   int? intervaloMinutos = 0;
   String? dosis;
+
+  TextEditingController nombreController = TextEditingController();
+  TextEditingController descripcionController = TextEditingController();
+  TextEditingController notasController = TextEditingController();
+  TextEditingController horasController = TextEditingController();
+  TextEditingController minutosController = TextEditingController();
+  TextEditingController dosisController = TextEditingController();
+  TextEditingController intervaloHoraController = TextEditingController();
+  TextEditingController intervaloMinutosController = TextEditingController();
+
   final List<String> formasMedicamento = [
     'Comprimidos: comprimido(s)',
     'Cápsulas: cápsula(s)',
@@ -48,6 +60,26 @@ class _FamilaresPacientesEditarmedicamentoScreenState
     'Óvulos: óvulo(s)',
     'Inhaladores: dosis',
   ];
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    nombreController.text = "obteniendoDatos...";
+    descripcionController.text = "obteniendoDatos...";
+    notasController.text = "obteniendoDatos...";
+    horasController.text = "obteniendoDatos...";
+    minutosController.text = "obteniendoDatos...";
+    dosisController.text = "obteniendoDatos...";
+    intervaloHoraController.text = "obteniendoDatos...";
+    intervaloMinutosController.text = "obteniendoDatos...";
+    obtenerMedicamento();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -131,6 +163,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: nombreController,
                         onChanged: (value) {
                           setState(() {
                             nombreM = value;
@@ -192,6 +225,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: descripcionController,
                         onChanged: (value) {
                           setState(() {
                             descripcionM = value;
@@ -317,6 +351,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 15),
                       child: TextField(
+                        controller: notasController,
                         onChanged: (value) {
                           setState(() {
                             notas = value;
@@ -464,6 +499,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                                 SizedBox(
                                   width: 150,
                                   child: TextField(
+                                    controller: horasController,
                                     keyboardType: TextInputType.number,
                                     maxLength: 2,
                                     onChanged: (value) {
@@ -550,6 +586,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                                 SizedBox(
                                   width: 150,
                                   child: TextField(
+                                    controller: minutosController,
                                     keyboardType: TextInputType.number,
                                     maxLength: 2,
                                     onChanged: (value) {
@@ -640,6 +677,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: TextField(
+                        controller: dosisController,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
                           setState(() {
@@ -742,5 +780,45 @@ class _FamilaresPacientesEditarmedicamentoScreenState
         ],
       ),
     );
+  }
+
+  void obtenerMedicamento() async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final result = await repo.obtenerMedicamento(
+        FamiliaresPacientesObtenermedicamento(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente ?? "",
+          idMedicamento: widget.idMedicamento ?? "",
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        nombreController.text = result.nombreM;
+        nombreM = result.nombreM;
+        descripcionController.text = result.descripcionM ?? "";
+        descripcionM = result.nombreM;
+        notasController.text = result.notas ?? "";
+        notas = result.notas;
+        tipoMedicamento = result.tipoMedicamento;
+        unidadDosis = result.unidadDosis;
+        horasController.text = result.intervaloHoras.toString();
+        minutosController.text = result.intervaloMinutos.toString();
+        dosisController.text = result.dosis.toString();
+        intervaloHora = result.intervaloHoras;
+        intervaloMinutos = result.intervaloMinutos;
+        dosis = result.dosis.toString();
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      Future.delayed(Duration(seconds: 1), () {
+        obtenerMedicamento();
+      });
+    }
   }
 }
