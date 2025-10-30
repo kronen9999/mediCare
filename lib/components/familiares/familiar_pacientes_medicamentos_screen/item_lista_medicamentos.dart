@@ -68,9 +68,14 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.edit_outlined,
-                            color: Color.fromARGB(255, 102, 101, 101),
+                          GestureDetector(
+                            onTap: () {
+                              widget.onSelect("editarMedicamento");
+                            },
+                            child: Icon(
+                              Icons.edit_outlined,
+                              color: Color.fromARGB(255, 102, 101, 101),
+                            ),
                           ),
                           Icon(
                             Icons.delete_outline,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medicare/components/familiares/familiar_pacientes_medicamentos_screen/item_lista_medicamentos.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/screens/familiar/medicamentos/familares_pacientes_editarmedicamento_screen.dart';
 import 'package:medicare/screens/familiar/medicamentos/familiar_pacientes_agregarmedicamento_screen.dart';
 
 class FamiliarPacientesMedicamentosScreen extends StatefulWidget {
@@ -48,6 +49,8 @@ class _FamiliarPacientesMedicamentosScreenState
             onSelect: setApartado,
             onUpdateM: obtenerMedicamentos,
           )
+        : apartado == "editarMedicamento"
+        ? FamilaresPacientesEditarmedicamentoScreen()
         : CircularProgressIndicator();
   }
 
