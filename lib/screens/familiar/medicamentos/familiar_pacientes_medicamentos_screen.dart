@@ -41,6 +41,9 @@ class _FamiliarPacientesMedicamentosScreenState
         ? principal()
         : apartado == "agregarMedicamento"
         ? FamiliarPacientesAgregarmedicamentoScreen(
+            idFamiliar: widget.idFamiliar,
+            tokenAcceso: widget.tokenAcceso,
+            idPaciente: widget.idPaciente,
             nombrePaciente: widget.nombrePaciente,
             onSelect: setApartado,
           )
