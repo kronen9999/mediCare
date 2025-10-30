@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class FamiliarPacientesAgregarmedicamentoScreen extends StatefulWidget {
+  final String? idFamiliar;
+  final String? tokenAcceso;
+  final String? idPaciente;
   final String? nombrePaciente;
   final void Function(String) onSelect;
   const FamiliarPacientesAgregarmedicamentoScreen({
     super.key,
+    required this.idFamiliar,
+    required this.tokenAcceso,
+    required this.idPaciente,
     required this.nombrePaciente,
     required this.onSelect,
   });
@@ -21,11 +27,14 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
   String? tipoMedicamento;
   String? notas;
   String? unidadDosis;
+  String? horaInicioMedicamento;
+  String? dosis;
+  String? horaRetardoLabel;
   final List<String> formasMedicamento = [
     'Comprimidos: comprimido(s)',
     'Cápsulas: cápsula(s)',
     'Grageas: gragea(s)',
-    'Tabletas',
+    'Tabletas: tableta(s)',
     'Jarabes: ml',
     'Suspensiones: ml',
     'Elixires: ml',
@@ -41,9 +50,18 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
   String? opcionSeleccionada;
   bool? primerRecordatorio = false;
 
+  int? retardoHora = 0;
+  int? retardoMinutos = 0;
+  int? intervaloHora = 0;
+  int? intervaloMinutos = 0;
   @override
   void initState() {
     super.initState();
+    final ahora = DateTime.now();
+    setState(() {
+      horaInicioMedicamento =
+          "${ahora.year}-${ahora.month.toString().padLeft(2, '0')}-${ahora.day.toString().padLeft(2, '0')} ${ahora.hour.toString().padLeft(2, '0')}:${ahora.minute.toString().padLeft(2, '0')}:${ahora.second.toString().padLeft(2, '0')}";
+    });
     opcionSeleccionada = 'systema';
   }
 
@@ -278,7 +296,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                               case 'Grageas: gragea(s)':
                                 unidadDosis = 'gragea(s)';
                                 break;
-                              case 'Tabletas':
+                              case 'Tabletas: tableta(s)':
                                 unidadDosis = 'tableta(s)';
                                 break;
                               case 'Jarabes: ml':
@@ -322,7 +340,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                       child: TextField(
                         onChanged: (value) {
                           setState(() {
-                            //    direccion = value;
+                            notas = value;
                           });
                         },
                         style: TextStyle(
@@ -426,6 +444,10 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                       groupValue: opcionSeleccionada,
                       onChanged: (String? value) {
                         setState(() {
+                          final ahora = DateTime.now();
+                          horaInicioMedicamento =
+                              "${ahora.year}-${ahora.month.toString().padLeft(2, '0')}-${ahora.day.toString().padLeft(2, '0')} ${ahora.hour.toString().padLeft(2, '0')}:${ahora.minute.toString().padLeft(2, '0')}:${ahora.second.toString().padLeft(2, '0')}";
+                          primerRecordatorio = false;
                           opcionSeleccionada = value;
                         });
                       },
@@ -444,6 +466,12 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                       onChanged: (String? value) {
                         setState(() {
                           opcionSeleccionada = value;
+                          final hoy = DateTime.now();
+                          setState(() {
+                            horaRetardoLabel = formato12Horas(
+                              "${hoy.hour}:${hoy.minute}",
+                            );
+                          });
                         });
                       },
                     ),
@@ -488,7 +516,21 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                                                 maxLength: 2,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    //  usuario = value;
+                                                    try {
+                                                      retardoHora = int.parse(
+                                                        value,
+                                                      );
+                                                      horaRetardoLabel =
+                                                          aumentarHoras(
+                                                            retardoHora,
+                                                          );
+                                                    } catch (e) {
+                                                      retardoHora = 0;
+                                                      horaRetardoLabel =
+                                                          aumentarHoras(
+                                                            retardoHora,
+                                                          );
+                                                    }
                                                   });
                                                 },
                                                 style: TextStyle(
@@ -581,7 +623,20 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                                                 maxLength: 2,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    //  usuario = value;
+                                                    try {
+                                                      retardoMinutos =
+                                                          int.parse(value);
+                                                      horaRetardoLabel =
+                                                          aumentarminutos(
+                                                            retardoMinutos,
+                                                          );
+                                                    } catch (e) {
+                                                      retardoMinutos = 0;
+                                                      horaRetardoLabel =
+                                                          aumentarminutos(
+                                                            retardoMinutos,
+                                                          );
+                                                    }
                                                   });
                                                 },
                                                 style: TextStyle(
@@ -679,7 +734,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                                         ),
                                         SizedBox(
                                           child: Text(
-                                            "12:30 PM",
+                                            "$horaRetardoLabel",
                                             style: TextStyle(
                                               color: const Color.fromARGB(
                                                 255,
@@ -774,7 +829,11 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                                     maxLength: 2,
                                     onChanged: (value) {
                                       setState(() {
-                                        //  usuario = value;
+                                        try {
+                                          intervaloHora = int.parse(value);
+                                        } catch (e) {
+                                          intervaloHora = 0;
+                                        }
                                       });
                                     },
                                     style: TextStyle(
@@ -856,7 +915,11 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                                     maxLength: 2,
                                     onChanged: (value) {
                                       setState(() {
-                                        //  usuario = value;
+                                        try {
+                                          intervaloMinutos = int.parse(value);
+                                        } catch (e) {
+                                          intervaloMinutos = 0;
+                                        }
                                       });
                                     },
                                     style: TextStyle(
@@ -930,7 +993,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                       child: SizedBox(
                         width: double.infinity,
                         child: Text(
-                          "Unidad de medida (${unidadDosis ?? "No especificada"})",
+                          "Ingesta (${unidadDosis ?? "No especificada"})",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -941,7 +1004,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
                           setState(() {
-                            //  contrasena = value;
+                            dosis = value;
                           });
                         },
                         style: TextStyle(
@@ -1009,7 +1072,9 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  AgregarMedicamento();
+                },
                 child: Text(
                   "Guardar medicamento",
                   style: TextStyle(
@@ -1047,5 +1112,41 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
         ],
       ),
     );
+  }
+
+  void AgregarMedicamento() {}
+
+  String formato12Horas(String hora24) {
+    // hora24 debe ser tipo "HH:mm"
+    final partes = hora24.split(':');
+    int hora = int.parse(partes[0]);
+    int minuto = int.parse(partes[1]);
+    String periodo = hora >= 12 ? 'PM' : 'AM';
+    int hora12 = hora % 12 == 0 ? 12 : hora % 12;
+    return '$hora12:${minuto.toString().padLeft(2, '0')} $periodo';
+  }
+
+  String aumentarHoras(int? horas) {
+    final ahora = DateTime.now();
+    final nuevaHora = ahora.add(
+      Duration(hours: horas ?? 0, minutes: retardoMinutos ?? 0),
+    );
+    setState(() {
+      horaInicioMedicamento =
+          "${nuevaHora.year}-${nuevaHora.month.toString().padLeft(2, '0')}-${nuevaHora.day.toString().padLeft(2, '0')} ${nuevaHora.hour.toString().padLeft(2, '0')}:${nuevaHora.minute.toString().padLeft(2, '0')}:${nuevaHora.second.toString().padLeft(2, '0')}";
+    });
+    return formato12Horas("${nuevaHora.hour}:${nuevaHora.minute}");
+  }
+
+  String aumentarminutos(int? minutos) {
+    final ahora = DateTime.now();
+    final nuevaHora = ahora.add(
+      Duration(hours: retardoHora ?? 0, minutes: minutos ?? 0),
+    );
+    setState(() {
+      horaInicioMedicamento =
+          "${nuevaHora.year}-${nuevaHora.month.toString().padLeft(2, '0')}-${nuevaHora.day.toString().padLeft(2, '0')} ${nuevaHora.hour.toString().padLeft(2, '0')}:${nuevaHora.minute.toString().padLeft(2, '0')}:${nuevaHora.second.toString().padLeft(2, '0')}";
+    });
+    return formato12Horas("${nuevaHora.hour}:${nuevaHora.minute}");
   }
 }
