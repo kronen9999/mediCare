@@ -55,8 +55,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["error"]);
     } else if (response.statusCode == 404) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -82,8 +84,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -108,8 +112,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
   //Metodo para obtener la informacion personal de un familiar
@@ -133,8 +139,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -158,8 +166,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -185,8 +195,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -211,8 +223,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -237,8 +251,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -269,8 +285,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -294,8 +312,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -321,8 +341,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -351,8 +373,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
   //Metodo para actualizar la informacion de la cuenta de un cuidador
@@ -381,8 +405,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -409,8 +435,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -436,8 +464,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -466,8 +496,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -492,8 +524,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -521,8 +555,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -551,8 +587,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -580,8 +618,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -607,8 +647,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -637,8 +679,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 409) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -666,8 +710,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 409) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -696,8 +742,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -724,8 +772,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -752,8 +802,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -781,8 +833,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -832,8 +886,10 @@ class FamiliaresReposotoryGlobal {
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return FamiliaresChatbotResponse.fromJson(data.first);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
     } else {
-      throw Exception("Ha ocurrido un error inesperado");
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 }
