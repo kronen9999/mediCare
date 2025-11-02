@@ -167,7 +167,12 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
         ),
       ),
       Padding(
-        padding: const EdgeInsets.all(25),
+        padding: const EdgeInsets.only(
+          top: 25,
+          left: 25,
+          right: 25,
+          bottom: 15,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
