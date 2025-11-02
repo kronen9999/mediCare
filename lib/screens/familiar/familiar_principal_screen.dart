@@ -16,7 +16,7 @@ class FamiliarPrincipalScreen extends StatefulWidget {
 }
 
 class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   Future<FamiliaresPacientesObtenerproximosrecordatoriosResponse?>?
   listaRecordatorios;
 
@@ -24,6 +24,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
   String? tokenAcceso;
   String tipoScreen = "default";
   late final AnimationController _controller;
+  late final AnimationController _controllerNoWifi;
 
   @override
   void initState() {
@@ -31,12 +32,15 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
     obtenerDatos();
     _controller = AnimationController(vsync: this);
     _controller.duration = Duration(seconds: 2);
+    _controllerNoWifi = AnimationController(vsync: this);
+    _controllerNoWifi.duration = Duration(seconds: 2);
     obtenerProximosRecordatorios();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _controllerNoWifi.dispose();
     super.dispose();
   }
 
@@ -78,6 +82,8 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
       if (mounted) {
         _controller.reset();
         _controller.forward();
+        _controllerNoWifi.reset();
+        _controllerNoWifi.forward();
       }
       tipoScreen = nuevoValor;
     });
@@ -186,7 +192,68 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
                 }
                 if (snapshot.hasError) {
                   return Center(
-                    child: Text('Error al cargar los recordatorios'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Lottie.asset(
+                            repeat: true,
+                            reverse: true,
+                            'assets/images/wifierror.json',
+                            controller: _controllerNoWifi,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.fitWidth,
+                            onLoaded: (composition) {
+                              _controllerNoWifi.duration = composition.duration;
+                              _controllerNoWifi.forward();
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+                        Text(
+                          "Parece que su conexión está lenta o inestable.",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: 180,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(
+                                255,
+                                204,
+                                57,
+                                46,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            onPressed: () {
+                              obtenerProximosRecordatorios();
+                            },
+                            icon: Icon(Icons.refresh, color: Colors.white),
+                            label: Text(
+                              "Reintentar",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }
                 if (!snapshot.hasData ||
