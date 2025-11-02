@@ -69,7 +69,7 @@ class Recordatorios {
       dosis: json['Dosis'] as String,
       unidadDosis: json['UnidadDosis'] as String,
       notas: json['Notas'],
-      nombreCuidador: json['NombreCuidador'],
+      nombreCuidador: json['NombreCuidador'] ?? "No asignado",
     );
   }
 
