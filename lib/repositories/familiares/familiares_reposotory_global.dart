@@ -18,6 +18,7 @@ import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_edi
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenerproximosrecordatorios.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
@@ -857,6 +858,42 @@ class FamiliaresReposotoryGlobal {
     if (response.statusCode == 200) {
       return FamiliaresPacientesEditarhorariomedicamentoResponse.fromJson(
         jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  /////////////////////////////////////Metodos del historial de administracion///////////////////////////////
+  ///
+  //Metodo para obtener los proximos recordatorios
+  Future<FamiliaresPacientesObtenerproximosrecordatoriosResponse?>?
+  obtenerProximosRecordatorios(
+    FamiliaresPacientesObtenerproximosrecordatorios recordatoriosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}HistorialAdministracion/ObtenerProximosRecordatorios',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(recordatoriosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesObtenerproximosrecordatoriosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 204) {
+      return FamiliaresPacientesObtenerproximosrecordatoriosResponse(
+        recordatorios: [],
       );
     } else if (response.statusCode == 422) {
       throw Exception(jsonDecode(response.body)["error"]);
