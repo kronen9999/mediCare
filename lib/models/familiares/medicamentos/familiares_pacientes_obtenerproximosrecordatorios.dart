@@ -68,8 +68,8 @@ class Recordatorios {
       nombreP: json['NombreP'] as String,
       dosis: json['Dosis'] as String,
       unidadDosis: json['UnidadDosis'] as String,
-      notas: json['Notas'] as String,
-      nombreCuidador: json['NombreCuidador'] as String,
+      notas: json['Notas'],
+      nombreCuidador: json['NombreCuidador'],
     );
   }
 

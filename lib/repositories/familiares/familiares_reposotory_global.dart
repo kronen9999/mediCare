@@ -13,6 +13,7 @@ import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
@@ -894,6 +895,34 @@ class FamiliaresReposotoryGlobal {
     } else if (response.statusCode == 204) {
       return FamiliaresPacientesObtenerproximosrecordatoriosResponse(
         recordatorios: [],
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para administrar un medicamento
+  Future<FamiliaresPacientesAdministrarmedicamentoResponse>
+  administrarMedicamento(
+    FamiliaresPacientesAdministrarmedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}HistorialAdministracion/administrarMedicamentos'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesAdministrarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
       throw Exception(jsonDecode(response.body)["error"]);

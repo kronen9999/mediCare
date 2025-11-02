@@ -270,7 +270,9 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
                     final recordatorio = recordatorios[index];
 
                     return ItemListaRecordatoriosproximos(
-                      idMedicamento: recordatorio.idHistorial.toString(),
+                      idFamiliar: idFamiliar,
+                      tokenAcceso: tokenAcceso,
+                      idHistorial: recordatorio.idHistorial.toString(),
                       nombreM: recordatorio.nombreM,
                       nombreP: recordatorio.nombreP,
                       nombreC: recordatorio.nombreCuidador,
@@ -280,6 +282,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
                       fechaAdministracion: formatearFecha(
                         recordatorio.fechaProgramada,
                       ),
+                      onUpdateMedicamentos: obtenerProximosRecordatorios,
                     );
                   },
                 );
