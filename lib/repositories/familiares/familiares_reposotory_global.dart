@@ -15,6 +15,7 @@ import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_cancelaradministracionmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
@@ -922,6 +923,36 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresPacientesAdministrarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para cancelar la administracion de un medicamento
+  Future<FamiliaresPacientesCancelaradministracionmedicamentoResponse>
+  cancelarAdministracionMedicamento(
+    FamiliaresPacientesCancelaradministracionmedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}HistorialAdministracion/CancelarAdministracionMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesCancelaradministracionmedicamentoResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

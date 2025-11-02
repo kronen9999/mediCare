@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_cancelaradministracionmedicamento.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class ItemListaRecordatoriosproximos extends StatefulWidget {
@@ -178,7 +179,9 @@ class _ItemListaRecordatoriosproximosState
                 child: Column(
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        cancelarAdministrarMedicamento(context);
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -222,6 +225,41 @@ class _ItemListaRecordatoriosproximosState
           tokenAcceso: widget.tokenAcceso!,
           idHistorial: widget.idHistorial,
           fechaAdministracion:
+              "${fechaHoraActual.year}-${fechaHoraActual.month.toString().padLeft(2, '0')}-${fechaHoraActual.day.toString().padLeft(2, '0')} ${fechaHoraActual.hour.toString().padLeft(2, '0')}:${fechaHoraActual.minute.toString().padLeft(2, '0')}:${fechaHoraActual.second.toString().padLeft(2, '0')}",
+        ),
+      );
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
+      );
+      widget.onUpdateMedicamentos();
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void cancelarAdministrarMedicamento(context) async {
+    final fechaHoraActual = DateTime.now();
+    final repo = FamiliaresReposotoryGlobal();
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+      barrierDismissible: false,
+    );
+    try {
+      final result = await repo.cancelarAdministracionMedicamento(
+        FamiliaresPacientesCancelaradministracionmedicamento(
+          idFamiliar: widget.idFamiliar!,
+          tokenAcceso: widget.tokenAcceso!,
+          idHistorial: widget.idHistorial,
+          fechaCancelacion:
               "${fechaHoraActual.year}-${fechaHoraActual.month.toString().padLeft(2, '0')}-${fechaHoraActual.day.toString().padLeft(2, '0')} ${fechaHoraActual.hour.toString().padLeft(2, '0')}:${fechaHoraActual.minute.toString().padLeft(2, '0')}:${fechaHoraActual.second.toString().padLeft(2, '0')}",
         ),
       );
