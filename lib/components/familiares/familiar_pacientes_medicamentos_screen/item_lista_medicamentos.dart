@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_desabilitarmedicamento.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class ItemListaMedicamentos extends StatefulWidget {
+  final String idFamiliar;
+  final String tokenAcceso;
+  final String idPaciente;
   final String idMedicamento;
   final String nombreM;
   final String? descripcionM;
@@ -8,6 +13,7 @@ class ItemListaMedicamentos extends StatefulWidget {
   final int medicamentoActivo;
   final void Function(String) onSelect;
   final void Function(String) setIdMedicamento;
+  final void Function() updateMedicamento;
   const ItemListaMedicamentos({
     super.key,
     required this.nombreM,
@@ -17,6 +23,10 @@ class ItemListaMedicamentos extends StatefulWidget {
     required this.onSelect,
     required this.setIdMedicamento,
     required this.idMedicamento,
+    required this.idFamiliar,
+    required this.tokenAcceso,
+    required this.idPaciente,
+    required this.updateMedicamento,
   });
 
   @override
@@ -182,7 +192,9 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
                     children: [
                       widget.medicamentoActivo == 1
                           ? TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                mostrarDialogoDesabilitarMedicamento(context);
+                              },
                               child: Text(
                                 "Deshabilitar medicamento",
                                 style: TextStyle(color: Colors.red),
@@ -204,5 +216,68 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
         ),
       ),
     );
+  }
+
+  void mostrarDialogoDesabilitarMedicamento(context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Deshabilitar medicamento"),
+        content: Text(
+          "¿Estás seguro de que deseas deshabilitar este medicamento?Ten en cuenta que desabilitarlo no lo borra,pero no generara mas recordatorios.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Cancelar", style: TextStyle(color: Colors.red)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              desabilitarMedicamento(context);
+            },
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.red),
+            ),
+            child: Text("Deshabilitar", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  desabilitarMedicamento(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
+      final result = await repo.desabilitarMedicamento(
+        FamiliaresPacientesDesabilitarmedicamento(
+          idFamiliar: widget.idFamiliar,
+          tokenAcceso: widget.tokenAcceso,
+          idPaciente: widget.idPaciente,
+          idMedicamento: widget.idMedicamento,
+        ),
+      );
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+      widget.updateMedicamento();
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
   }
 }

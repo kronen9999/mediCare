@@ -290,6 +290,10 @@ class _FamiliarPacientesMedicamentosScreenState
                         idMedicamento: medicamento.idMedicamento.toString(),
                         setIdMedicamento: setIdMedicamento,
                         onSelect: setApartado,
+                        idFamiliar: widget.idFamiliar ?? "",
+                        tokenAcceso: widget.tokenAcceso ?? "",
+                        idPaciente: widget.idPaciente ?? "",
+                        updateMedicamento: obtenerMedicamentos,
                       ),
                     );
                   },
