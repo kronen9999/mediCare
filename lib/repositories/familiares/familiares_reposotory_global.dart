@@ -19,6 +19,7 @@ import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_can
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_desabilitarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_habilitarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenerproximosrecordatorios.dart';
@@ -891,6 +892,36 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresPacientesDesabilitarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para habilitar un medicamento
+
+  Future<FamiliaresPacientesHabilitarmedicamentoResponse> habilitarMedicamento(
+    FamiliaresPacientesHabilitarmedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/HabilitarMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesHabilitarmedicamentoResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

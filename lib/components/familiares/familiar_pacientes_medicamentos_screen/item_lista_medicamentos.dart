@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_desabilitarmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_habilitarmedicamento.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class ItemListaMedicamentos extends StatefulWidget {
   final String idFamiliar;
@@ -201,7 +203,9 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
                               ),
                             )
                           : TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                mostrarDialogoHabilitarMedicamento(context);
+                              },
                               child: Text(
                                 "Habilitar medicamento",
                                 style: TextStyle(color: Colors.green),
@@ -247,6 +251,130 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
     );
   }
 
+  void mostrarDialogoHabilitarMedicamento(BuildContext context) {
+    int valueHoras = 0;
+    int valueMinutos = 5;
+    final hoy = DateTime.now();
+    var hoyFinal = hoy.add(Duration(minutes: 5));
+    String horaLabel = "";
+
+    void formatearHorario(int horas, int minutos) {
+      final dt = DateTime(0, 1, 1, horas, minutos);
+      int hora12 = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+      String periodo = dt.hour < 12 ? 'AM' : 'PM';
+      String minutosStr = dt.minute.toString().padLeft(2, '0');
+      setState(() {
+        horaLabel = "$hora12:$minutosStr $periodo";
+      });
+    }
+
+    formatearHorario(hoyFinal.hour, hoyFinal.minute);
+    void aumentarDisminuirTiempo(int horas, int minutos) {
+      final fechaCalculada = hoy.add(Duration(hours: horas, minutes: minutos));
+      hoyFinal = fechaCalculada;
+      int hora = fechaCalculada.hour;
+      int minuto = fechaCalculada.minute;
+      formatearHorario(hora, minuto);
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: Text("Habilitar medicamento"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    "Al activar un medicamento se generara un recordatorio en la hora y minutos que usted especifique",
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Horas : $valueHoras'),
+                        NumberPicker(
+                          itemHeight: 30,
+                          minValue: 0,
+                          maxValue: 24,
+                          value: valueHoras,
+                          onChanged: (value) {
+                            setState(() => valueHoras = value);
+                            aumentarDisminuirTiempo(value, valueMinutos);
+                          },
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Minutos : $valueMinutos'),
+                        NumberPicker(
+                          itemHeight: 30,
+                          minValue: 5,
+                          maxValue: 60,
+                          value: valueMinutos,
+                          onChanged: (value) {
+                            setState(() => valueMinutos = value);
+                            aumentarDisminuirTiempo(valueHoras, value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.green[200],
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(
+                      "$horaLabel",
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Cancelar", style: TextStyle(color: Colors.green)),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  habilitarMedicamento(
+                    hoyFinal.year.toString().padLeft(4, '0'),
+                    hoyFinal.month.toString().padLeft(2, '0'),
+                    hoyFinal.day.toString().padLeft(2, '0'),
+                    hoyFinal.hour.toString().padLeft(2, '0'),
+                    hoyFinal.minute.toString().padLeft(2, '0'),
+                    hoyFinal.second.toString().padLeft(2, '0'),
+                    context,
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Colors.green),
+                ),
+                child: Text("Habilitar", style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   desabilitarMedicamento(context) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
@@ -262,6 +390,49 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
           tokenAcceso: widget.tokenAcceso,
           idPaciente: widget.idPaciente,
           idMedicamento: widget.idMedicamento,
+        ),
+      );
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
+      widget.updateMedicamento();
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
+  }
+
+  void habilitarMedicamento(
+    String year,
+    String month,
+    String day,
+    String hour,
+    String min,
+    String sec,
+    context,
+  ) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
+      final result = await repo.habilitarMedicamento(
+        FamiliaresPacientesHabilitarmedicamento(
+          idFamiliar: widget.idFamiliar,
+          tokenAcceso: widget.tokenAcceso,
+          idPaciente: widget.idPaciente,
+          idMedicamento: widget.idMedicamento,
+          horaCalculo: "$year-$month-$day $hour:$min:$sec",
         ),
       );
       Navigator.of(context).pop();
