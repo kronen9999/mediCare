@@ -5,6 +5,7 @@ import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obt
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 //import 'package:medicare/screens/familiar/Inicio/familiar_chat_ia_widget.dart';
 import 'package:medicare/screens/familiar/Inicio/familiar_chat_iapersonalizada.dart';
+import 'package:medicare/screens/familiar/Inicio/familiar_historial_recordatorios_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FamiliarPrincipalScreen extends StatefulWidget {
@@ -50,6 +51,8 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: tipoScreen == "chatbot"
           ? null
+          : tipoScreen == "historialrecordatorios"
+          ? null
           : FloatingActionButton(
               onPressed: () {
                 setState(() {
@@ -70,7 +73,9 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
               ? FamiliarChatIapersonalizada(
                   idFamiliar: idFamiliar,
                   onSelect: asignarSeccion,
-                ) //FamiliarChatIaWidget()
+                )
+              : tipoScreen == "historialrecordatorios"
+              ? FamiliarHistorialRecordatoriosScreen()
               : Text("Otra pantalla"),
         ),
       ),
@@ -146,7 +151,9 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
             borderRadius: BorderRadius.circular(5),
           ),
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              asignarSeccion("historialrecordatorios");
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
