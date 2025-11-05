@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class FamiliarHistorialRecordatoriosScreen extends StatefulWidget {
-  const FamiliarHistorialRecordatoriosScreen({super.key});
+  final String? idFamiliar;
+  final String? tokenAcceso;
+  final void Function(String) onSelect;
+  const FamiliarHistorialRecordatoriosScreen({
+    super.key,
+    required this.idFamiliar,
+    required this.tokenAcceso,
+    required this.onSelect,
+  });
 
   @override
   State<FamiliarHistorialRecordatoriosScreen> createState() =>
@@ -10,6 +20,14 @@ class FamiliarHistorialRecordatoriosScreen extends StatefulWidget {
 
 class _FamiliarHistorialRecordatoriosScreenState
     extends State<FamiliarHistorialRecordatoriosScreen> {
+  DateTime? _selectedDay;
+  DateTime _focusedDay = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('es_ES', null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -53,6 +71,91 @@ class _FamiliarHistorialRecordatoriosScreenState
             ),
           ),
           metricasComponentes(context, "10", "2"),
+          Padding(
+            padding: const EdgeInsets.only(top: 25, left: 25, right: 25),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onSelect("default");
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Regresar a la pantalla principal    ",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Icon(Icons.arrow_back, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
+            child: TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: _focusedDay,
+              locale: "es_Es",
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = selectedDay;
+                });
+              },
+              headerStyle: HeaderStyle(formatButtonVisible: false),
+              calendarBuilders: CalendarBuilders(
+                todayBuilder: (context, date, _) {
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[100],
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${date.day}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+                selectedBuilder: (context, date, _) {
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${date.day}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );

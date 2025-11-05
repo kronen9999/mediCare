@@ -75,7 +75,11 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
                   onSelect: asignarSeccion,
                 )
               : tipoScreen == "historialrecordatorios"
-              ? FamiliarHistorialRecordatoriosScreen()
+              ? FamiliarHistorialRecordatoriosScreen(
+                  idFamiliar: idFamiliar,
+                  tokenAcceso: tokenAcceso,
+                  onSelect: asignarSeccion,
+                )
               : Text("Otra pantalla"),
         ),
       ),
