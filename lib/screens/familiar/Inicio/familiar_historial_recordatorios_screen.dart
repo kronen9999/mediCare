@@ -122,6 +122,13 @@ class _FamiliarHistorialRecordatoriosScreenState
                   _selectedDay = selectedDay;
                   _focusedDay = selectedDay;
                 });
+                /*
+                print("IdFamiliar: ${widget.idFamiliar}");
+                print("IdFamiliar: ${widget.tokenAcceso}");
+                print(
+                  "Dia seleccionado: ${selectedDay.year}-${selectedDay.month.toString().padLeft(2, "0")}-${selectedDay.day.toString().padLeft(2, "0")}",
+                );
+                */
               },
               headerStyle: HeaderStyle(formatButtonVisible: false),
               calendarBuilders: CalendarBuilders(
@@ -156,7 +163,253 @@ class _FamiliarHistorialRecordatoriosScreenState
               ),
             ),
           ),
+          itemHistorial(
+            context,
+            "Amoxicilina",
+            "Administrado",
+            "Johana",
+            "Mariano",
+            "5 Comprimido(s)",
+            "Juan Perez",
+            "Tomar con saldeuvas",
+          ),
         ],
+      ),
+    );
+  }
+
+  Padding itemHistorial(
+    BuildContext context,
+    String nombreM,
+    String estado,
+    String nombreP,
+    String nombreC,
+    String dosis,
+    String administro,
+    String notas,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(25),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromARGB(221, 214, 212, 212),
+              spreadRadius: .5,
+              blurRadius: 8,
+              offset: Offset(0, 10),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Color.fromRGBO(79, 172, 196, 1), width: .5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: estado == "Cancelado"
+                          ? Colors.red[300]
+                          : Colors.green[300],
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(
+                        estado == "Cancelado"
+                            ? Icons.error_outline
+                            : Icons.check_circle_outline,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: SizedBox(
+                      width: 230,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(nombreM, style: TextStyle(fontSize: 18)),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: estado == "Cancelado"
+                                  ? Colors.red[100]
+                                  : Colors.green[100],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Text(
+                                estado,
+                                style: estado == "Cancelado"
+                                    ? TextStyle(color: Colors.red)
+                                    : TextStyle(color: Colors.green),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(top: 15, bottom: 15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color.fromARGB(255, 220, 235, 247),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 140,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Paciente",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                nombreP,
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ),
+                            Text(
+                              "Cuidador",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(nombreC, style: TextStyle(fontSize: 15)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 140,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Dosis",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(dosis, style: TextStyle(fontSize: 15)),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(
+                                "Administro",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            Text(administro, style: TextStyle(fontSize: 15)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Icon(Icons.timer_outlined, color: Colors.grey),
+                  ),
+                  Text("Programada:", style: TextStyle(color: Colors.grey)),
+                  Text(" 12/Jun/2026, 10:00 AM"),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Icon(
+                        estado == "Cancelado"
+                            ? Icons.cancel_sharp
+                            : Icons.check_circle_sharp,
+                        color: estado == "Cancelado"
+                            ? Colors.red
+                            : Colors.green,
+                      ),
+                    ),
+                    estado == "Cancelado"
+                        ? Text(
+                            "Cancelada",
+                            style: TextStyle(color: Colors.grey),
+                          )
+                        : Text(
+                            "Administrada:",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                    Text(
+                      " 12/Dic/2026, 10:00 AM",
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 247, 237, 223),
+                  border: Border.all(color: Colors.orange, width: .5),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(
+                          Icons.edit_note_sharp,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 230,
+                        child: Text(
+                          notas,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 167, 100, 0),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
