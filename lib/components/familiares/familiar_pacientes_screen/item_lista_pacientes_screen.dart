@@ -240,6 +240,12 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
 
   void eliminarPaciente(context) async {
     final repo = FamiliaresReposotoryGlobal();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+    );
     try {
       final result = await repo.eliminarPaciente(
         FamiliarPacientesEliminarPaciente(
@@ -251,6 +257,7 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
       );
+      Navigator.of(context).pop();
       widget.onSelect("default");
       widget.onUpdatePacientes(widget.idFamliar, widget.tokenAcceso);
     } catch (e) {
