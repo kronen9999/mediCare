@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/components/familiares/familiar_cuidadores_screen/item_lista_cuidadores.dart';
 import 'package:medicare/components/familiares/familiar_pacientes_screen/item_lista_pacientes_screen.dart';
 import 'package:medicare/models/pacientes/familiares_pacientes_obtener_pacientes.dart';
@@ -16,7 +17,14 @@ class FamiliarPacientesScreen extends StatefulWidget {
       _FamiliarPacientesScreenState();
 }
 
-class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
+class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _controllerNoWifi = AnimationController(
+    vsync: this,
+  );
+  late final AnimationController _controllerEmpty = AnimationController(
+    vsync: this,
+  );
   Future<FamiliaresPacientesObtenerPacientesResponse?>? listaPacientes;
   String? idFamiliar;
   String? tokenAcceso;
@@ -28,6 +36,15 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
   void initState() {
     super.initState();
     obtenerDatos();
+    _controllerNoWifi.duration = const Duration(seconds: 2);
+    _controllerEmpty.duration = const Duration(seconds: 2);
+  }
+
+  @override
+  void dispose() {
+    _controllerNoWifi.dispose();
+    _controllerEmpty.dispose();
+    super.dispose();
   }
 
   @override
@@ -216,16 +233,34 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
+                _controllerNoWifi.reset();
+                _controllerNoWifi.forward();
                 return Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.wifi_off, color: Colors.red, size: 40),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Lottie.asset(
+                          repeat: true,
+                          reverse: true,
+                          'assets/images/wifierror.json',
+                          controller: _controllerNoWifi,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fitWidth,
+                          onLoaded: (composition) {
+                            _controllerNoWifi.duration = composition.duration;
+                            _controllerNoWifi.forward();
+                          },
+                        ),
+                      ),
+
                       const SizedBox(height: 16),
                       Text(
                         "Parece que su conexión está lenta o inestable.",
                         style: TextStyle(
-                          color: Color.fromRGBO(85, 150, 255, 1),
+                          color: Colors.red,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -236,7 +271,12 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
                         width: 180,
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              204,
+                              57,
+                              46,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -262,7 +302,36 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen> {
               } else if (!snapshot.hasData ||
                   snapshot.data?.pacientes == null ||
                   snapshot.data!.pacientes!.isEmpty) {
-                return Center(child: Text('No hay pacientes registrados'));
+                _controllerEmpty.reset();
+                _controllerEmpty.forward();
+                return Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    children: [
+                      Lottie.asset(
+                        repeat: true,
+                        reverse: true,
+                        'assets/images/empty.json',
+                        controller: _controllerEmpty,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.fitWidth,
+                        onLoaded: (composition) {
+                          _controllerEmpty.duration = composition.duration;
+                          _controllerEmpty.forward();
+                        },
+                      ),
+                      Text(
+                        "Usted no tiene ningun paciente registrado",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 13, 44, 70),
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               } else {
                 final pacientes = snapshot.data!.pacientes!;
                 return ListView.builder(
