@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/historial/familiares_historial_obtenermetricasrecordatorios.dart';
 import 'package:medicare/models/familiares/historial/familiares_historial_recordatorios.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
@@ -23,7 +24,11 @@ class FamiliarHistorialRecordatoriosScreen extends StatefulWidget {
 }
 
 class _FamiliarHistorialRecordatoriosScreenState
-    extends State<FamiliarHistorialRecordatoriosScreen> {
+    extends State<FamiliarHistorialRecordatoriosScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _controllerNoWifi = AnimationController(
+    vsync: this,
+  );
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   Future<FamiliaresHistorialRecordatoriosResponse?>? listaRecordatorios;
@@ -35,6 +40,13 @@ class _FamiliarHistorialRecordatoriosScreenState
     initializeDateFormatting('es_ES', null);
     obtenerRecordatorios();
     obtenerMetricas();
+    _controllerNoWifi.duration = const Duration(seconds: 2);
+  }
+
+  @override
+  void dispose() {
+    _controllerNoWifi.dispose();
+    super.dispose();
   }
 
   @override
@@ -197,9 +209,69 @@ class _FamiliarHistorialRecordatoriosScreenState
                   child: Center(child: CircularProgressIndicator()),
                 );
               } else if (snapshot.hasError) {
-                return Padding(
-                  padding: const EdgeInsets.all(25),
-                  child: Center(child: Text('Error al cargar los datos')),
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Lottie.asset(
+                          repeat: true,
+                          reverse: true,
+                          'assets/images/wifierror.json',
+                          controller: _controllerNoWifi,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fitWidth,
+                          onLoaded: (composition) {
+                            _controllerNoWifi.duration = composition.duration;
+                            _controllerNoWifi.forward();
+                          },
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+                      Text(
+                        "Parece que su conexión está lenta o inestable.",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: 180,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              204,
+                              57,
+                              46,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            obtenerRecordatorios();
+                          },
+                          icon: Icon(Icons.refresh, color: Colors.white),
+                          label: Text(
+                            "Reintentar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               } else if (!snapshot.hasData ||
                   snapshot.data == null ||
