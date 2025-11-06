@@ -13,6 +13,7 @@ import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/familiares/historial/familiares_historial_recordatorios.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_cancelaradministracionmedicamento.dart';
@@ -1016,6 +1017,36 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresPacientesCancelaradministracionmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para obtener el historial de administracion de un paciente
+  Future<FamiliaresHistorialRecordatoriosResponse?>?
+  obtenerHistorialRecordatorios(
+    FamiliaresHistorialRecordatorios recordatoriosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}HistorialAdministracion/ObtenerHistorialAdministracion',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(recordatoriosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresHistorialRecordatoriosResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
