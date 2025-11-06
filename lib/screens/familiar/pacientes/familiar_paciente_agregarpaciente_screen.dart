@@ -607,6 +607,12 @@ class _FamiliarPacienteAgregarpacienteScreenState
     required String padecimiento,
     context,
   }) async {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+      barrierDismissible: false,
+    );
     final repo = FamiliaresReposotoryGlobal();
     try {
       final result = await repo.agregarPaciente(
@@ -628,9 +634,11 @@ class _FamiliarPacienteAgregarpacienteScreenState
           content: Text(result.message.toString()),
         ),
       );
+      Navigator.of(context).pop();
       widget.onUpdate(widget.idFamiliar, widget.tokenAcceso);
       widget.onSelect("default");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
