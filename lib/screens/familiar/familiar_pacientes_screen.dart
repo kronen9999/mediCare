@@ -231,7 +231,9 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
             future: listaPacientes,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.blue),
+                );
               } else if (snapshot.hasError) {
                 _controllerNoWifi.reset();
                 _controllerNoWifi.forward();
