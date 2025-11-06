@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_obtener_cuidadoresna.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_asignar_cuidador.dart';
 import 'package:medicare/models/pacientes/familiar_pacientes_desasignar_cuidador.dart';
@@ -48,7 +49,28 @@ class ItemListaPacientesScreen extends StatefulWidget {
       _ItemListaPacientesScreenState();
 }
 
-class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
+class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _controllerNoWifi = AnimationController(
+    vsync: this,
+  );
+  late final AnimationController _controllerEmpty = AnimationController(
+    vsync: this,
+  );
+  @override
+  void initState() {
+    super.initState();
+    _controllerNoWifi.duration = const Duration(seconds: 2);
+    _controllerEmpty.duration = const Duration(seconds: 2);
+  }
+
+  @override
+  void dispose() {
+    _controllerNoWifi.dispose();
+    _controllerEmpty.dispose();
+    super.dispose();
+  }
+
   Future<FamiliaresCuidadoresObtenerCuidadoresnaResponse?>? listaCuidadoresNA;
   @override
   Widget build(BuildContext context) {
@@ -286,31 +308,88 @@ class _ItemListaPacientesScreenState extends State<ItemListaPacientesScreen> {
               future: listaCuidadoresNA,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
                   return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.wifi_off, color: Colors.red, size: 40),
-                        const SizedBox(height: 16),
-                        Text(
-                          "Parece que su conexión está lenta o inestable.",
-                          style: TextStyle(
-                            color: Color.fromRGBO(85, 150, 255, 1),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                    child: CircularProgressIndicator(color: Colors.blue),
+                  );
+                } else if (snapshot.hasError) {
+                  _controllerNoWifi.reset();
+                  _controllerNoWifi.forward();
+                  return Center(
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: Lottie.asset(
+                              repeat: true,
+                              reverse: true,
+                              'assets/images/wifierror.json',
+                              controller: _controllerNoWifi,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.fitWidth,
+                              onLoaded: (composition) {
+                                _controllerNoWifi.duration =
+                                    composition.duration;
+                                _controllerNoWifi.forward();
+                              },
+                            ),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
+
+                          const SizedBox(height: 16),
+                          Text(
+                            "Parece que su conexión está lenta o inestable.",
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
                     ),
                   );
                 } else if (snapshot.hasData && snapshot.data != null) {
                   final cuidadores = snapshot.data!.cuidadoresNoAsignados;
                   if (cuidadores.isEmpty) {
-                    return Text('No hay cuidadores disponibles.');
+                    _controllerEmpty.reset();
+                    _controllerEmpty.forward();
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        left: 25,
+                        right: 25,
+                        bottom: 25,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Lottie.asset(
+                            repeat: true,
+                            reverse: true,
+                            'assets/images/empty.json',
+                            controller: _controllerEmpty,
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.fitWidth,
+                            onLoaded: (composition) {
+                              _controllerEmpty.duration = composition.duration;
+                              _controllerEmpty.forward();
+                            },
+                          ),
+                          Text(
+                            "No se encontraron cuidadores",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 13, 44, 70),
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                   }
                   return ListView.builder(
                     shrinkWrap: true,
