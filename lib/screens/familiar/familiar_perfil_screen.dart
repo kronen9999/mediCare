@@ -151,26 +151,34 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
   }
 
   void obtenerPerfil() async {
-    final prefs = await SharedPreferences.getInstance();
-    idUsuario = prefs.getString('IdUsuario') ?? '';
-    tokenAcceso = prefs.getString('TokenAcceso') ?? '';
-    final repo = FamiliaresReposotoryGlobal();
-    final perfil = await repo.obtenerPerfil(
-      FamiliaresObtenerPerfil(idFamiliar: idUsuario, tokenAcceso: tokenAcceso),
-    );
-    final atributos = await repo.obtenerAtributosGenerales(
-      FamiliaresObtenerAtributosGenerales(
-        idFamiliar: idUsuario,
-        tokenAcceso: tokenAcceso,
-      ),
-    );
-    if (!mounted) return;
-    setState(() {
-      usuario = perfil.informacionCuenta?.usuario ?? 'No disponible';
-      correo = perfil.informacionCuenta?.correoE ?? 'No disponible';
-      numCuidadores = atributos.numeroCuidadores.toString();
-      numPacientes = atributos.numeroPacientes.toString();
-    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      idUsuario = prefs.getString('IdUsuario') ?? '';
+      tokenAcceso = prefs.getString('TokenAcceso') ?? '';
+      final repo = FamiliaresReposotoryGlobal();
+      final perfil = await repo.obtenerPerfil(
+        FamiliaresObtenerPerfil(
+          idFamiliar: idUsuario,
+          tokenAcceso: tokenAcceso,
+        ),
+      );
+      final atributos = await repo.obtenerAtributosGenerales(
+        FamiliaresObtenerAtributosGenerales(
+          idFamiliar: idUsuario,
+          tokenAcceso: tokenAcceso,
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        usuario = perfil.informacionCuenta?.usuario ?? 'No disponible';
+        correo = perfil.informacionCuenta?.correoE ?? 'No disponible';
+        numCuidadores = atributos.numeroCuidadores.toString();
+        numPacientes = atributos.numeroPacientes.toString();
+      });
+    } catch (e) {
+      if (!mounted) return;
+      obtenerPerfil();
+    }
   }
 
   void onbtenerPerfilHijos(String? idUsuario, String? tokenAcceso) async {
