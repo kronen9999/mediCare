@@ -291,17 +291,25 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
   }
 
   void obtenerDatos(String idFamiliar, String tokenAcceso) async {
-    final repo = FamiliaresReposotoryGlobal();
-    final result = await repo.obtenerPerfil(
-      FamiliaresObtenerPerfil(idFamiliar: idFamiliar, tokenAcceso: tokenAcceso),
-    );
-    if (!mounted) return;
-    setState(() {
-      correoE = result.informacionCuenta?.correoE;
-      usuario = result.informacionCuenta?.usuario;
-      correoEController.text = correoE ?? "";
-      usuarioEController.text = usuario ?? "";
-    });
+    try {
+      final repo = FamiliaresReposotoryGlobal();
+      final result = await repo.obtenerPerfil(
+        FamiliaresObtenerPerfil(
+          idFamiliar: idFamiliar,
+          tokenAcceso: tokenAcceso,
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        correoE = result.informacionCuenta?.correoE;
+        usuario = result.informacionCuenta?.usuario;
+        correoEController.text = correoE ?? "";
+        usuarioEController.text = usuario ?? "";
+      });
+    } catch (e) {
+      if (!mounted) return;
+      obtenerDatos(idFamiliar, tokenAcceso);
+    }
   }
 
   void actualizarDatos(
