@@ -188,18 +188,7 @@ class _FamiliarHistorialRecordatoriosScreenState
               ),
             ),
           ),
-          /*
-          itemHistorial(
-            context,
-            "Amoxicilina",
-            "Administrado",
-            "Johana",
-            "Mariano",
-            "5 Comprimido(s)",
-            "Juan Perez",
-            "Tomar con saldeuvas",
-          ),
-          */
+
           FutureBuilder<FamiliaresHistorialRecordatoriosResponse?>(
             future: listaRecordatorios,
             builder: (context, snapshot) {
@@ -292,6 +281,8 @@ class _FamiliarHistorialRecordatoriosScreenState
                       item.dosis,
                       item.administro ?? "Sin datos",
                       item.notas ?? 'sin notas',
+                      item.fechaProgramada,
+                      item.horaAdministracion ?? "",
                     );
                   }).toList(),
                 );
@@ -312,7 +303,75 @@ class _FamiliarHistorialRecordatoriosScreenState
     String dosis,
     String administro,
     String notas,
+    String fechaProgramada,
+    String? fechaAdministrada,
   ) {
+    String formateadorFecha(String fechaOriginal) {
+      String fechaFormateada = "";
+      try {
+        DateTime fecha = DateTime.parse(fechaOriginal);
+        fechaFormateada += "${fecha.day.toString().padLeft(2, '0')}/";
+        switch (fecha.month) {
+          case 1:
+            fechaFormateada += "Ene/";
+            break;
+          case 2:
+            fechaFormateada += "Feb/";
+            break;
+          case 3:
+            fechaFormateada += "Mar/";
+            break;
+          case 4:
+            fechaFormateada += "Abr/";
+            break;
+          case 5:
+            fechaFormateada += "May/";
+            break;
+          case 6:
+            fechaFormateada += "Jun/";
+            break;
+          case 7:
+            fechaFormateada += "Jul/";
+            break;
+          case 8:
+            fechaFormateada += "Ago/";
+            break;
+          case 9:
+            fechaFormateada += "Sep/";
+            break;
+          case 10:
+            fechaFormateada += "Oct/";
+            break;
+          case 11:
+            fechaFormateada += "Nov/";
+            break;
+          case 12:
+            fechaFormateada += "Dic/";
+            break;
+        }
+        fechaFormateada += "${fecha.year}, ";
+        int hora = fecha.hour;
+        int minutos = fecha.minute;
+        String periodo = "";
+        if (hora >= 12) {
+          periodo = "PM";
+          if (hora > 12) {
+            hora -= 12;
+          }
+        } else {
+          periodo = "AM";
+          if (hora == 0) {
+            hora = 12;
+          }
+        }
+        fechaFormateada +=
+            "${hora.toString().padLeft(2, '0')}:${minutos.toString().padLeft(2, '0')} $periodo";
+      } catch (e) {
+        fechaFormateada = fechaOriginal;
+      }
+      return fechaFormateada;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(25),
       child: Container(
@@ -466,7 +525,7 @@ class _FamiliarHistorialRecordatoriosScreenState
                     child: Icon(Icons.timer_outlined, color: Colors.grey),
                   ),
                   Text("Programada:", style: TextStyle(color: Colors.grey)),
-                  Text(" 12/Jun/2026, 10:00 AM"),
+                  Text(formateadorFecha(fechaProgramada)),
                 ],
               ),
               Padding(
@@ -495,7 +554,9 @@ class _FamiliarHistorialRecordatoriosScreenState
                             style: TextStyle(color: Colors.grey),
                           ),
                     Text(
-                      " 12/Dic/2026, 10:00 AM",
+                      fechaAdministrada != null && fechaAdministrada != ""
+                          ? formateadorFecha(fechaAdministrada)
+                          : "",
                       style: TextStyle(color: Colors.green),
                     ),
                   ],
