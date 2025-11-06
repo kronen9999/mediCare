@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/historial/familiares_historial_obtenermetricasrecordatorios.dart';
+import 'package:medicare/models/familiares/historial/familiares_historial_recordatorios.dart';
+import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class FamiliarHistorialRecordatoriosScreen extends StatefulWidget {
   final String? idFamiliar;
   final String? tokenAcceso;
+
   final void Function(String) onSelect;
   const FamiliarHistorialRecordatoriosScreen({
     super.key,
@@ -22,10 +26,15 @@ class _FamiliarHistorialRecordatoriosScreenState
     extends State<FamiliarHistorialRecordatoriosScreen> {
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
+  Future<FamiliaresHistorialRecordatoriosResponse?>? listaRecordatorios;
+  String recordatoriosAdministrados = "...";
+  String recordatoriosCancelados = "...";
   @override
   void initState() {
     super.initState();
     initializeDateFormatting('es_ES', null);
+    obtenerRecordatorios();
+    obtenerMetricas();
   }
 
   @override
@@ -70,7 +79,11 @@ class _FamiliarHistorialRecordatoriosScreenState
               fontWeight: FontWeight.w400,
             ),
           ),
-          metricasComponentes(context, "10", "2"),
+          metricasComponentes(
+            context,
+            recordatoriosAdministrados,
+            recordatoriosCancelados,
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 25, left: 25, right: 25),
             child: Container(
@@ -163,6 +176,7 @@ class _FamiliarHistorialRecordatoriosScreenState
               ),
             ),
           ),
+          /*
           itemHistorial(
             context,
             "Amoxicilina",
@@ -172,6 +186,45 @@ class _FamiliarHistorialRecordatoriosScreenState
             "5 Comprimido(s)",
             "Juan Perez",
             "Tomar con saldeuvas",
+          ),
+          */
+          FutureBuilder<FamiliaresHistorialRecordatoriosResponse?>(
+            future: listaRecordatorios,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else if (snapshot.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Center(child: Text('Error al cargar los datos')),
+                );
+              } else if (!snapshot.hasData ||
+                  snapshot.data == null ||
+                  snapshot.data!.recordatorios.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Center(child: Text('No hay historial disponible')),
+                );
+              } else {
+                return Column(
+                  children: snapshot.data!.recordatorios.map((item) {
+                    return itemHistorial(
+                      context,
+                      item.nombreM,
+                      item.estado,
+                      item.nombreP,
+                      item.nombreCuidador ?? "No asignado",
+                      item.dosis,
+                      item.administro ?? "Sin datos",
+                      item.notas ?? 'sin notas',
+                    );
+                  }).toList(),
+                );
+              }
+            },
           ),
         ],
       ),
@@ -397,7 +450,9 @@ class _FamiliarHistorialRecordatoriosScreenState
                       SizedBox(
                         width: 230,
                         child: Text(
-                          notas,
+                          (notas != "" && notas != "null")
+                              ? notas
+                              : "Sin notas adicionales",
                           style: TextStyle(
                             color: const Color.fromARGB(255, 167, 100, 0),
                           ),
@@ -531,5 +586,53 @@ class _FamiliarHistorialRecordatoriosScreenState
         ],
       ),
     );
+  }
+
+  void obtenerRecordatorios() async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        listaRecordatorios = repo.obtenerHistorialRecordatorios(
+          FamiliaresHistorialRecordatorios(
+            idFamiliar: widget.idFamiliar ?? "",
+            tokenAcceso: widget.tokenAcceso ?? "",
+            fechaDatos: "2025-11-03",
+          ),
+        );
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      obtenerRecordatorios();
+    }
+  }
+
+  void obtenerMetricas() async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      final response = await repo.obtenerMetricasRecordatorios(
+        FamiliaresHistorialObtenerMetricasRecordatorios(
+          idFamiliar: widget.idFamiliar ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        recordatoriosAdministrados = response.recordatoriosAdministrados
+            .toString();
+        recordatoriosCancelados = response.recordatoriosCancelados.toString();
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      obtenerMetricas();
+    }
   }
 }
