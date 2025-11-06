@@ -29,6 +29,9 @@ class _FamiliarHistorialRecordatoriosScreenState
   late final AnimationController _controllerNoWifi = AnimationController(
     vsync: this,
   );
+  late final AnimationController _controllerEmpty = AnimationController(
+    vsync: this,
+  );
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   Future<FamiliaresHistorialRecordatoriosResponse?>? listaRecordatorios;
@@ -43,6 +46,7 @@ class _FamiliarHistorialRecordatoriosScreenState
     );
     obtenerMetricas();
     _controllerNoWifi.duration = const Duration(seconds: 2);
+    _controllerEmpty.duration = const Duration(seconds: 2);
   }
 
   @override
@@ -265,9 +269,35 @@ class _FamiliarHistorialRecordatoriosScreenState
               } else if (!snapshot.hasData ||
                   snapshot.data == null ||
                   snapshot.data!.recordatorios.isEmpty) {
+                _controllerEmpty.reset();
+                _controllerEmpty.forward();
                 return Padding(
                   padding: const EdgeInsets.all(25),
-                  child: Center(child: Text('No hay historial disponible')),
+                  child: Column(
+                    children: [
+                      Lottie.asset(
+                        repeat: true,
+                        reverse: true,
+                        'assets/images/empty.json',
+                        controller: _controllerEmpty,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.fitWidth,
+                        onLoaded: (composition) {
+                          _controllerEmpty.duration = composition.duration;
+                          _controllerEmpty.forward();
+                        },
+                      ),
+                      Text(
+                        "Sin registro de recordatororios para este dia",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 13, 44, 70),
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               } else {
                 return Column(
