@@ -38,7 +38,9 @@ class _FamiliarHistorialRecordatoriosScreenState
   void initState() {
     super.initState();
     initializeDateFormatting('es_ES', null);
-    obtenerRecordatorios();
+    obtenerRecordatorios(
+      "${_focusedDay.year}-${_focusedDay.month.toString().padLeft(2, '0')}-${_focusedDay.day.toString().padLeft(2, '0')}",
+    );
     obtenerMetricas();
     _controllerNoWifi.duration = const Duration(seconds: 2);
   }
@@ -147,13 +149,9 @@ class _FamiliarHistorialRecordatoriosScreenState
                   _selectedDay = selectedDay;
                   _focusedDay = selectedDay;
                 });
-                /*
-                print("IdFamiliar: ${widget.idFamiliar}");
-                print("IdFamiliar: ${widget.tokenAcceso}");
-                print(
-                  "Dia seleccionado: ${selectedDay.year}-${selectedDay.month.toString().padLeft(2, "0")}-${selectedDay.day.toString().padLeft(2, "0")}",
+                obtenerRecordatorios(
+                  "${selectedDay.year}-${selectedDay.month.toString().padLeft(2, '0')}-${selectedDay.day.toString().padLeft(2, '0')}",
                 );
-                */
               },
               headerStyle: HeaderStyle(formatButtonVisible: false),
               calendarBuilders: CalendarBuilders(
@@ -246,7 +244,9 @@ class _FamiliarHistorialRecordatoriosScreenState
                             padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                           onPressed: () {
-                            obtenerRecordatorios();
+                            obtenerRecordatorios(
+                              "${_focusedDay.year}-${_focusedDay.month.toString().padLeft(2, '0')}-${_focusedDay.day.toString().padLeft(2, '0')}",
+                            );
                           },
                           icon: Icon(Icons.refresh, color: Colors.white),
                           label: Text(
@@ -721,7 +721,7 @@ class _FamiliarHistorialRecordatoriosScreenState
     );
   }
 
-  void obtenerRecordatorios() async {
+  void obtenerRecordatorios(String? fechaHoy) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
       if (!mounted) {
@@ -732,7 +732,7 @@ class _FamiliarHistorialRecordatoriosScreenState
           FamiliaresHistorialRecordatorios(
             idFamiliar: widget.idFamiliar ?? "",
             tokenAcceso: widget.tokenAcceso ?? "",
-            fechaDatos: "2025-11-03",
+            fechaDatos: fechaHoy ?? "",
           ),
         );
       });
@@ -740,7 +740,7 @@ class _FamiliarHistorialRecordatoriosScreenState
       if (!mounted) {
         return;
       }
-      obtenerRecordatorios();
+      obtenerRecordatorios(fechaHoy);
     }
   }
 
