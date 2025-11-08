@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/components/familiares/familiar_pacientes_medicamentos_screen/item_lista_medicamentos.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
@@ -26,15 +27,31 @@ class FamiliarPacientesMedicamentosScreen extends StatefulWidget {
 }
 
 class _FamiliarPacientesMedicamentosScreenState
-    extends State<FamiliarPacientesMedicamentosScreen> {
+    extends State<FamiliarPacientesMedicamentosScreen>
+    with TickerProviderStateMixin {
   String apartado = "defecto";
   String? idMedicamento;
   Future<FamiliaresPacientesObtenermedicamentosResponse?>? listaMedicamentos;
+  late final AnimationController _controllerEmpty = AnimationController(
+    vsync: this,
+  );
+  late final AnimationController _controllerNoWifi = AnimationController(
+    vsync: this,
+  );
 
   @override
   void initState() {
     super.initState();
+    _controllerEmpty.duration = const Duration(seconds: 2);
+    _controllerNoWifi.duration = const Duration(seconds: 2);
     obtenerMedicamentos();
+  }
+
+  @override
+  void dispose() {
+    _controllerEmpty.dispose();
+    _controllerNoWifi.dispose();
+    super.dispose();
   }
 
   @override
@@ -222,18 +239,38 @@ class _FamiliarPacientesMedicamentosScreenState
             future: listaMedicamentos,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.blue),
+                );
               } else if (snapshot.hasError) {
+                _controllerNoWifi.reset();
+                _controllerNoWifi.forward();
                 return Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.wifi_off, color: Colors.red, size: 40),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Lottie.asset(
+                          repeat: true,
+                          reverse: true,
+                          'assets/images/wifierror.json',
+                          controller: _controllerNoWifi,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fitWidth,
+                          onLoaded: (composition) {
+                            _controllerNoWifi.duration = composition.duration;
+                            _controllerNoWifi.forward();
+                          },
+                        ),
+                      ),
+
                       const SizedBox(height: 16),
                       Text(
                         "Parece que su conexión está lenta o inestable.",
                         style: TextStyle(
-                          color: Color.fromRGBO(85, 150, 255, 1),
+                          color: Colors.red,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -244,7 +281,12 @@ class _FamiliarPacientesMedicamentosScreenState
                         width: 180,
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              204,
+                              57,
+                              46,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -270,7 +312,36 @@ class _FamiliarPacientesMedicamentosScreenState
               } else if (!snapshot.hasData ||
                   snapshot.data?.medicamentos == null ||
                   snapshot.data!.medicamentos.isEmpty) {
-                return Center(child: Text('No hay medicamentos registrados'));
+                _controllerEmpty.reset();
+                _controllerEmpty.forward();
+                return Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    children: [
+                      Lottie.asset(
+                        repeat: true,
+                        reverse: true,
+                        'assets/images/empty.json',
+                        controller: _controllerEmpty,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.fitWidth,
+                        onLoaded: (composition) {
+                          _controllerEmpty.duration = composition.duration;
+                          _controllerEmpty.forward();
+                        },
+                      ),
+                      Text(
+                        "Usted no tiene ningun medicamento registrado para este paciente",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 13, 44, 70),
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               } else {
                 final medicamentos = snapshot.data!.medicamentos;
                 return ListView.builder(
