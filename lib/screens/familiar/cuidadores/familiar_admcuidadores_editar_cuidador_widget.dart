@@ -35,8 +35,8 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
   String? telefono2 = "Obteniendo datos...";
   String? correoE = "Obteniendo datos...";
   String? usuario = "Obteniendo datos...";
-  String? nuevaContrasena = "Obteniendo datos...";
-  String? confirmarContrasena = "Obteniendo datos...";
+  String? nuevaContrasena = "";
+  String? confirmarContrasena = "";
 
   TextEditingController nombreController = TextEditingController();
   TextEditingController apellidoPController = TextEditingController();
@@ -972,39 +972,49 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
     String tokenAcceso,
     String idCuidador,
   ) async {
-    final repo = FamiliaresReposotoryGlobal();
-    final response = await repo.obtenerCuidador(
-      FamiliaresCuidadoresObtenerCuidador(
-        idFamiliar: idFamiliar,
-        tokenAcceso: tokenAcceso,
-        idCuidador: idCuidador,
-      ),
-    );
-    if (!mounted) return;
-    setState(() {
-      nombre = response.nombre ?? "";
-      apellidoP = response.apellidoP ?? "";
-      apellidoM = response.apellidoM ?? "";
-      correoE = response.correoE ?? "";
-      usuario = response.usuario ?? "";
-      direccion = response.direccion ?? "";
-      telefono1 = response.telefono1 ?? "";
-      telefono2 = response.telefono2 ?? "";
+    try {
+      final repo = FamiliaresReposotoryGlobal();
+      final response = await repo.obtenerCuidador(
+        FamiliaresCuidadoresObtenerCuidador(
+          idFamiliar: idFamiliar,
+          tokenAcceso: tokenAcceso,
+          idCuidador: idCuidador,
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        nombre = response.nombre ?? "";
+        apellidoP = response.apellidoP ?? "";
+        apellidoM = response.apellidoM ?? "";
+        correoE = response.correoE ?? "";
+        usuario = response.usuario ?? "";
+        direccion = response.direccion ?? "";
+        telefono1 = response.telefono1 ?? "";
+        telefono2 = response.telefono2 ?? "";
 
-      nombreController.text = response.nombre ?? "";
-      apellidoPController.text = response.apellidoP ?? "";
-      apellidoMController.text = response.apellidoM ?? "";
-      direccionController.text = response.direccion ?? "";
-      telefono1Controller.text = response.telefono1 ?? "";
-      telefono2Controller.text = response.telefono2 ?? "";
-      correoEController.text = response.correoE ?? "";
-      usuarioController.text = response.usuario ?? "";
-    });
+        nombreController.text = response.nombre ?? "";
+        apellidoPController.text = response.apellidoP ?? "";
+        apellidoMController.text = response.apellidoM ?? "";
+        direccionController.text = response.direccion ?? "";
+        telefono1Controller.text = response.telefono1 ?? "";
+        telefono2Controller.text = response.telefono2 ?? "";
+        correoEController.text = response.correoE ?? "";
+        usuarioController.text = response.usuario ?? "";
+      });
+    } catch (e) {
+      if (!mounted) return;
+      obtenerCuidador(idFamiliar, tokenAcceso, idCuidador);
+    }
   }
 
   void actualizarInformacionPersonal(context) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
       final result = await repo.cuidadoresEditarInformacionPersonal(
         FamiliaresCuidadoresEditarInformacionPerfil(
           idFamiliar: widget.idFamiliar ?? "",
@@ -1018,6 +1028,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
           telefono2: telefono2 ?? "",
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -1028,6 +1039,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       );
       widget.onUpdate(widget.idFamiliar ?? "", widget.tokenAcceso ?? "");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
@@ -1040,6 +1052,11 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
   void actualizarInformacionAcceso(context) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
       final result = await repo.cuidadorActualizarInformacionCuenta(
         FamiliaresCuidadoresEditarInformacionCuentaAcceso(
           idFamiliar: widget.idFamiliar ?? "",
@@ -1049,6 +1066,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
           usuario: usuario ?? "",
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -1059,6 +1077,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       );
       widget.onUpdate(widget.idFamiliar ?? "", widget.tokenAcceso ?? "");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
@@ -1073,6 +1092,16 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
     String nuevaContrasena,
     String confirmarContrasena,
   ) async {
+    if (nuevaContrasena.isEmpty && confirmarContrasena.isEmpty ||
+        confirmarContrasena.trim() == "" && nuevaContrasena.trim() == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Por favor, complete ambos campos de contraseña"),
+        ),
+      );
+      return;
+    }
     if (nuevaContrasena != confirmarContrasena) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1084,6 +1113,11 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
     }
     final repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
       final result = await repo.cuidadorCambiarContrasena(
         FamiliaresCuidadoresCambiarContrasena(
           idFamiliar: widget.idFamiliar ?? "",
@@ -1092,6 +1126,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
           nuevaContrasena: nuevaContrasena,
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -1105,6 +1140,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       nuevaContrasena = "";
       confirmarContrasena = "";
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
