@@ -95,9 +95,7 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
                         GestureDetector(
                           onTap: () {
                             if (widget.onDelete != null) {
-                              widget.onDelete!(context, () {
-                                eliminarCuidador(context);
-                              });
+                              mostrarDialogoEliminarCuidador(context);
                             }
                           },
                           child: Icon(
@@ -196,6 +194,12 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
   void eliminarCuidador(context) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.eliminarCuidador(
         FamiliaresCuidadoresEliminarCuidador(
           idFamiliar: widget.idFamiliar,
@@ -203,6 +207,7 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
           idCuidador: widget.idCuidador,
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -211,7 +216,9 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
       );
       widget.onUpdateFather(widget.idFamiliar, widget.tokenAcceso);
       widget.onSelect("default");
+      Navigator.of(context).pop();
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
@@ -219,5 +226,34 @@ class _ItemListaCuidadoresState extends State<ItemListaCuidadores> {
         ),
       );
     }
+  }
+
+  void mostrarDialogoEliminarCuidador(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmar eliminación'),
+          content: Text('¿Estás seguro de que deseas eliminar este cuidador?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar', style: TextStyle(color: Colors.blue)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Colors.blue),
+              ),
+              child: Text('Eliminar', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                eliminarCuidador(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
