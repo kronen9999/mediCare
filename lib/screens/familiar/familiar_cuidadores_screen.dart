@@ -230,7 +230,9 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen>
                     future: listaCuidadores,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: CircularProgressIndicator(color: Colors.blue),
+                        );
                       } else if (snapshot.hasError) {
                         _controllerNoWifi.reset();
                         _controllerNoWifi.forward();
