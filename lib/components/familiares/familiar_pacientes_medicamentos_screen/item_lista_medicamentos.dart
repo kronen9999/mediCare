@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_medicamentos_eliminarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_desabilitarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_habilitarmedicamento.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
@@ -94,9 +95,14 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
                               color: Color.fromARGB(255, 102, 101, 101),
                             ),
                           ),
-                          Icon(
-                            Icons.delete_outline,
-                            color: Color.fromARGB(255, 102, 101, 101),
+                          GestureDetector(
+                            onTap: () {
+                              mostrarDialogoEliminarMedicamento(context);
+                            },
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: Color.fromARGB(255, 102, 101, 101),
+                            ),
                           ),
                         ],
                       ),
@@ -441,6 +447,70 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
         SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
       );
       widget.updateMedicamento();
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString().replaceAll("Exception: ", "")),
+        ),
+      );
+    }
+  }
+
+  void mostrarDialogoEliminarMedicamento(context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Confirmar eliminacion"),
+        content: Text(
+          "¿Estás seguro de que deseas eliminar este medicamento?Ten en cuenta que al eliminarlo no podras recuperarlo.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Cancelar", style: TextStyle(color: Colors.blue)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              eliminarMedicamento(context);
+            },
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.blue),
+            ),
+            child: Text("Eliminar", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void eliminarMedicamento(context) async {
+    final repo = FamiliaresReposotoryGlobal();
+    try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
+      final result = await repo.eliminarMedicamento(
+        FamiliaresMedicamentosEliminarmedicamento(
+          idFamiliar: widget.idFamiliar,
+          tokenAcceso: widget.tokenAcceso,
+          idPaciente: widget.idPaciente,
+          idMedicamento: widget.idMedicamento,
+        ),
+      );
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      widget.updateMedicamento();
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: Colors.green, content: Text(result.message)),
+      );
     } catch (e) {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
