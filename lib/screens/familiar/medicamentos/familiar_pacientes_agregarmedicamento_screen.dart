@@ -1159,6 +1159,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
           notas: notas ?? "",
         ),
       );
+      if (!mounted) return;
       Navigator.of(context).pop();
       widget.onUpdateM();
       widget.onSelect("defecto");
