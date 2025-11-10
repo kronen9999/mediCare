@@ -180,7 +180,7 @@ class _ItemListaRecordatoriosproximosState
                   children: [
                     TextButton(
                       onPressed: () {
-                        cancelarAdministrarMedicamento(context);
+                        mostrarDialogoCancelarAdministracion(context);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -263,6 +263,8 @@ class _ItemListaRecordatoriosproximosState
               "${fechaHoraActual.year}-${fechaHoraActual.month.toString().padLeft(2, '0')}-${fechaHoraActual.day.toString().padLeft(2, '0')} ${fechaHoraActual.hour.toString().padLeft(2, '0')}:${fechaHoraActual.minute.toString().padLeft(2, '0')}:${fechaHoraActual.second.toString().padLeft(2, '0')}",
         ),
       );
+      if (!mounted) return;
+      Navigator.of(context).pop();
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
@@ -277,5 +279,36 @@ class _ItemListaRecordatoriosproximosState
         ),
       );
     }
+  }
+
+  void mostrarDialogoCancelarAdministracion(context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Cancelar administracion"),
+          content: Text(
+            "¿Estás seguro de que deseas cancelar la administracion de este medicamento?Si el medicamento esta inabilitado no se generaran mas recordatiorios en caso contrario se generara el siguiente rcordatorio en base a la hora actual.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("No", style: TextStyle(color: Colors.red)),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Colors.red),
+              ),
+              onPressed: () {
+                cancelarAdministrarMedicamento(context);
+              },
+              child: Text("Sí", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
