@@ -26,6 +26,9 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
   String tipoScreen = "default";
   late final AnimationController _controller;
   late final AnimationController _controllerNoWifi;
+  late final AnimationController _controllerEmpty = AnimationController(
+    vsync: this,
+  );
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
     _controller.duration = Duration(seconds: 2);
     _controllerNoWifi = AnimationController(vsync: this);
     _controllerNoWifi.duration = Duration(seconds: 2);
+    _controllerEmpty.duration = Duration(seconds: 2);
     obtenerProximosRecordatorios();
   }
 
@@ -42,6 +46,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
   void dispose() {
     _controller.dispose();
     _controllerNoWifi.dispose();
+    _controllerEmpty.dispose();
     super.dispose();
   }
 
@@ -199,7 +204,9 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
               future: listaRecordatorios,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: CircularProgressIndicator(color: Colors.blue),
+                  );
                 }
                 if (snapshot.hasError) {
                   return Center(
@@ -270,7 +277,36 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
                 if (!snapshot.hasData ||
                     snapshot.data?.recordatorios == null ||
                     snapshot.data!.recordatorios.isEmpty) {
-                  return Center(child: Text('No hay próximos recordatorios'));
+                  _controllerEmpty.reset();
+                  _controllerEmpty.forward();
+                  return Padding(
+                    padding: const EdgeInsets.all(25),
+                    child: Column(
+                      children: [
+                        Lottie.asset(
+                          repeat: true,
+                          reverse: true,
+                          'assets/images/empty.json',
+                          controller: _controllerEmpty,
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.fitWidth,
+                          onLoaded: (composition) {
+                            _controllerEmpty.duration = composition.duration;
+                            _controllerEmpty.forward();
+                          },
+                        ),
+                        Text(
+                          "Sin recordatorios pendientes",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 13, 44, 70),
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 }
                 final recordatorios = snapshot.data!.recordatorios;
                 return ListView.builder(

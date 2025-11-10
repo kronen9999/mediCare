@@ -197,7 +197,9 @@ class _FamiliarHistorialRecordatoriosScreenState
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Padding(
                   padding: const EdgeInsets.all(25),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: Center(
+                    child: CircularProgressIndicator(color: Colors.blue),
+                  ),
                 );
               } else if (snapshot.hasError) {
                 return Center(
