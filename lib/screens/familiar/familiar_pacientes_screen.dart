@@ -427,7 +427,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Confirmar eliminación"),
-        content: Text("¿Está seguro que desea eliminar a este cuidador?"),
+        content: Text("¿Está seguro que desea eliminar a este paciente?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(), // Cierra el diálogo
