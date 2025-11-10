@@ -15,6 +15,7 @@ import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
 import 'package:medicare/models/familiares/historial/familiares_historial_obtenermetricasrecordatorios.dart';
 import 'package:medicare/models/familiares/historial/familiares_historial_recordatorios.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_medicamentos_eliminarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_cancelaradministracionmedicamento.dart';
@@ -924,6 +925,36 @@ class FamiliaresReposotoryGlobal {
 
     if (response.statusCode == 200) {
       return FamiliaresPacientesHabilitarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para eliminar un medicamento
+
+  Future<FamiliaresMedicamentosEliminarmedicamentoResponse> eliminarMedicamento(
+    FamiliaresMedicamentosEliminarmedicamento medicamentoData,
+  ) async {
+    final response = await http.delete(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/EliminarMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresMedicamentosEliminarmedicamentoResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
