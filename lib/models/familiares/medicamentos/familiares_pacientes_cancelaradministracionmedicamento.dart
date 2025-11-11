@@ -35,10 +35,14 @@ class FamiliaresPacientesCancelaradministracionmedicamento {
 class FamiliaresPacientesCancelaradministracionmedicamentoResponse {
   String message;
   String? fechaSiguienteDosis;
+  String? nombreM;
+  String? nombreP;
 
   FamiliaresPacientesCancelaradministracionmedicamentoResponse({
     required this.message,
     required this.fechaSiguienteDosis,
+    required this.nombreM,
+    required this.nombreP,
   });
 
   factory FamiliaresPacientesCancelaradministracionmedicamentoResponse.fromJson(
@@ -47,6 +51,8 @@ class FamiliaresPacientesCancelaradministracionmedicamentoResponse {
     return FamiliaresPacientesCancelaradministracionmedicamentoResponse(
       message: json['message'],
       fechaSiguienteDosis: json['FechaSiguienteDosis'],
+      nombreM: json['NombreM'],
+      nombreP: json['NombreP'],
     );
   }
 }
