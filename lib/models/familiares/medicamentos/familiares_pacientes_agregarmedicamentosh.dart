@@ -71,10 +71,12 @@ class FamiliaresPacientesAgregarmedicamentosh {
 class FamiliaresPacientesAgregarmedicamentoshResponse {
   final String message;
   final String fechaProgramada;
+  final int historialMedicamento;
 
   FamiliaresPacientesAgregarmedicamentoshResponse({
     required this.message,
     required this.fechaProgramada,
+    required this.historialMedicamento,
   });
 
   factory FamiliaresPacientesAgregarmedicamentoshResponse.fromJson(
@@ -83,6 +85,7 @@ class FamiliaresPacientesAgregarmedicamentoshResponse {
     return FamiliaresPacientesAgregarmedicamentoshResponse(
       message: json['message'],
       fechaProgramada: json['FechaProgramada'],
+      historialMedicamento: json['historialMedicamento'],
     );
   }
 }

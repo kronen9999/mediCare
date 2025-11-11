@@ -39,10 +39,12 @@ class FamiliaresPacientesHabilitarmedicamento {
 class FamiliaresPacientesHabilitarmedicamentoResponse {
   final String message;
   final String fechaSiguienteDosis;
+  final int historialMedicamento;
 
   FamiliaresPacientesHabilitarmedicamentoResponse({
     required this.message,
     required this.fechaSiguienteDosis,
+    required this.historialMedicamento,
   });
 
   factory FamiliaresPacientesHabilitarmedicamentoResponse.fromJson(
@@ -51,10 +53,15 @@ class FamiliaresPacientesHabilitarmedicamentoResponse {
     return FamiliaresPacientesHabilitarmedicamentoResponse(
       message: json['message'],
       fechaSiguienteDosis: json['FechaSiguienteDosis'],
+      historialMedicamento: json['historialMedicamento'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'message': message, 'FechaSiguienteDosis': fechaSiguienteDosis};
+    return {
+      'message': message,
+      'FechaSiguienteDosis': fechaSiguienteDosis,
+      'historialMedicamento': historialMedicamento,
+    };
   }
 }
