@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:medicare/main.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/main.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class FamiliarPacientesAgregarmedicamentoScreen extends StatefulWidget {
   final String? idFamiliar;
@@ -1163,6 +1167,12 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
       Navigator.of(context).pop();
       widget.onUpdateM();
       widget.onSelect("defecto");
+      await agregarNotificacion(
+        result.historialMedicamento,
+        nombreM ?? "",
+        widget.nombrePaciente ?? "",
+        result.fechaProgramada,
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -1212,5 +1222,30 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
           "${nuevaHora.year}-${nuevaHora.month.toString().padLeft(2, '0')}-${nuevaHora.day.toString().padLeft(2, '0')} ${nuevaHora.hour.toString().padLeft(2, '0')}:${nuevaHora.minute.toString().padLeft(2, '0')}:${nuevaHora.second.toString().padLeft(2, '0')}";
     });
     return formato12Horas("${nuevaHora.hour}:${nuevaHora.minute}");
+  }
+
+  Future<void> agregarNotificacion(
+    int idHistorial,
+    String nombreMedicamento,
+    String nombrePaciente,
+    String horaRecordatorio,
+  ) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      idHistorial,
+      "Es hora de suministrar {$nombreMedicamento}",
+      "Es hora de dar el medicamento a $nombrePaciente",
+      tz.TZDateTime.parse(tz.local, horaRecordatorio),
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medicare_channel_01',
+          'Recordatorios',
+          channelDescription: 'Canal para recordatorios de medicamentos',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 }
