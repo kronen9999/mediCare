@@ -40,11 +40,15 @@ class FamiliaresPacientesHabilitarmedicamentoResponse {
   final String message;
   final String fechaSiguienteDosis;
   final int historialMedicamento;
+  final String nombreM;
+  final String nombreP;
 
   FamiliaresPacientesHabilitarmedicamentoResponse({
     required this.message,
     required this.fechaSiguienteDosis,
     required this.historialMedicamento,
+    required this.nombreM,
+    required this.nombreP,
   });
 
   factory FamiliaresPacientesHabilitarmedicamentoResponse.fromJson(
@@ -54,6 +58,8 @@ class FamiliaresPacientesHabilitarmedicamentoResponse {
       message: json['message'],
       fechaSiguienteDosis: json['FechaSiguienteDosis'],
       historialMedicamento: json['historialMedicamento'],
+      nombreM: json['NombreM'],
+      nombreP: json['NombreP'],
     );
   }
 
@@ -62,6 +68,8 @@ class FamiliaresPacientesHabilitarmedicamentoResponse {
       'message': message,
       'FechaSiguienteDosis': fechaSiguienteDosis,
       'historialMedicamento': historialMedicamento,
+      'NombreM': nombreM,
+      'NombreP': nombreP,
     };
   }
 }
