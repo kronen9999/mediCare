@@ -7,6 +7,8 @@ import 'package:medicare/repositories/familiares/familiares_reposotory_global.da
 import 'package:medicare/screens/familiar/Inicio/familiar_chat_iapersonalizada.dart';
 import 'package:medicare/screens/familiar/Inicio/familiar_historial_recordatorios_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:medicare/main.dart';
 
 class FamiliarPrincipalScreen extends StatefulWidget {
   const FamiliarPrincipalScreen({super.key});
@@ -180,6 +182,24 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
             ),
           ),
         ),
+      ),
+      ElevatedButton(
+        onPressed: () async {
+          await flutterLocalNotificationsPlugin.show(
+            2001,
+            'Notificación inmediata',
+            'Si ves esto, el canal funciona',
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                'test_channel_immediate',
+                'Pruebas Inmediatas',
+                importance: Importance.max,
+                priority: Priority.high,
+              ),
+            ),
+          );
+        },
+        child: Text("Notificacion de prueba"),
       ),
       Padding(
         padding: const EdgeInsets.only(left: 25, right: 25),

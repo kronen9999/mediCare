@@ -3,8 +3,32 @@ import 'package:medicare/screens/cuidador/cuidadorhomescreen.dart';
 import 'package:medicare/screens/familiar/familiarhome.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> _initNotifications() async {
+  tz.initializeTimeZones();
+  // Ajusta a tu zona real si quieres detectar dinámicamente luego
+  tz.setLocalLocation(tz.getLocation('America/Mexico_City'));
+
+  const AndroidInitializationSettings androidSettings =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const DarwinInitializationSettings iosSettings =
+      DarwinInitializationSettings();
+  const InitializationSettings initSettings = InitializationSettings(
+    android: androidSettings,
+    iOS: iosSettings,
+  );
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _initNotifications();
   runApp(const MainApp());
 }
 
@@ -17,6 +41,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   String? sesionIniciada;
+
   @override
   void initState() {
     super.initState();
