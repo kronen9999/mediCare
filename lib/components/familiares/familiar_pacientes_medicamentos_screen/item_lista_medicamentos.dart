@@ -4,6 +4,9 @@ import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_des
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_habilitarmedicamento.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:medicare/main.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ItemListaMedicamentos extends StatefulWidget {
   final String idFamiliar;
@@ -441,6 +444,12 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
           horaCalculo: "$year-$month-$day $hour:$min:$sec",
         ),
       );
+      await agregarNotificacion(
+        result.historialMedicamento,
+        result.nombreM,
+        result.nombreP,
+        result.fechaSiguienteDosis,
+      );
       Navigator.of(context).pop();
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -520,5 +529,30 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
         ),
       );
     }
+  }
+
+  Future<void> agregarNotificacion(
+    int idHistorial,
+    String nombreMedicamento,
+    String nombrePaciente,
+    String horaRecordatorio,
+  ) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      idHistorial,
+      "Es hora de suministrar {$nombreMedicamento}",
+      "Es hora de dar el medicamento a $nombrePaciente",
+      tz.TZDateTime.parse(tz.local, horaRecordatorio),
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medicare_channel_01',
+          'Recordatorios',
+          channelDescription: 'Canal para recordatorios de medicamentos',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 }

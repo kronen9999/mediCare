@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_cancelaradministracionmedicamento.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
+import 'package:medicare/main.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ItemListaRecordatoriosproximos extends StatefulWidget {
   final String? idFamiliar;
@@ -228,6 +231,14 @@ class _ItemListaRecordatoriosproximosState
               "${fechaHoraActual.year}-${fechaHoraActual.month.toString().padLeft(2, '0')}-${fechaHoraActual.day.toString().padLeft(2, '0')} ${fechaHoraActual.hour.toString().padLeft(2, '0')}:${fechaHoraActual.minute.toString().padLeft(2, '0')}:${fechaHoraActual.second.toString().padLeft(2, '0')}",
         ),
       );
+      if (result.fechaSiguienteDosis != null) {
+        await agregarNotificacion(
+          int.parse(widget.idHistorial),
+          widget.nombreM,
+          widget.nombreP,
+          result.fechaSiguienteDosis!,
+        );
+      }
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
@@ -263,6 +274,15 @@ class _ItemListaRecordatoriosproximosState
               "${fechaHoraActual.year}-${fechaHoraActual.month.toString().padLeft(2, '0')}-${fechaHoraActual.day.toString().padLeft(2, '0')} ${fechaHoraActual.hour.toString().padLeft(2, '0')}:${fechaHoraActual.minute.toString().padLeft(2, '0')}:${fechaHoraActual.second.toString().padLeft(2, '0')}",
         ),
       );
+      if (result.fechaSiguienteDosis != null) {
+        await agregarNotificacion(
+          int.parse(widget.idHistorial),
+          widget.nombreM,
+          widget.nombreP,
+          result.fechaSiguienteDosis!,
+        );
+      }
+      await eliminarNotificacion(int.parse(widget.idHistorial));
       if (!mounted) return;
       Navigator.of(context).pop();
       Navigator.of(context).pop();
@@ -310,5 +330,34 @@ class _ItemListaRecordatoriosproximosState
         );
       },
     );
+  }
+
+  Future<void> agregarNotificacion(
+    int idHistorial,
+    String nombreMedicamento,
+    String nombrePaciente,
+    String horaRecordatorio,
+  ) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      idHistorial,
+      "Es hora de suministrar {$nombreMedicamento}",
+      "Es hora de dar el medicamento a $nombrePaciente",
+      tz.TZDateTime.parse(tz.local, horaRecordatorio),
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medicare_channel_01',
+          'Recordatorios',
+          channelDescription: 'Canal para recordatorios de medicamentos',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
+  }
+
+  Future<void> eliminarNotificacion(int idHistorial) async {
+    await flutterLocalNotificationsPlugin.cancel(idHistorial);
   }
 }
