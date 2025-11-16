@@ -7,6 +7,7 @@ import 'package:medicare/models/cuidadores/cuidadores_login.dart';
 import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
 import 'package:medicare/models/cuidadores/cuidadores_restablecercontrasena.dart';
 import 'package:medicare/models/cuidadores/cuidadores_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecordatorios.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarcontrasena.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarinformacioncuenta.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarinformacionpersonal.dart';
@@ -261,6 +262,36 @@ class CuidadoresRepositoryGlobal {
       return CuidadoresPerfilActualizarcontrasenaResponse.fromJson(
         jsonDecode(response.body),
       );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  ////Metodos para la pantalla principal del cuidador
+  Future<CuidadoresObtenerproximosrecordatoriosResponse?>?
+  obtenerProximosRecordatorios(
+    CuidadoresObtenerproximosrecordatorios recordatoriosData,
+  ) async {
+    final String urlBase = variableGlobal.rutaGlobalBase;
+    final String endpoint = 'Cuidadores/Pacientes/ObtenerProximosRecordatorios';
+    final response = await http.post(
+      Uri.parse(urlBase + endpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(recordatoriosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return CuidadoresObtenerproximosrecordatoriosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 400) {
+      return CuidadoresObtenerproximosrecordatoriosResponse(recordatorios: []);
     } else if (response.statusCode == 422) {
       throw Exception(jsonDecode(response.body)['error']);
     } else if (response.statusCode == 404) {
