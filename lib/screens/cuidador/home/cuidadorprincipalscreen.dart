@@ -84,7 +84,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
             child: Lottie.asset(
               repeat: true,
               reverse: true,
-              'assets/images/heartanimated.json',
+              'assets/images/healtgreen.json',
               controller: _controller,
               width: 250,
               height: 200,
@@ -253,7 +253,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
                             Lottie.asset(
                               repeat: true,
                               reverse: true,
-                              'assets/images/empty.json',
+                              'assets/images/nodatagreen.json',
                               controller: _controllerEmpty,
                               width: 200,
                               height: 200,
