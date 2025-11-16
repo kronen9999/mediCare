@@ -530,30 +530,35 @@ class _CuidadorperfilinformacionpersonalscreenState
   }
 
   void obtenerDatos() async {
-    final repo = CuidadoresRepositoryGlobal();
-    final result = await repo.obtenerPerfilBasico(
-      CuidadoresPerfilObtenerperfilbasico(
-        idCuidador: widget.idCuidador ?? "",
-        tokenAcceso: widget.tokenAcceso ?? "",
-      ),
-    );
-    if (!mounted) {
-      return;
+    try {
+      final repo = CuidadoresRepositoryGlobal();
+      final result = await repo.obtenerPerfilBasico(
+        CuidadoresPerfilObtenerperfilbasico(
+          idCuidador: widget.idCuidador ?? "",
+          tokenAcceso: widget.tokenAcceso ?? "",
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        nombre = result.nombre ?? "";
+        apellidoP = result.apellidoPaterno ?? "";
+        apellidoM = result.apellidoMaterno ?? "";
+        direccion = result.direccion ?? "";
+        telefono1 = result.telefono1 ?? "";
+        telefono2 = result.telefono2 ?? "";
+        nombreController.text = nombre ?? "";
+        apellidoPController.text = apellidoP ?? "";
+        apellidoMController.text = apellidoM ?? "";
+        direccionController.text = direccion ?? "";
+        telefono1Controller.text = telefono1 ?? "";
+        telefono2Controller.text = telefono2 ?? "";
+      });
+    } catch (e) {
+      if (!mounted) return;
+      obtenerDatos();
     }
-    setState(() {
-      nombre = result.nombre ?? "";
-      apellidoP = result.apellidoPaterno ?? "";
-      apellidoM = result.apellidoMaterno ?? "";
-      direccion = result.direccion ?? "";
-      telefono1 = result.telefono1 ?? "";
-      telefono2 = result.telefono2 ?? "";
-      nombreController.text = nombre ?? "";
-      apellidoPController.text = apellidoP ?? "";
-      apellidoMController.text = apellidoM ?? "";
-      direccionController.text = direccion ?? "";
-      telefono1Controller.text = telefono1 ?? "";
-      telefono2Controller.text = telefono2 ?? "";
-    });
   }
 
   void actualizarDatos(
