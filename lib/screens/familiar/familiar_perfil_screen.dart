@@ -9,6 +9,9 @@ import 'package:medicare/screens/familiar/perfil/familiar_perfil_informacioncuen
 import 'package:medicare/screens/familiar/perfil/familiar_perfil_informacionpersonal_widgetscreen.dart';
 import 'package:medicare/screens/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:medicare/main.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FamiliarPerfilScreen extends StatefulWidget {
   const FamiliarPerfilScreen({super.key});
@@ -204,11 +207,16 @@ class _FamiliarPerfilScreenState extends State<FamiliarPerfilScreen> {
   void cerrarSesion() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+    await eliminarNotificaciones();
   }
 
   void cambiarSeccion(String? nuevaSeccion) {
     setState(() {
       tipoSeccion = nuevaSeccion ?? "default";
     });
+  }
+
+  Future<void> eliminarNotificaciones() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }
