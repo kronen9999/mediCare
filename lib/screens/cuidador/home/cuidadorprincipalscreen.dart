@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medicare/components/cuidadores/home/item_lista_recordatoriosProximos.dart';
 import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecordatorios.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/cuidador/home/cuidador_chat_ia_widget.dart';
@@ -99,7 +100,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
             child: Text(
               "Bienvenido",
               style: TextStyle(
-                color: Color.fromRGBO(85, 150, 255, 1),
+                color: Colors.green,
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
@@ -117,7 +118,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
             padding: const EdgeInsets.all(25),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.green,
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextButton(
@@ -149,7 +150,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
               child: Text(
                 "Proximos recordatorios",
                 style: TextStyle(
-                  color: Colors.blue,
+                  color: Colors.green,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -164,7 +165,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
-                        child: CircularProgressIndicator(color: Colors.blue),
+                        child: CircularProgressIndicator(color: Colors.green),
                       );
                     }
                     if (snapshot.hasError) {
@@ -283,23 +284,20 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
                       itemBuilder: (context, index) {
                         final recordatorio = recordatorios[index];
 
-                        return Center(
-                          child: Text(recordatorio.idHistorial.toString()),
-                        ); /*ItemListaRecordatoriosproximos(
-                          idFamiliar: idFamiliar,
+                        return ItemListaRecordatoriosproximos(
+                          idCuidador: idCuidador,
                           tokenAcceso: tokenAcceso,
                           idHistorial: recordatorio.idHistorial.toString(),
                           nombreM: recordatorio.nombreM,
                           nombreP: recordatorio.nombreP,
-                          nombreC: recordatorio.nombreCuidador,
                           dosis: recordatorio.dosis,
                           unidadDosis: recordatorio.unidadDosis,
                           notas: recordatorio.notas,
                           fechaAdministracion: formatearFecha(
                             recordatorio.fechaProgramada,
                           ),
-                          onUpdateMedicamentos: obtenerProximosRecordatorios,
-                        );*/
+                          onUpdateRecordatorios: obtenerListaRecordatorios,
+                        );
                       },
                     );
                   },
@@ -339,5 +337,28 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
     setState(() {
       seccion = nuevaSeccion;
     });
+  }
+
+  String formatearFecha(String fechaSinFormato) {
+    DateTime fecha = DateTime.parse(fechaSinFormato.replaceFirst(' ', 'T'));
+    const meses = [
+      '',
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
+    String periodo = fecha.hour < 12 ? 'AM' : 'PM';
+    int hora12 = fecha.hour % 12 == 0 ? 12 : fecha.hour % 12;
+    String minutos = fecha.minute.toString().padLeft(2, '0');
+    return '${fecha.day} de ${meses[fecha.month]} a las $hora12:$minutos $periodo';
   }
 }
