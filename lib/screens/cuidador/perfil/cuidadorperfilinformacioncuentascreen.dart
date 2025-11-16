@@ -277,22 +277,29 @@ class _CuidadorperfilinformacioncuentascreenState
   }
 
   void obtenerDatos(String? idCuidador, String? tokenAcceso) async {
-    final repo = CuidadoresRepositoryGlobal();
-    final result = await repo.obtenerPerfilBasico(
-      CuidadoresPerfilObtenerperfilbasico(
-        idCuidador: idCuidador ?? "",
-        tokenAcceso: tokenAcceso ?? "",
-      ),
-    );
-    if (!mounted) {
-      return;
+    try {
+      final repo = CuidadoresRepositoryGlobal();
+      final result = await repo.obtenerPerfilBasico(
+        CuidadoresPerfilObtenerperfilbasico(
+          idCuidador: idCuidador ?? "",
+          tokenAcceso: tokenAcceso ?? "",
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        correoE = result.correoE ?? "";
+        usuario = result.usuario ?? "";
+        correoEController.text = result.correoE ?? "";
+        usuarioEController.text = result.usuario ?? "";
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      obtenerDatos(idCuidador, tokenAcceso);
     }
-    setState(() {
-      correoE = result.correoE ?? "";
-      usuario = result.usuario ?? "";
-      correoEController.text = result.correoE ?? "";
-      usuarioEController.text = result.usuario ?? "";
-    });
   }
 
   void actualizarDatos(String? usuario, String? correo, context) async {
