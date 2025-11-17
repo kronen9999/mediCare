@@ -689,7 +689,7 @@ class _CuidadorHistorialRecordatoriosScreenState
                     width: double.infinity,
                     child: Text(
                       "Administrados",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ),
                 ],
@@ -741,7 +741,7 @@ class _CuidadorHistorialRecordatoriosScreenState
                     width: double.infinity,
                     child: Text(
                       "Cancelados",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ),
                 ],
