@@ -7,6 +7,7 @@ import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecord
 import 'package:medicare/models/cuidadores/home/cuidadores_sabercuidadorasignado.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/cuidador/home/cuidador_chat_ia_widget.dart';
+import 'package:medicare/screens/cuidador/home/cuidador_historial_recordatorios_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Cuidadorprincipalscreen extends StatefulWidget {
@@ -82,6 +83,12 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
           height: double.infinity,
           child: seccion == "default"
               ? principal()
+              : seccion == "historialrecordatorios"
+              ? CuidadorHistorialRecordatoriosScreen(
+                  idCuidador: idCuidador,
+                  tokenAcceso: tokenAcceso,
+                  onSelect: asignarSeccion,
+                )
               : seccion == "chatbot"
               ? CuidadorChatIaWidget(onSelect: asignarSeccion)
               : Text("Otra pantalla"),
