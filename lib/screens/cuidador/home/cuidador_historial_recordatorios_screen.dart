@@ -197,7 +197,7 @@ class _CuidadorHistorialRecordatoriosScreenState
                 return Padding(
                   padding: const EdgeInsets.all(25),
                   child: Center(
-                    child: CircularProgressIndicator(color: Colors.blue),
+                    child: CircularProgressIndicator(color: Colors.green),
                   ),
                 );
               } else if (snapshot.hasError) {
