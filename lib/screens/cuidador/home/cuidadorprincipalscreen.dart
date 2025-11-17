@@ -34,6 +34,9 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
   late final AnimationController _controllerEmpty = AnimationController(
     vsync: this,
   );
+  late final AnimationController _controllerWarning = AnimationController(
+    vsync: this,
+  );
   String seccion = "default";
   Future<CuidadoresObtenerproximosrecordatoriosResponse?>? listaRecordatorios;
 
@@ -44,6 +47,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
     _controllerNoWifi = AnimationController(vsync: this);
     _controllerEmpty.duration = const Duration(seconds: 2);
     _controllerNoWifi.duration = const Duration(seconds: 2);
+    _controllerWarning.duration = const Duration(seconds: 2);
     obtenerDatosSesion();
   }
 
@@ -52,6 +56,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
     _controller.dispose();
     _controllerNoWifi.dispose();
     _controllerEmpty.dispose();
+    _controllerWarning.dispose();
     super.dispose();
   }
 
@@ -722,10 +727,32 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
   Column apartadoNoAsignado() {
     return Column(
       children: [
-        Text(
-          "Aún no tienes un paciente asignado.",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black, fontSize: 20),
+        Padding(
+          padding: const EdgeInsets.only(top: 50),
+          child: Lottie.asset(
+            repeat: true,
+            reverse: true,
+            'assets/images/warning.json',
+            controller: _controllerEmpty,
+            width: 150,
+            height: 150,
+            fit: BoxFit.fitWidth,
+            onLoaded: (composition) {
+              _controllerEmpty.duration = composition.duration;
+              _controllerEmpty.forward();
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(25),
+          child: Text(
+            "Lo sentimos pero tu administrador no te ha asignado un familiar,te sugerimos contactar con el para que pueda asignarte uno.",
+            style: TextStyle(
+              color: const Color.fromARGB(255, 34, 82, 36),
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     );
