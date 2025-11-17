@@ -67,9 +67,12 @@ class _ItemListaRecordatoriosproximosState
                   Icon(Icons.timer_outlined, color: Colors.blue, size: 22),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      widget.fechaAdministracion ?? "Sin fecha",
-                      style: TextStyle(color: Colors.blue, fontSize: 18),
+                    child: SizedBox(
+                      width: 288,
+                      child: Text(
+                        widget.fechaAdministracion ?? "Sin fecha",
+                        style: TextStyle(color: Colors.blue, fontSize: 18),
+                      ),
                     ),
                   ),
                 ],
