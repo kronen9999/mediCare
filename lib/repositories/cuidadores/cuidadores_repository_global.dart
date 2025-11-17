@@ -7,6 +7,8 @@ import 'package:medicare/models/cuidadores/cuidadores_login.dart';
 import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
 import 'package:medicare/models/cuidadores/cuidadores_restablecercontrasena.dart';
 import 'package:medicare/models/cuidadores/cuidadores_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/cuidadores/home/cuidador_obtenerhistorialrecordatorios.dart';
+import 'package:medicare/models/cuidadores/home/cuidador_obtenermetricashistorial.dart';
 import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecordatorios.dart';
 import 'package:medicare/models/cuidadores/home/cuidadores_sabercuidadorasignado.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarcontrasena.dart';
@@ -319,6 +321,62 @@ class CuidadoresRepositoryGlobal {
 
     if (response.statusCode == 200) {
       return CuidadoresSabercuidadorasignadoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para obtener el historial de recordatorios del cuidador
+  Future<CuidadorObtenerHistorialRecordatoriosResponse?>?
+  obtenerHistorialRecordatorios(
+    CuidadorObtenerHistorialRecordatorios historialData,
+  ) async {
+    final String urlBase = variableGlobal.rutaGlobalBase;
+    final String endpoint =
+        'Cuidadores/Pacientes/ObtenerHistorialRecordatorios';
+    final response = await http.post(
+      Uri.parse(urlBase + endpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(historialData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return CuidadorObtenerHistorialRecordatoriosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+  //Metodo para obtener las metricas de los recordatorios del cuidador
+
+  Future<CuidadorObtenerMetricasHistorialResponse> obtenerMetricas(
+    metricasData,
+  ) async {
+    final String urlBase = variableGlobal.rutaGlobalBase;
+    final String endpoint = 'Cuidadores/Pacientes/ObtenerMetricasRecordatorios';
+    final response = await http.post(
+      Uri.parse(urlBase + endpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(metricasData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return CuidadorObtenerMetricasHistorialResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {
