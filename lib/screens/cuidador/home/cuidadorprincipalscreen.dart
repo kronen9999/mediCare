@@ -67,6 +67,8 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: seccion == "chatbot"
           ? null
+          : seccion == "historialrecordatorios"
+          ? null
           : FloatingActionButton(
               onPressed: () {
                 setState(() {
