@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medicare/components/cuidadores/home/item_lista_recordatoriosProximos.dart';
 import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecordatorios.dart';
+import 'package:medicare/models/cuidadores/home/cuidadores_sabercuidadorasignado.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/screens/cuidador/home/cuidador_chat_ia_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +19,7 @@ class Cuidadorprincipalscreen extends StatefulWidget {
 
 class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
     with TickerProviderStateMixin {
+  String cuidadorAsignado = "En espera";
   late final AnimationController _controller;
   late final AnimationController _controllerNoWifi;
   String? idCuidador;
@@ -65,11 +69,62 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
           width: double.infinity,
           height: double.infinity,
           child: seccion == "default"
-              ? principal()
+              ? (cuidadorAsignado == "Asignado"
+                    ? principal()
+                    : cuidadorAsignado == "No Asignado"
+                    ? noAsignado()
+                    : Center(
+                        child: CircularProgressIndicator(color: Colors.green),
+                      ))
               : seccion == "chatbot"
               ? CuidadorChatIaWidget(onSelect: asignarSeccion)
               : Text("Otra pantalla"),
         ),
+      ),
+    );
+  }
+
+  SingleChildScrollView noAsignado() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              'assets/images/healtgreen.json',
+              controller: _controller,
+              width: 250,
+              height: 200,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                _controller.duration = composition.duration;
+                _controller.forward();
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Text(
+              "Bienvenido",
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Text(
+            "Adminstra los recordatorios de tus seres queridos",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -173,7 +228,6 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(snapshot.error.toString()),
                             Padding(
                               padding: const EdgeInsets.only(top: 30),
                               child: Lottie.asset(
@@ -320,7 +374,29 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
         );
       });
     } catch (e) {
-      print(e.toString());
+      //
+    }
+  }
+
+  void saberPacienteAsignado(String idCuidador, String tokenAcceso) async {
+    try {
+      final repo = CuidadoresRepositoryGlobal();
+      final result = await repo.saberPacienteAsignado(
+        CuidadoresSabercuidadorasignado(
+          idCuidador: idCuidador,
+          tokenAcceso: tokenAcceso,
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        cuidadorAsignado = result.message.toString();
+      });
+      if (result.message == "Asignado") {
+        obtenerListaRecordatorios(idCuidador, tokenAcceso);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      saberPacienteAsignado(idCuidador, tokenAcceso);
     }
   }
 
@@ -330,7 +406,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
       idCuidador = prefs.getString('IdCuidador');
       tokenAcceso = prefs.getString('TokenAcceso');
     });
-    obtenerListaRecordatorios(idCuidador ?? "", tokenAcceso ?? "");
+    saberPacienteAsignado(idCuidador ?? "", tokenAcceso ?? "");
   }
 
   void asignarSeccion(String nuevaSeccion) {
