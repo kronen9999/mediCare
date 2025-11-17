@@ -7,6 +7,7 @@ import 'package:medicare/models/cuidadores/cuidadores_login.dart';
 import 'package:medicare/models/cuidadores/cuidadores_recupearcuentapcorreo.dart';
 import 'package:medicare/models/cuidadores/cuidadores_restablecercontrasena.dart';
 import 'package:medicare/models/cuidadores/cuidadores_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/cuidadores/home/cuidador_administrarmedicamento.dart';
 import 'package:medicare/models/cuidadores/home/cuidador_obtenerhistorialrecordatorios.dart';
 import 'package:medicare/models/cuidadores/home/cuidador_obtenermetricashistorial.dart';
 import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecordatorios.dart';
@@ -377,6 +378,34 @@ class CuidadoresRepositoryGlobal {
 
     if (response.statusCode == 200) {
       return CuidadorObtenerMetricasHistorialResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)['error']);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
+
+  //Metodo para administrar un medicamento de parte del cuidador
+
+  Future<CuidadorAdministrarmedicamentoResponse> administrarMedicamento(
+    CuidadorAdministrarmedicamento medicamentoData,
+  ) async {
+    final String urlBase = variableGlobal.rutaGlobalBase;
+    final String endpoint = 'Cuidadores/Pacientes/AdministrarMedicamento';
+    final response = await http.post(
+      Uri.parse(urlBase + endpoint),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return CuidadorAdministrarmedicamentoResponse.fromJson(
         jsonDecode(response.body),
       );
     } else if (response.statusCode == 422) {

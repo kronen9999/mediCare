@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medicare/models/cuidadores/home/cuidador_administrarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_cancelaradministracionmedicamento.dart';
+import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/main.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -172,7 +174,7 @@ class _ItemListaRecordatoriosproximosState
 
   void administrarMedicamento(context) async {
     final fechaHoraActual = DateTime.now();
-    final repo = FamiliaresReposotoryGlobal();
+    final repo = CuidadoresRepositoryGlobal();
     showDialog(
       context: context,
       builder: (_) =>
@@ -181,8 +183,8 @@ class _ItemListaRecordatoriosproximosState
     );
     try {
       final result = await repo.administrarMedicamento(
-        FamiliaresPacientesAdministrarmedicamento(
-          idFamiliar: widget.idCuidador!,
+        CuidadorAdministrarmedicamento(
+          idCuidador: widget.idCuidador!,
           tokenAcceso: widget.tokenAcceso!,
           idHistorial: widget.idHistorial,
           fechaAdministracion:
