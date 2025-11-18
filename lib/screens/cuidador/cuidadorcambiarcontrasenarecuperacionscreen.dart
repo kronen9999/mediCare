@@ -250,6 +250,12 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
 
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
       final result = await repo.restablerContrasena(
         CuidadoresRestablecercontrasena(
           correoE: widget.correoE,
@@ -257,10 +263,10 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
           nuevaContrasena: campoNuevaContrasena1 ?? '',
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
       );
-
       Future.delayed(Duration(seconds: 2), () {
         Navigator.push(
           context,
@@ -268,6 +274,7 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
         );
       });
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll('Exception: ', '')),
