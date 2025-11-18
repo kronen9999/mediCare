@@ -189,9 +189,15 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
   void recuperarCuenta(context) async {
     FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
       final response = await repo.recuperarCuentaPCorreo(
         FamiliaresRecuperarcuentapcorreo(correoE: correoE ?? ''),
       );
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -199,6 +205,7 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
         ),
       );
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll('Exception: ', '')),
