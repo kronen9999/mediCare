@@ -67,6 +67,14 @@ class _FamilaresPacientesEditarmedicamentoScreenState
 
   @override
   void dispose() {
+    nombreController.dispose();
+    descripcionController.dispose();
+    notasController.dispose();
+    horasController.dispose();
+    minutosController.dispose();
+    dosisController.dispose();
+    intervaloHoraController.dispose();
+    intervaloMinutosController.dispose();
     super.dispose();
   }
 
@@ -859,16 +867,32 @@ class _FamilaresPacientesEditarmedicamentoScreenState
       );
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }
   }
 
   void actualizarHorarioMedicamento(context) async {
+    if (intervaloHora == 0 && intervaloMinutos == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "El intervalo de tiempo no puede ser 0 horas y 0 minutos, por favor ingresa un valor válido.",
+          ),
+        ),
+      );
+      return;
+    }
     final repo = FamiliaresReposotoryGlobal();
     showDialog(
       context: context,
@@ -895,10 +919,15 @@ class _FamilaresPacientesEditarmedicamentoScreenState
       );
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }
