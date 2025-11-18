@@ -64,12 +64,12 @@ class _ItemListaRecordatoriosproximosState
             children: [
               Row(
                 children: [
-                  Icon(Icons.timer_outlined, color: Colors.blue, size: 22),
+                  Icon(Icons.timer_outlined, color: Colors.blue, size: 20),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       widget.fechaAdministracion ?? "Sin fecha",
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: TextStyle(color: Colors.blue, fontSize: 16.5),
                     ),
                   ),
                 ],
