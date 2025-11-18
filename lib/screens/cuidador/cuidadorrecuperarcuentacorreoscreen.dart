@@ -199,9 +199,16 @@ class _CuidadorrecuperarcuentacorreoscreenState
     }
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
       final result = await repo.enviarCodigoRecuperacion(
         CuidadoresRecupearcuentapcorreo(correoE: _correo ?? ''),
       );
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -210,6 +217,7 @@ class _CuidadorrecuperarcuentacorreoscreenState
         ),
       );
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll('Exception: ', '')),
