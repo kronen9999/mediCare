@@ -262,6 +262,12 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
   void cambiarContrasena(context) async {
     FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.restablecerContrasena(
         FamiliaresRestablecercontrasena(
           correoE: widget.correoE ?? '',
@@ -269,6 +275,7 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
           nuevaContrasena: campoContrasena1 ?? '',
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result.message.toString()),
@@ -282,6 +289,7 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
         );
       });
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll('Exception: ', '')),
