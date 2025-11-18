@@ -52,6 +52,7 @@ class _FamiliarHistorialRecordatoriosScreenState
   @override
   void dispose() {
     _controllerNoWifi.dispose();
+    _controllerEmpty.dispose();
     super.dispose();
   }
 
