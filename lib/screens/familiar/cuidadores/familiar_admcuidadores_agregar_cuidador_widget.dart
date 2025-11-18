@@ -795,6 +795,12 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
   ) async {
     final repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
       final result = await repo.agregarCuidador(
         FamiliaresCuidadoresAgregarCuidador(
           idFamiliar: idFamiliar,
@@ -817,8 +823,10 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
         ),
       );
       widget.onUpdate(idFamiliar, tokenAcceso);
+      Navigator.of(context).pop();
       widget.onSelect("default");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,

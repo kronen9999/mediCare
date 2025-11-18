@@ -637,33 +637,40 @@ class _FamiliarPacienteEditarpacienteScreenState
   }
 
   void obtenerDatos() async {
-    final repo = FamiliaresReposotoryGlobal();
-    final result = await repo.obtenerPaciente(
-      FamiliaresPacienteObtenerPaciente(
-        idFamiliar: widget.idFamiliar,
-        tokenAcceso: widget.tokenAcceso ?? "",
-        idPaciente: widget.idPaciente,
-      ),
-    );
-    if (!mounted) {
-      return;
+    try {
+      final repo = FamiliaresReposotoryGlobal();
+      final result = await repo.obtenerPaciente(
+        FamiliaresPacienteObtenerPaciente(
+          idFamiliar: widget.idFamiliar,
+          tokenAcceso: widget.tokenAcceso ?? "",
+          idPaciente: widget.idPaciente,
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        nombre = result.nombre;
+        apellidoP = result.apellidoP;
+        apellidoM = result.apellidoM;
+        direccion = result.direccion;
+        telefono1 = result.telefono1;
+        telefono2 = result.telefono2;
+        padecimiento = result.padecimiento;
+        nombreController.text = result.nombre ?? '';
+        apellidoPController.text = result.apellidoP ?? '';
+        apellidoMController.text = result.apellidoM ?? '';
+        direccionController.text = result.direccion ?? '';
+        telefono1Controller.text = result.telefono1 ?? '';
+        telefono2Controller.text = result.telefono2 ?? '';
+        padecimientoController.text = result.padecimiento ?? '';
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      obtenerDatos();
     }
-    setState(() {
-      nombre = result.nombre;
-      apellidoP = result.apellidoP;
-      apellidoM = result.apellidoM;
-      direccion = result.direccion;
-      telefono1 = result.telefono1;
-      telefono2 = result.telefono2;
-      padecimiento = result.padecimiento;
-      nombreController.text = result.nombre ?? '';
-      apellidoPController.text = result.apellidoP ?? '';
-      apellidoMController.text = result.apellidoM ?? '';
-      direccionController.text = result.direccion ?? '';
-      telefono1Controller.text = result.telefono1 ?? '';
-      telefono2Controller.text = result.telefono2 ?? '';
-      padecimientoController.text = result.padecimiento ?? '';
-    });
   }
 
   void editarPaciente(
@@ -676,6 +683,12 @@ class _FamiliarPacienteEditarpacienteScreenState
     String? padecimiento,
     context,
   ) async {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+      barrierDismissible: false,
+    );
     final repo = FamiliaresReposotoryGlobal();
     try {
       final result = await repo.editarPaciente(
@@ -701,9 +714,11 @@ class _FamiliarPacienteEditarpacienteScreenState
           content: Text(result.message ?? "Error al editar el paciente"),
         ),
       );
+      Navigator.of(context).pop();
       widget.onUpdate(widget.idFamiliar, widget.tokenAcceso);
       widget.onSelect("default");
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,

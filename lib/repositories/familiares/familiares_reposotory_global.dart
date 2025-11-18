@@ -13,6 +13,19 @@ import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/models/familiares/familiares_recuperarcuentapcorreo.dart';
 import 'package:medicare/models/familiares/familiares_restablecercontrasena.dart';
 import 'package:medicare/models/familiares/familiares_verificarcodigorecuperacion.dart';
+import 'package:medicare/models/familiares/historial/familiares_historial_obtenermetricasrecordatorios.dart';
+import 'package:medicare/models/familiares/historial/familiares_historial_recordatorios.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_medicamentos_eliminarmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_administrarmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_cancelaradministracionmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_desabilitarmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_habilitarmedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamentos.dart';
+import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenerproximosrecordatorios.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
@@ -50,8 +63,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["error"]);
     } else if (response.statusCode == 404) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -77,8 +92,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -103,8 +120,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
   //Metodo para obtener la informacion personal de un familiar
@@ -128,8 +147,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -153,8 +174,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -180,8 +203,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -206,8 +231,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -232,8 +259,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -264,8 +293,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -289,8 +320,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -316,8 +349,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -346,8 +381,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
   //Metodo para actualizar la informacion de la cuenta de un cuidador
@@ -376,8 +413,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -404,8 +443,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -431,8 +472,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -461,8 +504,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -487,8 +532,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -516,8 +563,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -546,8 +595,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -575,8 +626,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -602,8 +655,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 403) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -632,8 +687,10 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 409) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
@@ -661,11 +718,410 @@ class FamiliaresReposotoryGlobal {
       throw Exception(jsonDecode(response.body)["message"]);
     } else if (response.statusCode == 409) {
       throw Exception(jsonDecode(response.body)["message"]);
-    } else {
+    } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 
+  ////////////////////////////////////Metodos de medicamentos y horarios////////////////////////
+
+  Future<FamiliaresPacientesObtenermedicamentosResponse?>? obtenerMedicamentos(
+    FamiliaresPacientesObtenermedicamentos medicamentosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/ObtenerMedicamentos',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesObtenermedicamentosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 204) {
+      return FamiliaresPacientesObtenermedicamentosResponse(medicamentos: []);
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para agregar un medicamento
+
+  Future<FamiliaresPacientesAgregarmedicamentoshResponse> agregarMedicamentoH(
+    FamiliaresPacientesAgregarmedicamentosh medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/AgregarMedicamentoHorario',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesAgregarmedicamentoshResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para obtener la informacion de un medicamento
+
+  Future<FamiliaresPacientesObtenermedicamentoResponse> obtenerMedicamento(
+    FamiliaresPacientesObtenermedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/ObtenerMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesObtenermedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para actualizar los datos de la informacion del medicamento
+
+  Future<FamiliaresPacientesEditarInformacionmedicamentoResponse>
+  editarInformacionMedicamento(
+    FamiliaresPacientesEditarInformacionmedicamento infoData,
+  ) async {
+    final response = await http.put(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/EditarMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(infoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesEditarInformacionmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para editar el horario del medicamento
+
+  Future<FamiliaresPacientesEditarhorariomedicamentoResponse>
+  editarHorarioMedicamento(
+    FamiliaresPacientesEditarhorariomedicamento horarioData,
+  ) async {
+    final response = await http.put(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/EditarHorarioMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(horarioData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesEditarhorariomedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para desabilitar un medicamento
+
+  Future<FamiliaresPacientesDesabilitarmedicamentoResponse>
+  desabilitarMedicamento(
+    FamiliaresPacientesDesabilitarmedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/DesabilitarMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesDesabilitarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para habilitar un medicamento
+
+  Future<FamiliaresPacientesHabilitarmedicamentoResponse> habilitarMedicamento(
+    FamiliaresPacientesHabilitarmedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/HabilitarMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesHabilitarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para eliminar un medicamento
+
+  Future<FamiliaresMedicamentosEliminarmedicamentoResponse> eliminarMedicamento(
+    FamiliaresMedicamentosEliminarmedicamento medicamentoData,
+  ) async {
+    final response = await http.delete(
+      Uri.parse(
+        '${urlBase}Familiares/Pacientes/Medicamentos/EliminarMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresMedicamentosEliminarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  /////////////////////////////////////Metodos del historial de administracion///////////////////////////////
+  ///
+  //Metodo para obtener los proximos recordatorios
+  Future<FamiliaresPacientesObtenerproximosrecordatoriosResponse?>?
+  obtenerProximosRecordatorios(
+    FamiliaresPacientesObtenerproximosrecordatorios recordatoriosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}HistorialAdministracion/ObtenerProximosRecordatorios',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(recordatoriosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesObtenerproximosrecordatoriosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 204) {
+      return FamiliaresPacientesObtenerproximosrecordatoriosResponse(
+        recordatorios: [],
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para administrar un medicamento
+  Future<FamiliaresPacientesAdministrarmedicamentoResponse>
+  administrarMedicamento(
+    FamiliaresPacientesAdministrarmedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse('${urlBase}HistorialAdministracion/administrarMedicamentos'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesAdministrarmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para cancelar la administracion de un medicamento
+  Future<FamiliaresPacientesCancelaradministracionmedicamentoResponse>
+  cancelarAdministracionMedicamento(
+    FamiliaresPacientesCancelaradministracionmedicamento medicamentoData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}HistorialAdministracion/CancelarAdministracionMedicamento',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(medicamentoData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresPacientesCancelaradministracionmedicamentoResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  //Metodo para obtener el historial de administracion de un paciente
+  Future<FamiliaresHistorialRecordatoriosResponse?>?
+  obtenerHistorialRecordatorios(
+    FamiliaresHistorialRecordatorios recordatoriosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}HistorialAdministracion/ObtenerHistorialAdministracion',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(recordatoriosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresHistorialRecordatoriosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
+
+  Future<FamiliaresHistorialObtenerMetricasRecordatoriosResponse>
+  obtenerMetricasRecordatorios(
+    FamiliaresHistorialObtenerMetricasRecordatorios recordatoriosData,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        '${urlBase}HistorialAdministracion/ObtenerMetricasAdministracion',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(recordatoriosData.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return FamiliaresHistorialObtenerMetricasRecordatoriosResponse.fromJson(
+        jsonDecode(response.body),
+      );
+    } else if (response.statusCode == 422) {
+      throw Exception(jsonDecode(response.body)["error"]);
+    } else if (response.statusCode == 404) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 401) {
+      throw Exception(jsonDecode(response.body)["message"]);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
+    } else {
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
+    }
+  }
   ////////////////////////////////////Metodos del chatBot////////////
 
   Future<FamiliaresChatbotResponse> envioMensaje(
@@ -682,8 +1138,10 @@ class FamiliaresReposotoryGlobal {
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return FamiliaresChatbotResponse.fromJson(data.first);
+    } else if (response.statusCode == 500) {
+      throw Exception(jsonDecode(response.body)['message']);
     } else {
-      throw Exception("Ha ocurrido un error inesperado");
+      throw Exception("Parece que ha ocurrido un error intentelo de nuevo");
     }
   }
 }

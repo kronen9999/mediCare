@@ -558,30 +558,35 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
   }
 
   void obtenerDatos() async {
-    final datosperfil = FamiliaresReposotoryGlobal();
-    final result = await datosperfil.obtenerPerfil(
-      FamiliaresObtenerPerfil(
-        idFamiliar: widget.idFamiliar,
-        tokenAcceso: widget.tokenAcceso,
-      ),
-    );
-    if (!mounted) return;
-    setState(() {
-      nombre = result.informacionPersonal?.nombbre ?? "";
+    try {
+      final datosperfil = FamiliaresReposotoryGlobal();
+      final result = await datosperfil.obtenerPerfil(
+        FamiliaresObtenerPerfil(
+          idFamiliar: widget.idFamiliar,
+          tokenAcceso: widget.tokenAcceso,
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        nombre = result.informacionPersonal?.nombbre ?? "";
 
-      apellidoP = result.informacionPersonal?.apellidoP ?? "";
-      apellidoM = result.informacionPersonal?.apellidoM ?? "";
-      direccion = result.informacionPersonal?.direccion ?? "";
-      telefono1 = result.informacionPersonal?.telefono1 ?? "";
-      telefono2 = result.informacionPersonal?.telefono2 ?? "";
+        apellidoP = result.informacionPersonal?.apellidoP ?? "";
+        apellidoM = result.informacionPersonal?.apellidoM ?? "";
+        direccion = result.informacionPersonal?.direccion ?? "";
+        telefono1 = result.informacionPersonal?.telefono1 ?? "";
+        telefono2 = result.informacionPersonal?.telefono2 ?? "";
 
-      nombreController.text = nombre ?? "";
-      apellidoPController.text = apellidoP ?? "";
-      apellidoMController.text = apellidoM ?? "";
-      direccionController.text = direccion ?? "";
-      telefono1Controller.text = telefono1 ?? "";
-      telefono2Controller.text = telefono2 ?? "";
-    });
+        nombreController.text = nombre ?? "";
+        apellidoPController.text = apellidoP ?? "";
+        apellidoMController.text = apellidoM ?? "";
+        direccionController.text = direccion ?? "";
+        telefono1Controller.text = telefono1 ?? "";
+        telefono2Controller.text = telefono2 ?? "";
+      });
+    } catch (e) {
+      if (!mounted) return;
+      obtenerDatos();
+    }
   }
 
   void actualizarDatos(

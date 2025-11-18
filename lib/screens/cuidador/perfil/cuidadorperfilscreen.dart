@@ -162,29 +162,13 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
   }
 
   void obtenerDatos() async {
-    final repo = CuidadoresRepositoryGlobal();
     final prefs = await SharedPreferences.getInstance();
     if (!mounted) {
       return;
     }
     final idCuidador = prefs.getString("IdCuidador");
     final tokenAcceso = prefs.getString("TokenAcceso");
-    final result = await repo.obtenerPerfil(
-      CuidadoresPerfilObtenerperfil(
-        idCuidador: idCuidador ?? "",
-        tokenAcceso: tokenAcceso ?? "",
-      ),
-    );
-    setState(() {
-      usuarioCuidador = result.usuario ?? "Sin definir";
-      correoCuidador = result.correoE ?? "Sin definir";
-      nombreCFamiliar =
-          "${result.nombreFamiliar ?? ""} ${result.apellidoPFamiliar ?? ""} ${result.apellidoMFamiliar ?? ""}";
-      correoFamiliar = result.correoEFamiliar ?? "Sin definir";
-      direccionFamiliar = result.direccionFamiliar ?? "Sin definir";
-      telefono1Familiar = result.telefono1 ?? "Sin definir";
-      telefono2Familiar = result.telefono2 ?? "Sin definir";
-    });
+    obtenerPerfil(idCuidador, tokenAcceso);
   }
 
   void obtenerDatosSesion() async {
@@ -200,25 +184,63 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
 
   void obtenerDatosHijo(String? idCuidador, String? tokenAcceso) async {
     final repo = CuidadoresRepositoryGlobal();
-    if (!mounted) {
-      return;
+
+    try {
+      final result = await repo.obtenerPerfil(
+        CuidadoresPerfilObtenerperfil(
+          idCuidador: idCuidador ?? "",
+          tokenAcceso: tokenAcceso ?? "",
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        usuarioCuidador = result.usuario ?? "Sin definir";
+        correoCuidador = result.correoE ?? "Sin definir";
+        nombreCFamiliar =
+            "${result.nombreFamiliar ?? ""} ${result.apellidoPFamiliar ?? ""} ${result.apellidoMFamiliar ?? ""}";
+        correoFamiliar = result.correoEFamiliar ?? "Sin definir";
+        direccionFamiliar = result.direccionFamiliar ?? "Sin definir";
+        telefono1Familiar = result.telefono1 ?? "Sin definir";
+        telefono2Familiar = result.telefono2 ?? "Sin definir";
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      obtenerDatosHijo(idCuidador, tokenAcceso);
     }
-    final result = await repo.obtenerPerfil(
-      CuidadoresPerfilObtenerperfil(
-        idCuidador: idCuidador ?? "",
-        tokenAcceso: tokenAcceso ?? "",
-      ),
-    );
-    setState(() {
-      usuarioCuidador = result.usuario ?? "Sin definir";
-      correoCuidador = result.correoE ?? "Sin definir";
-      nombreCFamiliar =
-          "${result.nombreFamiliar ?? ""} ${result.apellidoPFamiliar ?? ""} ${result.apellidoMFamiliar ?? ""}";
-      correoFamiliar = result.correoEFamiliar ?? "Sin definir";
-      direccionFamiliar = result.direccionFamiliar ?? "Sin definir";
-      telefono1Familiar = result.telefono1 ?? "Sin definir";
-      telefono2Familiar = result.telefono2 ?? "Sin definir";
-    });
+  }
+
+  void obtenerPerfil(String? idCuidador, String? tokenAcceso) async {
+    try {
+      final repo = CuidadoresRepositoryGlobal();
+      final result = await repo.obtenerPerfil(
+        CuidadoresPerfilObtenerperfil(
+          idCuidador: idCuidador ?? "",
+          tokenAcceso: tokenAcceso ?? "",
+        ),
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        usuarioCuidador = result.usuario ?? "Sin definir";
+        correoCuidador = result.correoE ?? "Sin definir";
+        nombreCFamiliar =
+            "${result.nombreFamiliar ?? ""} ${result.apellidoPFamiliar ?? ""} ${result.apellidoMFamiliar ?? ""}";
+        correoFamiliar = result.correoEFamiliar ?? "Sin definir";
+        direccionFamiliar = result.direccionFamiliar ?? "Sin definir";
+        telefono1Familiar = result.telefono1 ?? "Sin definir";
+        telefono2Familiar = result.telefono2 ?? "Sin definir";
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      obtenerPerfil(idCuidador, tokenAcceso);
+    }
   }
 
   void cambiarApartado(String nuevoApartado) {
