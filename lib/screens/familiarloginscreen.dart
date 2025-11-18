@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/familiar/familiarhome.dart';
 import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
@@ -305,9 +306,14 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
       );
     } catch (e) {
       Navigator.pop(context);
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );
