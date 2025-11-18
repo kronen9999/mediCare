@@ -245,13 +245,19 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
   void registro(context) async {
     final repo = FamiliaresRegistroRepository();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.registro(
         FamiliaresRegistro(
           correoE: _correo ?? '',
           contrasena: _contrasena ?? '',
         ),
       );
-      // Muestra el mensaje de éxito que viene en result.message
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -268,6 +274,7 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
         _contrasena = null;
       });
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll('Exception: ', '')),
