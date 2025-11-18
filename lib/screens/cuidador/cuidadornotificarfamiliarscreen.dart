@@ -199,11 +199,17 @@ class _CuidadornotificarfamiliarscreenState
     }
 
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
-
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.green)),
+      barrierDismissible: false,
+    );
     try {
       final result = await repo.alertaFamiliar(
         CuidadoresAlertafamiliar(usuario: usuario ?? ''),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
       );
@@ -214,6 +220,7 @@ class _CuidadornotificarfamiliarscreenState
         );
       });
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll('Exception: ', '')),
