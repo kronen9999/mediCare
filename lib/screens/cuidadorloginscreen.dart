@@ -14,8 +14,8 @@ class Cuidadorloginscreen extends StatefulWidget {
 }
 
 class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
-  String? _Credencial;
-  String? _Contrasena;
+  String? _credencial;
+  String? _contrasena;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,7 +113,7 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                             child: TextField(
                               onChanged: (value) {
                                 setState(() {
-                                  _Credencial = value;
+                                  _credencial = value;
                                 });
                               },
                               decoration: InputDecoration(
@@ -156,7 +156,7 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                             child: TextField(
                               onChanged: (value) {
                                 setState(() {
-                                  _Contrasena = value;
+                                  _contrasena = value;
                                 });
                               },
                               obscureText: true,
@@ -240,10 +240,10 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
   }
 
   void loginCuidador(context) async {
-    if (_Credencial == null ||
-        _Contrasena == null ||
-        _Credencial!.isEmpty ||
-        _Contrasena!.isEmpty) {
+    if (_credencial == null ||
+        _contrasena == null ||
+        _credencial!.isEmpty ||
+        _contrasena!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Por favor, completa todos los campos"),
@@ -256,22 +256,30 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
 
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
       final result = await repo.loginCuidador(
         CuidadoresLogin(
-          contrasena: _Contrasena ?? '',
-          credencial: _Credencial ?? '',
+          contrasena: _contrasena ?? '',
+          credencial: _credencial ?? '',
         ),
       );
       guardarDatos(
         result.usuario?.idUsuario.toString(),
         result.usuario?.tokenAcceso,
       );
+      Navigator.of(context).pop();
       Future.delayed(Duration(seconds: 1));
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Cuidadorhomescreen()),
       );
     } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString().replaceAll('Exception: ', '')),
