@@ -248,6 +248,16 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
       return;
     }
 
+    if (campoNuevaContrasena1 != campoNuevaContrasena2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Las contraseñas no coinciden"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
     try {
       showDialog(
@@ -275,9 +285,14 @@ class _CuidadorcambiarcontrasenarecuperacionscreenState
       });
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );
