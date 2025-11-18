@@ -218,9 +218,14 @@ class _FamiliarverificarcodigoscreenState
       );
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );
@@ -254,9 +259,14 @@ class _FamiliarverificarcodigoscreenState
       );
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );
