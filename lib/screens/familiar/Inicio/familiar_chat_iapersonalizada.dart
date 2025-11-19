@@ -47,7 +47,7 @@ class _FamiliarChatIapersonalizadaState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "MediCare bot",
+          "Medibot",
           style: TextStyle(
             color: Colors.blue,
             fontWeight: FontWeight.bold,
