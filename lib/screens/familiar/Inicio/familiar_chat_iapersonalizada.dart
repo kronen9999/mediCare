@@ -38,35 +38,8 @@ class _FamiliarChatIapersonalizadaState
   @override
   void dispose() {
     _controller.dispose();
+    mensajeController.dispose();
     super.dispose();
-  }
-
-  void empezarHablar() {
-    _controller.duration = Duration(seconds: 2);
-  }
-
-  void dejarDeHablar() {
-    _controller.stop();
-  }
-
-  void hablarPorFrames(
-    int frameInicio,
-    int frameFin, {
-    Duration? fragmentDuration,
-  }) {
-    final dur = _controller.duration;
-    if (dur == null) return;
-    const totalFrames = 82; // Tu animación tiene 82 frames
-    final start = frameInicio / totalFrames;
-    final end = frameFin / totalFrames;
-
-    // Duración del fragmento (por defecto 1 segundo si no se pasa)
-    final duration = fragmentDuration ?? Duration(seconds: 1);
-
-    _controller.stop();
-    _controller.duration = duration;
-    _controller.value = start;
-    _controller.repeat(min: start, max: end, reverse: true);
   }
 
   @override
@@ -78,7 +51,7 @@ class _FamiliarChatIapersonalizadaState
           style: TextStyle(
             color: Colors.blue,
             fontWeight: FontWeight.bold,
-            fontSize: 30,
+            fontSize: 20,
           ),
         ),
         actions: [
@@ -100,24 +73,31 @@ class _FamiliarChatIapersonalizadaState
               child: Lottie.asset(
                 repeat: true,
                 reverse: true,
-                'assets/images/circle.json',
+                'assets/images/aifamiliar.json',
                 controller: _controller,
                 width: 200,
                 height: 200,
                 fit: BoxFit.fill,
                 onLoaded: (composition) {
                   _controller.duration = composition.duration;
-                  _controller.repeat();
+                  _controller.forward();
+                  Future.delayed(Duration(seconds: 2), () {
+                    if (!mounted) return;
+                    _controller.stop();
+                  });
                 },
               ),
             ),
             if (!primeraInteraccion)
               Column(
                 children: [
-                  Text(
-                    "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey, fontSize: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Text(
+                      "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey, fontSize: 20),
+                    ),
                   ),
                 ],
               )
