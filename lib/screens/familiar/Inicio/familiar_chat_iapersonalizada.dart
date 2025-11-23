@@ -45,6 +45,7 @@ class _FamiliarChatIapersonalizadaState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true, // Asegura que el contenido se ajuste
       appBar: AppBar(
         title: Text(
           "Medibot",
@@ -69,75 +70,77 @@ class _FamiliarChatIapersonalizadaState
       body: SafeArea(
         child: Column(
           children: [
-            Center(
-              child: Lottie.asset(
-                repeat: true,
-                reverse: true,
-                'assets/images/aifamiliar.json',
-                controller: _controller,
-                width: 200,
-                height: 200,
-                fit: BoxFit.fill,
-                onLoaded: (composition) {
-                  _controller.duration = composition.duration;
-                  _controller.forward();
-                  Future.delayed(Duration(seconds: 2), () {
-                    if (!mounted) return;
-                    _controller.stop();
-                  });
-                },
-              ),
-            ),
-            if (!primeraInteraccion)
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey, fontSize: 20),
-                    ),
-                  ),
-                ],
-              )
-            else
-              const SizedBox(height: 24),
-            // Área de mensajes scrollable
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                itemCount: mensajes.length,
-                itemBuilder: (context, index) {
-                  return Align(
-                    alignment: index % 2 == 0
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Center(
+                      child: Lottie.asset(
+                        repeat: true,
+                        reverse: true,
+                        'assets/images/aifamiliar.json',
+                        controller: _controller,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.fill,
+                        onLoaded: (composition) {
+                          _controller.duration = composition.duration;
+                          _controller.forward();
+                          Future.delayed(Duration(seconds: 2), () {
+                            if (!mounted) return;
+                            _controller.stop();
+                          });
+                        },
+                      ),
+                    ),
+                    if (!primeraInteraccion)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Text(
+                          "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey, fontSize: 20),
+                        ),
+                      ),
+                    ListView.builder(
+                      shrinkWrap:
+                          true, // Permite que el ListView se ajuste al contenido
+                      physics:
+                          NeverScrollableScrollPhysics(), // Desactiva el scroll interno
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
-                        vertical: 10,
+                        vertical: 8,
                       ),
-                      decoration: BoxDecoration(
-                        color: index % 2 == 0
-                            ? Colors.blue[100]
-                            : Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        mensajes[index],
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      itemCount: mensajes.length,
+                      itemBuilder: (context, index) {
+                        return Align(
+                          alignment: index % 2 == 0
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: index % 2 == 0
+                                  ? Colors.blue[100]
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              mensajes[index],
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
             ),
-            // Input fijo abajo
             Padding(
               padding: EdgeInsets.only(
                 left: 8,
@@ -217,6 +220,9 @@ class _FamiliarChatIapersonalizadaState
 
   void enviarMensaje() async {
     String? mensajeChat = mensaje;
+    final fechaActual = DateTime.now();
+    final fechaFormateada =
+        "${fechaActual.year}-${fechaActual.month.toString().padLeft(2, '0')}-${fechaActual.day.toString().padLeft(2, '0')} ${fechaActual.hour.toString().padLeft(2, '0')}:${fechaActual.minute.toString().padLeft(2, '0')}:${fechaActual.second.toString().padLeft(2, '0')}";
     if (mensaje != null && mensaje!.trim().isNotEmpty) {
       setState(() {
         mensajes.add(mensaje!.trim());
@@ -224,14 +230,22 @@ class _FamiliarChatIapersonalizadaState
         mensaje = null;
         primeraInteraccion = true;
       });
-      final repo = FamiliaresReposotoryGlobal();
-      final respuesta = await repo.envioMensaje(
-        FamiliaresChatbot(
-          idFamiliar: widget.idFamiliar ?? '',
-          mensaje: mensajeChat ?? "",
-        ),
-      );
-      recibirRespuesta(respuesta.response);
+      try {
+        final repo = FamiliaresReposotoryGlobal();
+        final respuesta = await repo.envioMensaje(
+          FamiliaresChatbot(
+            idUsuario: widget.idFamiliar ?? '',
+            mensaje: mensajeChat ?? "",
+            fechaActual: fechaFormateada,
+            tipoUsuario: "familiar",
+          ),
+        );
+        recibirRespuesta(respuesta.response);
+      } catch (e) {
+        recibirRespuesta(
+          "Parece que ha habido un error al procesar tu solicitud. Por favor intenta de nuevo o verifica tu conexión a internet.",
+        );
+      }
     }
   }
 
