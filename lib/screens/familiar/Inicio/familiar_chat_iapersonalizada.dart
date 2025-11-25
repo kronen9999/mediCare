@@ -230,7 +230,7 @@ class _FamiliarChatIapersonalizadaState
     if (mensaje != null && mensaje!.trim().isNotEmpty) {
       setState(() {
         mensajes.add(mensaje!.trim());
-        mensajes.add('...');
+        mensajes.add('Dame un segundo estoy trabajando en tu solicitud...');
         mensajeEspera = true;
         mensajeController.clear();
         mensaje = null;
@@ -246,8 +246,10 @@ class _FamiliarChatIapersonalizadaState
             tipoUsuario: "familiar",
           ),
         );
+        if (!mounted) return;
         recibirRespuesta(respuesta.response);
       } catch (e) {
+        if (!mounted) return;
         recibirRespuesta(
           "Parece que ha habido un error al procesar tu solicitud. Por favor intenta de nuevo o verifica tu conexión a internet.",
         );
@@ -258,7 +260,9 @@ class _FamiliarChatIapersonalizadaState
   void recibirRespuesta(String respuesta) {
     setState(() {
       final lastIndex = mensajes.length - 1;
-      if (lastIndex >= 0 && mensajes[lastIndex] == '...') {
+      if (lastIndex >= 0 &&
+          mensajes[lastIndex] ==
+              'Dame un segundo estoy trabajando en tu solicitud...') {
         mensajes[lastIndex] = respuesta;
       } else {
         mensajes.add(respuesta);
