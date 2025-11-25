@@ -123,6 +123,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
         child: Lottie.asset(
           repeat: true,
           reverse: true,
+          frameRate: FrameRate.max,
           'assets/images/heartanimated.json',
           controller: _controller,
           width: 250,
