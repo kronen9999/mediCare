@@ -28,6 +28,8 @@ class _FamiliarChatIapersonalizadaState
   // Lista de mensajes de ejemplo
   final List<String> mensajes = [];
 
+  bool mensajeEspera = false;
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +47,7 @@ class _FamiliarChatIapersonalizadaState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // Asegura que el contenido se ajuste
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "Medibot",
@@ -123,7 +125,7 @@ class _FamiliarChatIapersonalizadaState
                       decoration: BoxDecoration(
                         color: index % 2 == 0
                             ? Colors.blue[100]
-                            : Colors.grey[200],
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -202,7 +204,9 @@ class _FamiliarChatIapersonalizadaState
                           IconButton(
                             icon: Icon(Icons.send, color: Colors.blue),
                             onPressed: () {
-                              enviarMensaje();
+                              if (!mensajeEspera) {
+                                enviarMensaje();
+                              }
                             },
                           ),
                         ],
@@ -227,6 +231,7 @@ class _FamiliarChatIapersonalizadaState
       setState(() {
         mensajes.add(mensaje!.trim());
         mensajes.add('...');
+        mensajeEspera = true;
         mensajeController.clear();
         mensaje = null;
         primeraInteraccion = true;
@@ -258,6 +263,7 @@ class _FamiliarChatIapersonalizadaState
       } else {
         mensajes.add(respuesta);
       }
+      mensajeEspera = false;
     });
   }
 }
