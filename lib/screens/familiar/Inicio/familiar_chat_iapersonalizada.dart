@@ -145,14 +145,19 @@ class _FamiliarChatIapersonalizadaState
               ),
               child: Row(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: .5),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Icon(Icons.image_outlined, color: Colors.blue),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {});
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: .5),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(Icons.image_outlined, color: Colors.blue),
+                      ),
                     ),
                   ),
                   SizedBox(width: 8),
@@ -221,6 +226,7 @@ class _FamiliarChatIapersonalizadaState
     if (mensaje != null && mensaje!.trim().isNotEmpty) {
       setState(() {
         mensajes.add(mensaje!.trim());
+        mensajes.add('...');
         mensajeController.clear();
         mensaje = null;
         primeraInteraccion = true;
@@ -246,7 +252,12 @@ class _FamiliarChatIapersonalizadaState
 
   void recibirRespuesta(String respuesta) {
     setState(() {
-      mensajes.add(respuesta);
+      final lastIndex = mensajes.length - 1;
+      if (lastIndex >= 0 && mensajes[lastIndex] == '...') {
+        mensajes[lastIndex] = respuesta;
+      } else {
+        mensajes.add(respuesta);
+      }
     });
   }
 }
