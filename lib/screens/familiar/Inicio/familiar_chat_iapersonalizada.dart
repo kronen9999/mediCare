@@ -47,7 +47,6 @@ class _FamiliarChatIapersonalizadaState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "Medibot",
@@ -81,6 +80,7 @@ class _FamiliarChatIapersonalizadaState
                 controller: _controller,
                 width: 200,
                 height: 200,
+                frameRate: FrameRate.max,
                 fit: BoxFit.fill,
                 onLoaded: (composition) {
                   _controller.duration = composition.duration;
