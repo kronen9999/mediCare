@@ -50,7 +50,7 @@ class _CuidadorChatIaPersonalizadaScreenState
         title: Text(
           "Medibot",
           style: TextStyle(
-            color: Colors.blue,
+            color: Colors.green,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -75,7 +75,7 @@ class _CuidadorChatIaPersonalizadaScreenState
               child: Lottie.asset(
                 repeat: true,
                 reverse: true,
-                'assets/images/aifamiliar.json',
+                'assets/images/aicuidador.json',
                 controller: _controller,
                 width: 200,
                 height: 200,
@@ -123,7 +123,7 @@ class _CuidadorChatIaPersonalizadaScreenState
                       ),
                       decoration: BoxDecoration(
                         color: index % 2 == 0
-                            ? Colors.blue[100]
+                            ? Colors.green[100]
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -157,7 +157,7 @@ class _CuidadorChatIaPersonalizadaScreenState
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8),
-                        child: Icon(Icons.image_outlined, color: Colors.blue),
+                        child: Icon(Icons.image_outlined, color: Colors.green),
                       ),
                     ),
                   ),
@@ -169,7 +169,7 @@ class _CuidadorChatIaPersonalizadaScreenState
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
-                      child: Icon(Icons.mic_none_outlined, color: Colors.blue),
+                      child: Icon(Icons.mic_none_outlined, color: Colors.green),
                     ),
                   ),
                   SizedBox(width: 8),
@@ -201,7 +201,7 @@ class _CuidadorChatIaPersonalizadaScreenState
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.send, color: Colors.blue),
+                            icon: Icon(Icons.send, color: Colors.green),
                             onPressed: () {
                               if (!mensajeEspera) {
                                 enviarMensaje();
