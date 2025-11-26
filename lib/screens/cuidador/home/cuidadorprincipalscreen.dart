@@ -107,6 +107,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: Lottie.asset(
+              frameRate: FrameRate.max,
               repeat: true,
               reverse: true,
               'assets/images/healtgreen.json',
