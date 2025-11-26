@@ -4,11 +4,11 @@ import 'package:medicare/models/familiares/familiares_chatbot.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
 class CuidadorChatIaPersonalizadaScreen extends StatefulWidget {
-  final String? idFamiliar;
+  final String? idCuidador;
   final void Function(String) onSelect;
   const CuidadorChatIaPersonalizadaScreen({
     super.key,
-    required this.idFamiliar,
+    required this.idCuidador,
     required this.onSelect,
   });
 
@@ -239,10 +239,10 @@ class _CuidadorChatIaPersonalizadaScreenState
         final repo = FamiliaresReposotoryGlobal();
         final respuesta = await repo.envioMensaje(
           FamiliaresChatbot(
-            idUsuario: widget.idFamiliar ?? '',
+            idUsuario: widget.idCuidador ?? '',
             mensaje: mensajeChat ?? "",
             fechaActual: fechaFormateada,
-            tipoUsuario: "familiar",
+            tipoUsuario: "cuidador",
           ),
         );
         if (!mounted) return;

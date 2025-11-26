@@ -6,6 +6,7 @@ import 'package:medicare/components/cuidadores/home/item_lista_recordatoriosProx
 import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecordatorios.dart';
 import 'package:medicare/models/cuidadores/home/cuidadores_sabercuidadorasignado.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidador/home/cuidador_chat_ia_personalizada_screen.dart';
 import 'package:medicare/screens/cuidador/home/cuidador_chat_ia_widget.dart';
 import 'package:medicare/screens/cuidador/home/cuidador_historial_recordatorios_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,7 +93,10 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
                   onSelect: asignarSeccion,
                 )
               : seccion == "chatbot"
-              ? CuidadorChatIaWidget(onSelect: asignarSeccion)
+              ? CuidadorChatIaPersonalizadaScreen(
+                  idCuidador: idCuidador,
+                  onSelect: asignarSeccion,
+                )
               : Text("Otra pantalla"),
         ),
       ),
