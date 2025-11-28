@@ -28,22 +28,6 @@ class _CuidadorhomescreenState extends State<Cuidadorhomescreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(73, 223, 32, 1),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
               const SizedBox(width: 10),
               const Text(
                 "MediCare",
