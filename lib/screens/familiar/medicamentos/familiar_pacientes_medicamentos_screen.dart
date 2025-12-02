@@ -160,56 +160,7 @@ class _FamiliarPacientesMedicamentosScreenState
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 25,
-              right: 25,
-              top: 5,
-              bottom: 25,
-            ),
-            child: SizedBox(
-              height: 50,
-              child: TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color.fromARGB(109, 236, 230, 230),
-                  hintText: "Buscar medicamento",
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: Color.fromRGBO(79, 172, 196, 1),
-                      width: .5,
-                    ),
-                  ),
-                  prefixIcon: Icon(Icons.search, color: Colors.blue),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: Color.fromRGBO(
-                        79,
-                        172,
-                        196,
-                        1,
-                      ), // Color del borde cuando está habilitado
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color:
-                          Colors.blue, // Color del borde cuando está enfocado
-                      width: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+
           Padding(
             padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
             child: SizedBox(
