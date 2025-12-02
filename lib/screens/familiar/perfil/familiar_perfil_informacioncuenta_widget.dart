@@ -175,7 +175,7 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Usuario",
+                        "Usuario (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),

@@ -376,7 +376,7 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono principal",
+                        "Telefono principal (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -440,7 +440,7 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono secundario",
+                        "Telefono secundario (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),

@@ -214,7 +214,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Descripcion del medicamento",
+                        "Descripcion del medicamento (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -339,7 +339,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Notas del medicamento",
+                        "Notas del medicamento (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),

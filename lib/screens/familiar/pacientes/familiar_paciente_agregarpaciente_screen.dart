@@ -232,7 +232,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Apellido Materno",
+                        "Apellido Materno (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -293,7 +293,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Padecimiento",
+                        "Padecimiento (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -354,7 +354,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Direccion",
+                        "Direccion (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -415,7 +415,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono principal",
+                        "Telefono principal (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -478,7 +478,7 @@ class _FamiliarPacienteAgregarpacienteScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono secundario",
+                        "Telefono secundario (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),

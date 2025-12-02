@@ -7,6 +7,8 @@ import 'package:medicare/repositories/familiares/familiares_reposotory_global.da
 import 'package:medicare/screens/familiar/Inicio/familiar_chat_iapersonalizada.dart';
 import 'package:medicare/screens/familiar/Inicio/familiar_historial_recordatorios_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:medicare/main.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FamiliarPrincipalScreen extends StatefulWidget {
@@ -356,6 +358,18 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
           ),
         );
       });
+      final recordatorios = await listaRecordatorios;
+      if (!mounted) return;
+      if (recordatorios != null && recordatorios.recordatorios.isNotEmpty) {
+        for (var recordatorio in recordatorios.recordatorios) {
+          agregarNotificacion(
+            recordatorio.idHistorial,
+            recordatorio.nombreM,
+            recordatorio.nombreP,
+            recordatorio.fechaProgramada,
+          );
+        }
+      }
     } catch (e) {
       if (!mounted) {
         return;
@@ -385,5 +399,39 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
     int hora12 = fecha.hour % 12 == 0 ? 12 : fecha.hour % 12;
     String minutos = fecha.minute.toString().padLeft(2, '0');
     return '${fecha.day} de ${meses[fecha.month]} a las $hora12:$minutos $periodo';
+  }
+
+  Future<void> agregarNotificacion(
+    int idHistorial,
+    String nombreMedicamento,
+    String nombrePaciente,
+    String horaRecordatorio,
+  ) async {
+    final fechaActual = tz.TZDateTime.now(tz.local);
+    final fechaNotificacion = DateTime.parse(horaRecordatorio);
+
+    final tzFechaNotificacion = tz.TZDateTime.from(fechaNotificacion, tz.local);
+
+    if (tzFechaNotificacion.isBefore(fechaActual)) {
+      return;
+    }
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      idHistorial,
+      "Es hora de suministrar {$nombreMedicamento}",
+      "Es hora de dar el medicamento a $nombrePaciente",
+      tz.TZDateTime.parse(tz.local, horaRecordatorio),
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medicare_channel_01',
+          'Recordatorios',
+          channelDescription: 'Canal para recordatorios de medicamentos',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 }

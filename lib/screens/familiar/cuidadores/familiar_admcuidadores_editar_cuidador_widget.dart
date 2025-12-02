@@ -282,7 +282,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Apellido Materno",
+                        "Apellido Materno (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -344,7 +344,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Direccion",
+                        "Direccion (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -406,7 +406,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono principal",
+                        "Telefono principal (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -470,7 +470,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono secundario",
+                        "Telefono secundario (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -1008,6 +1008,34 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
   }
 
   void actualizarInformacionPersonal(context) async {
+    if (nombre == null ||
+        nombre!.isEmpty ||
+        nombre!.trim() == "" ||
+        nombre == null ||
+        nombre!.isEmpty ||
+        nombre!.trim() == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El nombre del cuidador es obligatorio"),
+        ),
+      );
+      return;
+    }
+    if (apellidoP == null ||
+        apellidoP!.isEmpty ||
+        apellidoP!.trim() == "" ||
+        nombre == null ||
+        nombre!.isEmpty ||
+        nombre!.trim() == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El apellido paterno es obligatorio"),
+        ),
+      );
+      return;
+    }
     final repo = FamiliaresReposotoryGlobal();
     try {
       showDialog(
