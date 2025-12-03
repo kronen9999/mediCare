@@ -38,7 +38,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
     super.initState();
     obtenerDatos();
     _controller = AnimationController(vsync: this);
-    _controller.duration = Duration(seconds: 2);
+    _controller.duration = Duration(seconds: 20);
     _controllerNoWifi = AnimationController(vsync: this);
     _controllerNoWifi.duration = Duration(seconds: 2);
     _controllerEmpty.duration = Duration(seconds: 2);
@@ -126,14 +126,15 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
           repeat: true,
           reverse: true,
           frameRate: FrameRate.max,
-          'assets/images/heartanimated.json',
+          'assets/images/home.json',
           controller: _controller,
-          width: 250,
+          width: 300,
           height: 200,
           fit: BoxFit.fill,
           onLoaded: (composition) {
-            _controller.duration = composition.duration;
-            _controller.forward();
+            if (mounted) {
+              _controller.repeat();
+            }
           },
         ),
       ),

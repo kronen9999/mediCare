@@ -27,6 +27,8 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen>
   late final AnimationController _controllerEmpty = AnimationController(
     vsync: this,
   );
+
+  late final AnimationController _controller = AnimationController(vsync: this);
   Future<FamiliaresCuidadoresObtenerCuidadoresResponse?>? listaCuidadores =
       Future.value(
         FamiliaresCuidadoresObtenerCuidadoresResponse(cuidadores: []),
@@ -38,12 +40,14 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen>
     obtenerDatos();
     _controllerEmpty.duration = Duration(seconds: 2);
     _controllerNoWifi.duration = Duration(seconds: 2);
+    _controller.duration = Duration(seconds: 20);
   }
 
   @override
   void dispose() {
     _controllerNoWifi.dispose();
     _controllerEmpty.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -80,20 +84,19 @@ class _FamiliarCuidadoresScreenState extends State<FamiliarCuidadoresScreen>
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.person_outline_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.all(20),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/cuidadores.json',
+              controller: _controller,
+              width: 250,
+              height: 200,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                _controller.repeat();
+              },
             ),
           ),
           Padding(

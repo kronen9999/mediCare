@@ -38,12 +38,14 @@ class _FamiliarPacientesMedicamentosScreenState
   late final AnimationController _controllerNoWifi = AnimationController(
     vsync: this,
   );
+  late final AnimationController _controller = AnimationController(vsync: this);
 
   @override
   void initState() {
     super.initState();
     _controllerEmpty.duration = const Duration(seconds: 2);
     _controllerNoWifi.duration = const Duration(seconds: 2);
+    _controller.duration = const Duration(seconds: 15);
     obtenerMedicamentos();
   }
 
@@ -51,6 +53,7 @@ class _FamiliarPacientesMedicamentosScreenState
   void dispose() {
     _controllerEmpty.dispose();
     _controllerNoWifi.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -84,20 +87,19 @@ class _FamiliarPacientesMedicamentosScreenState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(201, 85, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.medication_liquid_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 30),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/medicamentos.json',
+              controller: _controller,
+              width: 200,
+              height: 200,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                _controller.repeat();
+              },
             ),
           ),
           Padding(

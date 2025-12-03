@@ -25,6 +25,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
   late final AnimationController _controllerEmpty = AnimationController(
     vsync: this,
   );
+  late final AnimationController _controller = AnimationController(vsync: this);
   Future<FamiliaresPacientesObtenerPacientesResponse?>? listaPacientes;
   String? idFamiliar;
   String? tokenAcceso;
@@ -38,12 +39,15 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
     obtenerDatos();
     _controllerNoWifi.duration = const Duration(seconds: 2);
     _controllerEmpty.duration = const Duration(seconds: 2);
+    _controller.duration = const Duration(seconds: 30);
+    _controller.forward();
   }
 
   @override
   void dispose() {
     _controllerNoWifi.dispose();
     _controllerEmpty.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -87,22 +91,20 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
     return SingleChildScrollView(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(201, 85, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.personal_injury_outlined,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-            ),
+          Lottie.asset(
+            repeat: true,
+            reverse: true,
+            frameRate: FrameRate.max,
+            'assets/images/pacientes.json',
+            controller: _controller,
+            width: 240,
+            height: 240,
+            fit: BoxFit.fill,
+            onLoaded: (composition) {
+              if (mounted) {
+                _controller.repeat();
+              }
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(top: 15, bottom: 15),
