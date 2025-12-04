@@ -103,8 +103,8 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
               frameRate: FrameRate.max,
               'assets/images/informacionf.json',
               controller: _controller,
-              width: 200,
-              height: 200,
+              width: 220,
+              height: 220,
               fit: BoxFit.fill,
               onLoaded: (composition) {
                 if (mounted) {
