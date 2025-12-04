@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_agregar_cuidador.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -21,7 +22,8 @@ class FamiliarAdmcuidadoresAgregarCuidadorWidget extends StatefulWidget {
 }
 
 class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
-    extends State<FamiliarAdmcuidadoresAgregarCuidadorWidget> {
+    extends State<FamiliarAdmcuidadoresAgregarCuidadorWidget>
+    with TickerProviderStateMixin {
   String? nombre;
   String? apellidoP;
   String? apellidoM;
@@ -32,26 +34,38 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
   String? usuario;
   String? contrasena;
 
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.person_outline_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 200,
+              height: 200,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(

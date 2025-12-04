@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_cambiar_contrasena.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
@@ -26,7 +27,8 @@ class FamiliarAdmcuidadoresEditarCuidadorWidget extends StatefulWidget {
 }
 
 class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
-    extends State<FamiliarAdmcuidadoresEditarCuidadorWidget> {
+    extends State<FamiliarAdmcuidadoresEditarCuidadorWidget>
+    with TickerProviderStateMixin {
   String? nombre = "Obteniendo datos...";
   String? apellidoP = "Obteniendo datos...";
   String? apellidoM = "Obteniendo datos...";
@@ -48,6 +50,11 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
   TextEditingController usuarioController = TextEditingController();
   TextEditingController nuevaContrasenaController = TextEditingController();
   TextEditingController confirmarContrasenaController = TextEditingController();
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
 
   @override
   void initState() {
@@ -79,6 +86,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
     usuarioController.dispose();
     nuevaContrasenaController.dispose();
     confirmarContrasenaController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -88,16 +96,21 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(Icons.edit_outlined, color: Colors.white, size: 40),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 200,
+              height: 200,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
