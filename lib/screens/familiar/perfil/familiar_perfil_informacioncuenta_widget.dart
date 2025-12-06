@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
@@ -22,12 +23,18 @@ class FamiliarPerfilCambiarcontrasenaWidget extends StatefulWidget {
 }
 
 class _FamiliarPerfilCambiarcontrasenaWidgetState
-    extends State<FamiliarPerfilCambiarcontrasenaWidget> {
+    extends State<FamiliarPerfilCambiarcontrasenaWidget>
+    with TickerProviderStateMixin {
   String? correoE = "Obteniendo datos...";
   String? usuario = "Obteniendo datos...";
 
   TextEditingController correoEController = TextEditingController();
   TextEditingController usuarioEController = TextEditingController();
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
 
   @override
   void initState() {
@@ -41,6 +48,7 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
   void dispose() {
     correoEController.dispose();
     usuarioEController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -50,20 +58,21 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(85, 150, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.mail_outline_rounded,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate(60),
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(

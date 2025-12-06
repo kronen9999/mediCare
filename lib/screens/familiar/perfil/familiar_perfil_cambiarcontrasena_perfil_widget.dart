@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_contrasena.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -19,16 +20,23 @@ class FamiliarPerfilCambiarcontrasenaPerfilWidget extends StatefulWidget {
 }
 
 class _FamiliarPerfilCambiarcontrasenaWidgetState
-    extends State<FamiliarPerfilCambiarcontrasenaPerfilWidget> {
+    extends State<FamiliarPerfilCambiarcontrasenaPerfilWidget>
+    with TickerProviderStateMixin {
   TextEditingController contrasenaActualController = TextEditingController();
   TextEditingController nuevaContrasenaController = TextEditingController();
   String? contrasenaA;
   String? contrasenaN;
 
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
+
   @override
   void dispose() {
     contrasenaActualController.dispose();
     nuevaContrasenaController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -38,26 +46,27 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(85, 150, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.lock_person_outlined,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate(60),
+              'assets/images/seguridad.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 15, bottom: 15),
             child: Text(
-              "Editar informacion de la cuenta",
+              "Cambiar Contraseña",
               style: TextStyle(
                 color: Color.fromRGBO(85, 150, 255, 1),
                 fontSize: 20,
@@ -66,7 +75,7 @@ class _FamiliarPerfilCambiarcontrasenaWidgetState
             ),
           ),
           Text(
-            "Actualiza tu correo electrónico y usuario",
+            "Actualize su contraseña de acceeso",
             style: TextStyle(
               color: Colors.black,
               fontSize: 15,

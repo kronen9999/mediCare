@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/perfil/familiares_actualizar_informacion_personal.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 import 'package:medicare/models/familiares/perfil/familiares_obtener_perfil.dart';
@@ -21,7 +22,8 @@ class FamiliarPerfilInformacionpersonalWidgetscreen extends StatefulWidget {
 }
 
 class _FamiliarPerfilInformacionpersonalWidgetscreenState
-    extends State<FamiliarPerfilInformacionpersonalWidgetscreen> {
+    extends State<FamiliarPerfilInformacionpersonalWidgetscreen>
+    with TickerProviderStateMixin {
   String? nombre = "Obteniendo datos...";
   String? apellidoP = "Obteniendo datos...";
   String? apellidoM = "Obteniendo datos...";
@@ -35,6 +37,11 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
   final TextEditingController direccionController = TextEditingController();
   final TextEditingController telefono1Controller = TextEditingController();
   final TextEditingController telefono2Controller = TextEditingController();
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
 
   @override
   void initState() {
@@ -56,6 +63,7 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
     direccionController.dispose();
     telefono1Controller.dispose();
     telefono2Controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -65,20 +73,21 @@ class _FamiliarPerfilInformacionpersonalWidgetscreenState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(85, 150, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.person_outline_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate(60),
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
