@@ -38,7 +38,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
     super.initState();
     obtenerDatos();
     _controller = AnimationController(vsync: this);
-    _controller.duration = Duration(seconds: 15);
+    _controller.duration = Duration(seconds: 10);
     _controllerNoWifi = AnimationController(vsync: this);
     _controllerNoWifi.duration = Duration(seconds: 2);
     _controllerEmpty.duration = Duration(seconds: 2);

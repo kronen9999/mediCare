@@ -32,7 +32,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
   String? telefono2 = "";
   String? padecimiento = "";
   String? direccion = "";
-  late final AnimationController _controller;
+  late final AnimationController _controller = AnimationController(vsync: this);
   late final AnimationController _controllerNoWifi;
   String? idCuidador;
   String? tokenAcceso;
@@ -48,7 +48,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller.duration = const Duration(seconds: 10);
     _controllerNoWifi = AnimationController(vsync: this);
     _controllerEmpty.duration = const Duration(seconds: 2);
     _controllerNoWifi.duration = const Duration(seconds: 2);
@@ -117,14 +117,15 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
               frameRate: FrameRate.max,
               repeat: true,
               reverse: true,
-              'assets/images/healtgreen.json',
+              'assets/images/homec.json',
               controller: _controller,
               width: 250,
               height: 200,
               fit: BoxFit.fill,
               onLoaded: (composition) {
-                _controller.duration = composition.duration;
-                _controller.forward();
+                if (mounted) {
+                  _controller.repeat();
+                }
               },
             ),
           ),
