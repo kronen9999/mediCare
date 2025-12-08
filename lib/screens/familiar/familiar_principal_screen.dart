@@ -432,7 +432,7 @@ class _FamiliarPrincipalScreenState extends State<FamiliarPrincipalScreen>
           ticker: 'ticker',
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 }

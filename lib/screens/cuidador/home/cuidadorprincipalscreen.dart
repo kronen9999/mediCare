@@ -901,7 +901,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
           ticker: 'ticker',
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 }

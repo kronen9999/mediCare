@@ -567,7 +567,7 @@ class _ItemListaMedicamentosState extends State<ItemListaMedicamentos> {
           ticker: 'ticker',
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 }

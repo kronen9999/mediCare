@@ -1265,7 +1265,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
           ticker: 'ticker',
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 }
