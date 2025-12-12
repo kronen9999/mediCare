@@ -23,25 +23,15 @@ class _HomescreenState extends State<Homescreen> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: SvgPicture.asset(
-                      'assets/images/heart.svg',
-                      height: 30,
-                      colorFilter: ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Image.asset(
+                    'assets/images/medicarelogo.png',
+                    height: 70,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 25, bottom: 10),
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Text(
                     "MediCare",
                     style: TextStyle(
