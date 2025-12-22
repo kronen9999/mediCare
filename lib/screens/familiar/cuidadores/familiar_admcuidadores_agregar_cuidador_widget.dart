@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_agregar_cuidador.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
 
@@ -21,7 +22,8 @@ class FamiliarAdmcuidadoresAgregarCuidadorWidget extends StatefulWidget {
 }
 
 class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
-    extends State<FamiliarAdmcuidadoresAgregarCuidadorWidget> {
+    extends State<FamiliarAdmcuidadoresAgregarCuidadorWidget>
+    with TickerProviderStateMixin {
   String? nombre;
   String? apellidoP;
   String? apellidoM;
@@ -32,26 +34,38 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
   String? usuario;
   String? contrasena;
 
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.person_outline_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
@@ -234,7 +248,7 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Apellido Materno",
+                        "Apellido Materno (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -295,7 +309,7 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Direccion",
+                        "Direccion (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -356,7 +370,7 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono principal",
+                        "Telefono principal (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -419,7 +433,7 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono secundario",
+                        "Telefono secundario (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -827,10 +841,15 @@ class _FamiliarAdmcuidadoresAgregarCuidadorWidgetState
       widget.onSelect("default");
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }

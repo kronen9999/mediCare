@@ -1,5 +1,5 @@
 class Globalvariables {
   final String _rutaGlobalBase =
-      "https://chimerically-centrobaric-brendan.ngrok-free.dev/Integrador9/MediCareBackend/public/";
+      "https://stvcamcis.com/MediCareBackend/content/";
   String get rutaGlobalBase => _rutaGlobalBase;
 }

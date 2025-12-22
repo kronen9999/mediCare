@@ -14,8 +14,8 @@ class Cuidadorloginscreen extends StatefulWidget {
 }
 
 class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
-  String? _Credencial;
-  String? _Contrasena;
+  String? _credencial;
+  String? _contrasena;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,23 +24,6 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
               const Text(
                 "MediCare",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -113,7 +96,7 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                             child: TextField(
                               onChanged: (value) {
                                 setState(() {
-                                  _Credencial = value;
+                                  _credencial = value;
                                 });
                               },
                               decoration: InputDecoration(
@@ -156,7 +139,7 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
                             child: TextField(
                               onChanged: (value) {
                                 setState(() {
-                                  _Contrasena = value;
+                                  _contrasena = value;
                                 });
                               },
                               obscureText: true,
@@ -240,10 +223,10 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
   }
 
   void loginCuidador(context) async {
-    if (_Credencial == null ||
-        _Contrasena == null ||
-        _Credencial!.isEmpty ||
-        _Contrasena!.isEmpty) {
+    if (_credencial == null ||
+        _contrasena == null ||
+        _credencial!.isEmpty ||
+        _contrasena!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Por favor, completa todos los campos"),
@@ -256,25 +239,38 @@ class _CuidadorloginscreenState extends State<Cuidadorloginscreen> {
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
 
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
       final result = await repo.loginCuidador(
         CuidadoresLogin(
-          contrasena: _Contrasena ?? '',
-          credencial: _Credencial ?? '',
+          contrasena: _contrasena ?? '',
+          credencial: _credencial ?? '',
         ),
       );
       guardarDatos(
         result.usuario?.idUsuario.toString(),
         result.usuario?.tokenAcceso,
       );
+      Navigator.of(context).pop();
       Future.delayed(Duration(seconds: 1));
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Cuidadorhomescreen()),
       );
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

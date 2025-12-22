@@ -32,6 +32,7 @@ class _FamiliarHistorialRecordatoriosScreenState
   late final AnimationController _controllerEmpty = AnimationController(
     vsync: this,
   );
+  late final AnimationController _controller = AnimationController(vsync: this);
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   Future<FamiliaresHistorialRecordatoriosResponse?>? listaRecordatorios;
@@ -47,11 +48,14 @@ class _FamiliarHistorialRecordatoriosScreenState
     obtenerMetricas();
     _controllerNoWifi.duration = const Duration(seconds: 2);
     _controllerEmpty.duration = const Duration(seconds: 2);
+    _controller.duration = const Duration(seconds: 10);
   }
 
   @override
   void dispose() {
     _controllerNoWifi.dispose();
+    _controllerEmpty.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -62,19 +66,20 @@ class _FamiliarHistorialRecordatoriosScreenState
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(85, 150, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.history_rounded,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/historial.json',
+              controller: _controller,
+              width: 200,
+              height: 200,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(

@@ -25,6 +25,7 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
   late final AnimationController _controllerEmpty = AnimationController(
     vsync: this,
   );
+  late final AnimationController _controller = AnimationController(vsync: this);
   Future<FamiliaresPacientesObtenerPacientesResponse?>? listaPacientes;
   String? idFamiliar;
   String? tokenAcceso;
@@ -38,12 +39,15 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
     obtenerDatos();
     _controllerNoWifi.duration = const Duration(seconds: 2);
     _controllerEmpty.duration = const Duration(seconds: 2);
+    _controller.duration = const Duration(seconds: 30);
+    _controller.forward();
   }
 
   @override
   void dispose() {
     _controllerNoWifi.dispose();
     _controllerEmpty.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -87,22 +91,20 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
     return SingleChildScrollView(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(201, 85, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.personal_injury_outlined,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-            ),
+          Lottie.asset(
+            repeat: true,
+            reverse: true,
+            frameRate: FrameRate.max,
+            'assets/images/pacientes.json',
+            controller: _controller,
+            width: 240,
+            height: 240,
+            fit: BoxFit.fill,
+            onLoaded: (composition) {
+              if (mounted) {
+                _controller.repeat();
+              }
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(top: 15, bottom: 15),
@@ -159,56 +161,6 @@ class _FamiliarPacientesScreenState extends State<FamiliarPacientesScreen>
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 25,
-              right: 25,
-              top: 5,
-              bottom: 25,
-            ),
-            child: SizedBox(
-              height: 50,
-              child: TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color.fromARGB(109, 236, 230, 230),
-                  hintText: "Buscar paciente",
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: Color.fromRGBO(79, 172, 196, 1),
-                      width: .5,
-                    ),
-                  ),
-                  prefixIcon: Icon(Icons.search, color: Colors.blue),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: Color.fromRGBO(
-                        79,
-                        172,
-                        196,
-                        1,
-                      ), // Color del borde cuando está habilitado
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color:
-                          Colors.blue, // Color del borde cuando está enfocado
-                      width: 1.5,
-                    ),
-                  ),
                 ),
               ),
             ),

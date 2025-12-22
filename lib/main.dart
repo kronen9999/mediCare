@@ -24,6 +24,20 @@ Future<void> _initNotifications() async {
     iOS: iosSettings,
   );
   await flutterLocalNotificationsPlugin.initialize(initSettings);
+
+  // Crear el canal de notificaciones para Android
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'medicare_channel_01', // ID único del canal
+    'Recordatorios', // Nombre del canal
+    description: 'Canal para recordatorios de medicamentos',
+    importance: Importance.max,
+  );
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >()
+      ?.createNotificationChannel(channel);
 }
 
 Future<void> main() async {

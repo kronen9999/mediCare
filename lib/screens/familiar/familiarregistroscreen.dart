@@ -24,22 +24,6 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
               const SizedBox(width: 10),
               const Text(
                 "MediCare",
@@ -245,13 +229,19 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
   void registro(context) async {
     final repo = FamiliaresRegistroRepository();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.registro(
         FamiliaresRegistro(
           correoE: _correo ?? '',
           contrasena: _contrasena ?? '',
         ),
       );
-      // Muestra el mensaje de éxito que viene en result.message
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -268,9 +258,15 @@ class _FamiliarregistroscreenState extends State<Familiarregistroscreen> {
         _contrasena = null;
       });
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

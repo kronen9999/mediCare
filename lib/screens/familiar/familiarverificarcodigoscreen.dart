@@ -25,23 +25,6 @@ class _FamiliarverificarcodigoscreenState
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
               const Text(
                 "MediCare",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -119,6 +102,7 @@ class _FamiliarverificarcodigoscreenState
                           child: SizedBox(
                             width: 150,
                             child: TextField(
+                              maxLength: 10,
                               onChanged: (value) {
                                 setState(() {
                                   codigoVerificacion = value;
@@ -199,16 +183,32 @@ class _FamiliarverificarcodigoscreenState
   void reenviarCodigo(context) async {
     FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.recuperarCuentaPCorreo(
         FamiliaresRecuperarcuentapcorreo(correoE: widget.correoE ?? ''),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message), backgroundColor: Colors.green),
-      );
-    } catch (e) {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text("Codigo de recuperacion enviado"),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );
@@ -218,12 +218,19 @@ class _FamiliarverificarcodigoscreenState
   void verificarCodigo(context) async {
     FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.verificarCodigoRecuperacion(
         FamiliaresVerificarcodigorecuperacion(
           correoE: widget.correoE ?? "",
           codigoVerificacion: codigoVerificacion ?? "",
         ),
       );
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -234,9 +241,15 @@ class _FamiliarverificarcodigoscreenState
         ),
       );
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

@@ -210,42 +210,6 @@ class _ApartadoOpcionesState extends State<ApartadoOpciones> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Colors.grey)),
-                  ),
-                  child: TextButton(
-                    onPressed: () {},
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Icon(
-                              Icons.notifications_none_rounded,
-                              color: Colors.grey,
-                              size: 20,
-                            ),
-                          ),
-                          Text(
-                            "Notificaciones",
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          ),
-                          Spacer(),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
