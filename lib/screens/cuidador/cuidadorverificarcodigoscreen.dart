@@ -25,23 +25,6 @@ class _CuidadorverificarcodigoscreenState
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
               const Text(
                 "MediCare",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -119,6 +102,7 @@ class _CuidadorverificarcodigoscreenState
                           child: SizedBox(
                             width: 150,
                             child: TextField(
+                              maxLength: 10,
                               onChanged: (value) {
                                 setState(() {
                                   _codigoVerificacion = value;
@@ -209,12 +193,19 @@ class _CuidadorverificarcodigoscreenState
 
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
       final response = await repo.verificarCodigo(
         CuidadoresVerificarcodigorecuperacion(
           correoE: widget.correoE ?? '',
           codigoVerificacion: _codigoVerificacion ?? '',
         ),
       );
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -225,9 +216,15 @@ class _CuidadorverificarcodigoscreenState
         ),
       );
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );
@@ -246,16 +243,29 @@ class _CuidadorverificarcodigoscreenState
     }
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
       final result = await repo.enviarCodigoRecuperacion(
         CuidadoresRecupearcuentapcorreo(correoE: widget.correoE ?? ''),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
       );
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

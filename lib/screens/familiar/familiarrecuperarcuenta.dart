@@ -22,23 +22,6 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
               const Text(
                 "MediCare",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -189,9 +172,15 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
   void recuperarCuenta(context) async {
     FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
       final response = await repo.recuperarCuentaPCorreo(
         FamiliaresRecuperarcuentapcorreo(correoE: correoE ?? ''),
       );
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -199,9 +188,15 @@ class _FamiliarrecuperarcuentaState extends State<Familiarrecuperarcuenta> {
         ),
       );
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

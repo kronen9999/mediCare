@@ -6,9 +6,13 @@ import 'package:medicare/components/cuidadores/home/item_lista_recordatoriosProx
 import 'package:medicare/models/cuidadores/home/cuidadores_obtenerproximosrecordatorios.dart';
 import 'package:medicare/models/cuidadores/home/cuidadores_sabercuidadorasignado.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
+import 'package:medicare/screens/cuidador/home/cuidador_chat_ia_personalizada_screen.dart';
 import 'package:medicare/screens/cuidador/home/cuidador_chat_ia_widget.dart';
 import 'package:medicare/screens/cuidador/home/cuidador_historial_recordatorios_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:medicare/main.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Cuidadorprincipalscreen extends StatefulWidget {
   const Cuidadorprincipalscreen({super.key});
@@ -28,7 +32,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
   String? telefono2 = "";
   String? padecimiento = "";
   String? direccion = "";
-  late final AnimationController _controller;
+  late final AnimationController _controller = AnimationController(vsync: this);
   late final AnimationController _controllerNoWifi;
   String? idCuidador;
   String? tokenAcceso;
@@ -44,7 +48,7 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller.duration = const Duration(seconds: 10);
     _controllerNoWifi = AnimationController(vsync: this);
     _controllerEmpty.duration = const Duration(seconds: 2);
     _controllerNoWifi.duration = const Duration(seconds: 2);
@@ -92,7 +96,10 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
                   onSelect: asignarSeccion,
                 )
               : seccion == "chatbot"
-              ? CuidadorChatIaWidget(onSelect: asignarSeccion)
+              ? CuidadorChatIaPersonalizadaScreen(
+                  idCuidador: idCuidador,
+                  onSelect: asignarSeccion,
+                )
               : Text("Otra pantalla"),
         ),
       ),
@@ -107,16 +114,18 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: Lottie.asset(
+              frameRate: FrameRate.max,
               repeat: true,
               reverse: true,
-              'assets/images/healtgreen.json',
+              'assets/images/homec.json',
               controller: _controller,
               width: 250,
               height: 200,
               fit: BoxFit.fill,
               onLoaded: (composition) {
-                _controller.duration = composition.duration;
-                _controller.forward();
+                if (mounted) {
+                  _controller.repeat();
+                }
               },
             ),
           ),
@@ -778,8 +787,20 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
           ),
         );
       });
+      final recordatorios = await listaRecordatorios;
+      if (!mounted) return;
+      if (recordatorios != null && recordatorios.recordatorios.isNotEmpty) {
+        for (var recordatorio in recordatorios.recordatorios) {
+          agregarNotificacion(
+            recordatorio.idHistorial,
+            recordatorio.nombreM,
+            recordatorio.nombreP,
+            recordatorio.fechaProgramada,
+          );
+        }
+      }
     } catch (e) {
-      //
+      print("Error al obtener los recordatorios: $e");
     }
   }
 
@@ -848,5 +869,39 @@ class _CuidadorprincipalscreenState extends State<Cuidadorprincipalscreen>
     int hora12 = fecha.hour % 12 == 0 ? 12 : fecha.hour % 12;
     String minutos = fecha.minute.toString().padLeft(2, '0');
     return '${fecha.day} de ${meses[fecha.month]} a las $hora12:$minutos $periodo';
+  }
+
+  Future<void> agregarNotificacion(
+    int idHistorial,
+    String nombreMedicamento,
+    String nombrePaciente,
+    String horaRecordatorio,
+  ) async {
+    final fechaActual = tz.TZDateTime.now(tz.local);
+    final fechaNotificacion = DateTime.parse(horaRecordatorio);
+
+    final tzFechaNotificacion = tz.TZDateTime.from(fechaNotificacion, tz.local);
+
+    if (tzFechaNotificacion.isBefore(fechaActual)) {
+      return;
+    }
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      idHistorial,
+      "Es hora de suministrar {$nombreMedicamento}",
+      "Es hora de dar el medicamento a $nombrePaciente",
+      tz.TZDateTime.parse(tz.local, horaRecordatorio),
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medicare_channel_01',
+          'Recordatorios',
+          channelDescription: 'Canal para recordatorios de medicamentos',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
   }
 }

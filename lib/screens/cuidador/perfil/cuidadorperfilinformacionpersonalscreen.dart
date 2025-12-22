@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_actualizarinformacionpersonal.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfilbasico.dart';
 import 'package:medicare/repositories/cuidadores/cuidadores_repository_global.dart';
@@ -20,7 +22,8 @@ class Cuidadorperfilinformacionpersonalscreen extends StatefulWidget {
 }
 
 class _CuidadorperfilinformacionpersonalscreenState
-    extends State<Cuidadorperfilinformacionpersonalscreen> {
+    extends State<Cuidadorperfilinformacionpersonalscreen>
+    with TickerProviderStateMixin {
   String? nombre = "Obteniendo datos...";
   String? apellidoP = "Obteniendo datos...";
   String? apellidoM = "Obteniendo datos...";
@@ -33,6 +36,10 @@ class _CuidadorperfilinformacionpersonalscreenState
   final TextEditingController direccionController = TextEditingController();
   final TextEditingController telefono1Controller = TextEditingController();
   final TextEditingController telefono2Controller = TextEditingController();
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
   @override
   void initState() {
     super.initState();
@@ -53,6 +60,7 @@ class _CuidadorperfilinformacionpersonalscreenState
     direccionController.dispose();
     telefono1Controller.dispose();
     telefono2Controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -62,20 +70,21 @@ class _CuidadorperfilinformacionpersonalscreenState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.person_outline_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate(60),
+              'assets/images/informacionc.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
@@ -598,13 +607,19 @@ class _CuidadorperfilinformacionpersonalscreenState
       );
       widget.onSelection("default");
     } catch (e) {
-      if (mounted) {
-        Navigator.of(context).pop();
+      if (!mounted) {
+        return;
+      }
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.toString().replaceAll("Exception: ", "")),
         ),
       );
     }

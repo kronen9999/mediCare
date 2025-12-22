@@ -28,6 +28,8 @@ class _FamiliarChatIapersonalizadaState
   // Lista de mensajes de ejemplo
   final List<String> mensajes = [];
 
+  bool mensajeEspera = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,35 +40,8 @@ class _FamiliarChatIapersonalizadaState
   @override
   void dispose() {
     _controller.dispose();
+    mensajeController.dispose();
     super.dispose();
-  }
-
-  void empezarHablar() {
-    _controller.duration = Duration(seconds: 2);
-  }
-
-  void dejarDeHablar() {
-    _controller.stop();
-  }
-
-  void hablarPorFrames(
-    int frameInicio,
-    int frameFin, {
-    Duration? fragmentDuration,
-  }) {
-    final dur = _controller.duration;
-    if (dur == null) return;
-    const totalFrames = 82; // Tu animación tiene 82 frames
-    final start = frameInicio / totalFrames;
-    final end = frameFin / totalFrames;
-
-    // Duración del fragmento (por defecto 1 segundo si no se pasa)
-    final duration = fragmentDuration ?? Duration(seconds: 1);
-
-    _controller.stop();
-    _controller.duration = duration;
-    _controller.value = start;
-    _controller.repeat(min: start, max: end, reverse: true);
   }
 
   @override
@@ -74,11 +49,11 @@ class _FamiliarChatIapersonalizadaState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "MediCare bot",
+          "Medibot",
           style: TextStyle(
             color: Colors.blue,
             fontWeight: FontWeight.bold,
-            fontSize: 30,
+            fontSize: 20,
           ),
         ),
         actions: [
@@ -96,34 +71,39 @@ class _FamiliarChatIapersonalizadaState
       body: SafeArea(
         child: Column(
           children: [
+            // Animación y mensaje inicial
             Center(
               child: Lottie.asset(
                 repeat: true,
                 reverse: true,
-                'assets/images/circle.json',
+                'assets/images/aifamiliar.json',
                 controller: _controller,
                 width: 200,
                 height: 200,
+                frameRate: FrameRate.max,
                 fit: BoxFit.fill,
                 onLoaded: (composition) {
                   _controller.duration = composition.duration;
-                  _controller.repeat();
+                  _controller.forward();
+                  Future.delayed(Duration(seconds: 2), () {
+                    if (!mounted) return;
+                    _controller.stop();
+                  });
                 },
               ),
             ),
             if (!primeraInteraccion)
-              Column(
-                children: [
-                  Text(
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Text(
                     "Hola soy medibot tu asistente virtual👋\n¿En que te puedo ayudar hoy?",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey, fontSize: 20),
                   ),
-                ],
-              )
-            else
-              const SizedBox(height: 24),
-            // Área de mensajes scrollable
+                ),
+              ),
+            // Área de mensajes fija
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(
@@ -145,7 +125,7 @@ class _FamiliarChatIapersonalizadaState
                       decoration: BoxDecoration(
                         color: index % 2 == 0
                             ? Colors.blue[100]
-                            : Colors.grey[200],
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -157,7 +137,7 @@ class _FamiliarChatIapersonalizadaState
                 },
               ),
             ),
-            // Input fijo abajo
+            // Área de entrada fija
             Padding(
               padding: EdgeInsets.only(
                 left: 8,
@@ -167,14 +147,19 @@ class _FamiliarChatIapersonalizadaState
               ),
               child: Row(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: .5),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Icon(Icons.image_outlined, color: Colors.blue),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {});
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: .5),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(Icons.image_outlined, color: Colors.blue),
+                      ),
                     ),
                   ),
                   SizedBox(width: 8),
@@ -219,7 +204,9 @@ class _FamiliarChatIapersonalizadaState
                           IconButton(
                             icon: Icon(Icons.send, color: Colors.blue),
                             onPressed: () {
-                              enviarMensaje();
+                              if (!mensajeEspera) {
+                                enviarMensaje();
+                              }
                             },
                           ),
                         ],
@@ -237,27 +224,50 @@ class _FamiliarChatIapersonalizadaState
 
   void enviarMensaje() async {
     String? mensajeChat = mensaje;
+    final fechaActual = DateTime.now();
+    final fechaFormateada =
+        "${fechaActual.year}-${fechaActual.month.toString().padLeft(2, '0')}-${fechaActual.day.toString().padLeft(2, '0')} ${fechaActual.hour.toString().padLeft(2, '0')}:${fechaActual.minute.toString().padLeft(2, '0')}:${fechaActual.second.toString().padLeft(2, '0')}";
     if (mensaje != null && mensaje!.trim().isNotEmpty) {
       setState(() {
         mensajes.add(mensaje!.trim());
+        mensajes.add('Dame un segundo estoy trabajando en tu solicitud...');
+        mensajeEspera = true;
         mensajeController.clear();
         mensaje = null;
         primeraInteraccion = true;
       });
-      final repo = FamiliaresReposotoryGlobal();
-      final respuesta = await repo.envioMensaje(
-        FamiliaresChatbot(
-          idFamiliar: widget.idFamiliar ?? '',
-          mensaje: mensajeChat ?? "",
-        ),
-      );
-      recibirRespuesta(respuesta.response);
+      try {
+        final repo = FamiliaresReposotoryGlobal();
+        final respuesta = await repo.envioMensaje(
+          FamiliaresChatbot(
+            idUsuario: widget.idFamiliar ?? '',
+            mensaje: mensajeChat ?? "",
+            fechaActual: fechaFormateada,
+            tipoUsuario: "familiar",
+          ),
+        );
+        if (!mounted) return;
+        recibirRespuesta(respuesta.response);
+      } catch (e) {
+        if (!mounted) return;
+        recibirRespuesta(
+          "Parece que ha habido un error al procesar tu solicitud. Por favor intenta de nuevo o verifica tu conexión a internet.",
+        );
+      }
     }
   }
 
   void recibirRespuesta(String respuesta) {
     setState(() {
-      mensajes.add(respuesta);
+      final lastIndex = mensajes.length - 1;
+      if (lastIndex >= 0 &&
+          mensajes[lastIndex] ==
+              'Dame un segundo estoy trabajando en tu solicitud...') {
+        mensajes[lastIndex] = respuesta;
+      } else {
+        mensajes.add(respuesta);
+      }
+      mensajeEspera = false;
     });
   }
 }

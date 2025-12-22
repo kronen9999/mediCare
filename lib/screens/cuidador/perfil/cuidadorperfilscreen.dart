@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/components/cuidadores/perfil/perfilinformacionadmwidget.dart';
 import 'package:medicare/components/cuidadores/perfil/perfilopcioneswidget.dart';
 import 'package:medicare/models/cuidadores/perfil/cuidadores_perfil_obtenerperfil.dart';
@@ -16,7 +17,8 @@ class Cuidadorperfilscreen extends StatefulWidget {
   State<Cuidadorperfilscreen> createState() => _CuidadorperfilscreenState();
 }
 
-class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
+class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen>
+    with TickerProviderStateMixin {
   String apartado = "default";
   String? idCuidador;
   String? tokenAcceso;
@@ -28,11 +30,22 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
   String? telefono1Familiar = "Obteniendo datos...";
   String? telefono2Familiar = "Obteniendo datos...";
 
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 10),
+    vsync: this,
+  );
+
   @override
   void initState() {
     super.initState();
     obtenerDatos();
     obtenerDatosSesion();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -71,19 +84,20 @@ class _CuidadorperfilscreenState extends State<Cuidadorperfilscreen> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 28, 177, 22),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.person_outline_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/user.json',
+              controller: _controller,
+              width: 150,
+              height: 200,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(

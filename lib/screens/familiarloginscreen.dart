@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicare/screens/familiar/familiarhome.dart';
 import 'package:medicare/screens/familiar/familiarrecuperarcuenta.dart';
@@ -26,23 +27,6 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
               const Text(
                 "MediCare",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -280,28 +264,39 @@ class _FamiliarloginscreenState extends State<Familiarloginscreen> {
   void login() async {
     final repo = FamiliarLoginRepository();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.login(
         FamilialesLogin(
           credencial: credencial ?? '',
           contrasena: contrasena ?? '',
         ),
       );
-      // Si el login es exitoso, muestra un SnackBar con el mensaje
+
       guardarDatos(
         result.usuario!.tokenAcceso,
         result.usuario!.idUsuario.toString(),
       );
-
+      Navigator.pop(context);
       await Future.delayed(Duration(milliseconds: 1000));
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Familiarhome()),
       );
     } catch (e) {
-      // Si hay error, muestra el mensaje de error
+      Navigator.pop(context);
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

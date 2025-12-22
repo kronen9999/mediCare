@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/main.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_agregarmedicamentosh.dart';
 import 'package:medicare/repositories/familiares/familiares_reposotory_global.dart';
@@ -29,7 +30,8 @@ class FamiliarPacientesAgregarmedicamentoScreen extends StatefulWidget {
 }
 
 class _FamiliarPacientesAgregarmedicamentoScreenState
-    extends State<FamiliarPacientesAgregarmedicamentoScreen> {
+    extends State<FamiliarPacientesAgregarmedicamentoScreen>
+    with TickerProviderStateMixin {
   String? nombreM;
   String? descripcionM;
   String? tipoMedicamento;
@@ -62,6 +64,12 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
   int? retardoMinutos = 0;
   int? intervaloHora = 0;
   int? intervaloMinutos = 0;
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -74,25 +82,32 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(201, 85, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  Icons.assignment_add,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
@@ -214,7 +229,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Descripcion del medicamento",
+                        "Descripcion del medicamento (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -339,7 +354,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Notas del medicamento",
+                        "Notas del medicamento (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -1181,10 +1196,15 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
       );
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }
@@ -1245,7 +1265,7 @@ class _FamiliarPacientesAgregarmedicamentoScreenState
           ticker: 'ticker',
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 }

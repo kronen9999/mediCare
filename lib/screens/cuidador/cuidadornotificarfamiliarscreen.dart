@@ -23,23 +23,6 @@ class _CuidadornotificarfamiliarscreenState
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
               const Text(
                 "MediCare",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -199,11 +182,17 @@ class _CuidadornotificarfamiliarscreenState
     }
 
     CuidadoresRepositoryGlobal repo = CuidadoresRepositoryGlobal();
-
+    showDialog(
+      context: context,
+      builder: (_) =>
+          Center(child: CircularProgressIndicator(color: Colors.green)),
+      barrierDismissible: false,
+    );
     try {
       final result = await repo.alertaFamiliar(
         CuidadoresAlertafamiliar(usuario: usuario ?? ''),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.message), backgroundColor: Colors.green),
       );
@@ -214,9 +203,15 @@ class _CuidadornotificarfamiliarscreenState
         );
       });
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

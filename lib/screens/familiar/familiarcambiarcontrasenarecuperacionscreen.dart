@@ -31,22 +31,6 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    "assets/images/heart.svg",
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ),
               const SizedBox(width: 10),
               const Text(
                 "MediCare",
@@ -262,6 +246,12 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
   void cambiarContrasena(context) async {
     FamiliaresReposotoryGlobal repo = FamiliaresReposotoryGlobal();
     try {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Center(child: CircularProgressIndicator(color: Colors.blue)),
+        barrierDismissible: false,
+      );
       final result = await repo.restablecerContrasena(
         FamiliaresRestablecercontrasena(
           correoE: widget.correoE ?? '',
@@ -269,6 +259,7 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
           nuevaContrasena: campoContrasena1 ?? '',
         ),
       );
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result.message.toString()),
@@ -282,9 +273,15 @@ class _FamiliarcambiarcontrasenarecuperacionscreenState
         );
       });
     } catch (e) {
+      Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString().replaceAll('Exception: ', '')),
+          content: Text(message.replaceAll('Exception: ', '')),
           backgroundColor: Colors.red,
         ),
       );

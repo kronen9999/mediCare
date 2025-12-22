@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_cambiar_contrasena.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_cuenta.dart';
 import 'package:medicare/models/familiares/admcuidadores/familiares_cuidadores_editar_informacion_perfil.dart';
@@ -26,7 +27,8 @@ class FamiliarAdmcuidadoresEditarCuidadorWidget extends StatefulWidget {
 }
 
 class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
-    extends State<FamiliarAdmcuidadoresEditarCuidadorWidget> {
+    extends State<FamiliarAdmcuidadoresEditarCuidadorWidget>
+    with TickerProviderStateMixin {
   String? nombre = "Obteniendo datos...";
   String? apellidoP = "Obteniendo datos...";
   String? apellidoM = "Obteniendo datos...";
@@ -48,6 +50,11 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
   TextEditingController usuarioController = TextEditingController();
   TextEditingController nuevaContrasenaController = TextEditingController();
   TextEditingController confirmarContrasenaController = TextEditingController();
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
 
   @override
   void initState() {
@@ -79,6 +86,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
     usuarioController.dispose();
     nuevaContrasenaController.dispose();
     confirmarContrasenaController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -88,16 +96,21 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(Icons.edit_outlined, color: Colors.white, size: 40),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
@@ -282,7 +295,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Apellido Materno",
+                        "Apellido Materno (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -344,7 +357,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Direccion",
+                        "Direccion (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -406,7 +419,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono principal",
+                        "Telefono principal (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -470,7 +483,7 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Telefono secundario",
+                        "Telefono secundario (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -1008,6 +1021,34 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
   }
 
   void actualizarInformacionPersonal(context) async {
+    if (nombre == null ||
+        nombre!.isEmpty ||
+        nombre!.trim() == "" ||
+        nombre == null ||
+        nombre!.isEmpty ||
+        nombre!.trim() == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El nombre del cuidador es obligatorio"),
+        ),
+      );
+      return;
+    }
+    if (apellidoP == null ||
+        apellidoP!.isEmpty ||
+        apellidoP!.trim() == "" ||
+        nombre == null ||
+        nombre!.isEmpty ||
+        nombre!.trim() == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El apellido paterno es obligatorio"),
+        ),
+      );
+      return;
+    }
     final repo = FamiliaresReposotoryGlobal();
     try {
       showDialog(
@@ -1040,10 +1081,15 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       widget.onUpdate(widget.idFamiliar ?? "", widget.tokenAcceso ?? "");
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }
@@ -1078,10 +1124,15 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       widget.onUpdate(widget.idFamiliar ?? "", widget.tokenAcceso ?? "");
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }
@@ -1141,10 +1192,15 @@ class _FamiliarAdmcuidadoresEditarCuidadorWidgetState
       confirmarContrasena = "";
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }

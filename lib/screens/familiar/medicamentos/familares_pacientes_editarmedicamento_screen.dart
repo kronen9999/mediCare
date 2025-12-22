@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editar_informacionmedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_editarhorariomedicamento.dart';
 import 'package:medicare/models/familiares/medicamentos/familiares_pacientes_obtenermedicamento.dart';
@@ -28,7 +29,8 @@ class FamilaresPacientesEditarmedicamentoScreen extends StatefulWidget {
 }
 
 class _FamilaresPacientesEditarmedicamentoScreenState
-    extends State<FamilaresPacientesEditarmedicamentoScreen> {
+    extends State<FamilaresPacientesEditarmedicamentoScreen>
+    with TickerProviderStateMixin {
   String? nombreM;
   String? descripcionM;
   String? tipoMedicamento;
@@ -46,6 +48,10 @@ class _FamilaresPacientesEditarmedicamentoScreenState
   TextEditingController dosisController = TextEditingController();
   TextEditingController intervaloHoraController = TextEditingController();
   TextEditingController intervaloMinutosController = TextEditingController();
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 5),
+    vsync: this,
+  );
 
   final List<String> formasMedicamento = [
     'Comprimidos: comprimido(s)',
@@ -67,6 +73,15 @@ class _FamilaresPacientesEditarmedicamentoScreenState
 
   @override
   void dispose() {
+    nombreController.dispose();
+    descripcionController.dispose();
+    notasController.dispose();
+    horasController.dispose();
+    minutosController.dispose();
+    dosisController.dispose();
+    intervaloHoraController.dispose();
+    intervaloMinutosController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -90,16 +105,21 @@ class _FamilaresPacientesEditarmedicamentoScreenState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(201, 85, 255, 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(Icons.edit_outlined, color: Colors.white, size: 40),
-              ),
+            padding: const EdgeInsets.only(top: 10),
+            child: Lottie.asset(
+              repeat: true,
+              reverse: true,
+              frameRate: FrameRate.max,
+              'assets/images/informacionf.json',
+              controller: _controller,
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+              onLoaded: (composition) {
+                if (mounted) {
+                  _controller.repeat();
+                }
+              },
             ),
           ),
           Padding(
@@ -222,7 +242,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Descripcion del medicamento",
+                        "Descripcion del medicamento (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -348,7 +368,7 @@ class _FamilaresPacientesEditarmedicamentoScreenState
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Notas del medicamento",
+                        "Notas del medicamento (Opcional)",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -859,16 +879,32 @@ class _FamilaresPacientesEditarmedicamentoScreenState
       );
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }
   }
 
   void actualizarHorarioMedicamento(context) async {
+    if (intervaloHora == 0 && intervaloMinutos == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "El intervalo de tiempo no puede ser 0 horas y 0 minutos, por favor ingresa un valor válido.",
+          ),
+        ),
+      );
+      return;
+    }
     final repo = FamiliaresReposotoryGlobal();
     showDialog(
       context: context,
@@ -895,10 +931,15 @@ class _FamilaresPacientesEditarmedicamentoScreenState
       );
     } catch (e) {
       Navigator.of(context).pop();
+      String message = e.toString();
+      if (message.startsWith("ClientException")) {
+        message =
+            "Error de conexión. Por favor, verifica tu conexión a internet e intentalo de nuevo.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(e.toString().replaceAll("Exception: ", "")),
+          content: Text(message.replaceAll("Exception: ", "")),
         ),
       );
     }
